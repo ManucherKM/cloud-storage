@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router'
 import { privateRoutes, publicRoutes } from '../routes'
-import { Error } from '../pages/Error'
+import { NotFound } from 'kuui-react'
 
 export const AppRouter = () => {
 	const isAuth: boolean = false
@@ -22,7 +22,7 @@ export const AppRouter = () => {
 							Component={route.component}
 						/>
 				  ))}
-			<Route path="/*" Component={Error} />
+			<Route path="/*" Component={NotFound} />
 		</Routes>
 	)
 }
