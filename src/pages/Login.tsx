@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import type { ChangeEvent, FormEvent } from 'react'
-import { Title, Form, Input, Button, TextError } from 'kuui-react'
+import { Title, Form, Input, Button, TextError, Loader } from 'kuui-react'
 import HCaptcha from '@hcaptcha/react-hcaptcha'
 import { validateEmail, isObjectValuesEmpty, validatePassword } from '@/utils'
 
@@ -34,6 +34,7 @@ export const Login = () => {
 	const [form, setForm] = useState<IForm>(defaultForm)
 	const [formErrors, setFormErrors] = useState<IFormErrors>(defaultFormErrors)
 	const [disableSubmit, setDisableSubmit] = useState<boolean>(true)
+	const [isLoading, setIsLoading] = useState<boolean>(false)
 
 	async function submitHandler(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault()
@@ -42,9 +43,13 @@ export const Login = () => {
 			return
 		}
 
+		setIsLoading(true)
+
 		// API
 
 		setForm(defaultForm)
+
+		setIsLoading(false)
 	}
 
 	function emailHandler(e: ChangeEvent<HTMLInputElement>) {
@@ -98,6 +103,8 @@ export const Login = () => {
 
 	return (
 		<div className="w-full h-full flex flex-col justify-center items-center">
+			{isLoading && <Loader />}
+
 			<Title className="mb-5">Authorization</Title>
 
 			<Form
