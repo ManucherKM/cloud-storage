@@ -1,7 +1,9 @@
 @import 'kuui-react/styles';
+@import './tailwild.scss';
 
 body {
 	margin: 0;
 	padding: 0;
 	background-color: var(--kuui-black-1000);
+	font-family: var(--Noto-Sans-Mono);
 }
