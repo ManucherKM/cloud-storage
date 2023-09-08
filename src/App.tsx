@@ -1,4 +1,4 @@
-import { AppRouter } from './components/AppRouter'
+import { AppRouter } from '@/components'
 import './assets/styles/index.scss'
 
 export const App = () => {

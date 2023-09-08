@@ -1,7 +1,4 @@
-import { Home } from './pages/Home'
-import { Login } from './pages/Login'
-import { Registration } from './pages/Registration'
-import { Storage } from './pages/Storage'
+import { Home, Login, Registration, Storage } from '@/pages'
 
 export interface IRoute {
 	path: string

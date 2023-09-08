@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router'
-import { privateRoutes, publicRoutes } from '../routes'
+import { privateRoutes, publicRoutes } from '@/routes'
 import { NotFound } from 'kuui-react'
 
 export const AppRouter = () => {
