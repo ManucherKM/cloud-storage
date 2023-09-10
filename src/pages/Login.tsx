@@ -1,6 +1,15 @@
 import { useEffect, useState } from 'react'
 import type { ChangeEvent, FormEvent } from 'react'
-import { Title, Form, Input, Button, TextError, Loader } from 'kuui-react'
+import {
+	Title,
+	Form,
+	Input,
+	Button,
+	TextError,
+	Loader,
+	GoogleAuth,
+	VKAuth,
+} from 'kuui-react'
 import HCaptcha from '@hcaptcha/react-hcaptcha'
 import { validateEmail, isObjectValuesEmpty, validatePassword } from '@/utils'
 
@@ -94,6 +103,14 @@ export const Login = () => {
 		)
 	}
 
+	function googleAuthHandler() {
+		console.log('Google auth')
+	}
+
+	function vkAuthHandler() {
+		console.log('Vk auth')
+	}
+
 	useEffect(() => {
 		const isValid =
 			isObjectValuesEmpty(formErrors) && !isObjectValuesEmpty(form)
@@ -134,11 +151,20 @@ export const Login = () => {
 					onChange={passwordHandler}
 				/>
 
-				<HCaptcha sitekey={HCAPTCHA_SITEKEY} onVerify={hCaptchaHandler} />
+				<HCaptcha
+					theme="dark"
+					sitekey={HCAPTCHA_SITEKEY}
+					onVerify={hCaptchaHandler}
+				/>
 
 				<Button disabled={disableSubmit} variant="active" type="submit">
 					Submit
 				</Button>
+
+				<div className="w-full h-[1px] bg-[--kuui-black-500]" />
+
+				<GoogleAuth variant="large" onClick={googleAuthHandler} />
+				<VKAuth variant="large" onClick={vkAuthHandler} />
 			</Form>
 		</div>
 	)
