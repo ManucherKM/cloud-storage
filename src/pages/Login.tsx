@@ -19,14 +19,12 @@ export interface IForm {
 	email: string
 	password: string
 	token: string
-	ekey: string
 }
 
 const defaultForm: IForm = {
 	email: '',
 	password: '',
 	token: '',
-	ekey: '',
 }
 
 export interface IFormErrors {
@@ -91,16 +89,12 @@ export const Login = () => {
 		setForm(prev => ({ ...prev, password }))
 	}
 
-	function hCaptchaHandler(token: string, ekey: string) {
-		setForm(prev => ({ ...prev, token, ekey }))
+	function hCaptchaVerifyHandler(token: string) {
+		setForm(prev => ({ ...prev, token }))
+	}
 
-		// After 2 minutes the data becomes out of date. We delete them.
-		setTimeout(
-			() => {
-				setForm(prev => ({ ...prev, token: '', ekey: '' }))
-			},
-			1000 * 60 * 2,
-		)
+	function hCaptchaExpireHandler() {
+		setForm(prev => ({ ...prev, token: '' }))
 	}
 
 	function googleAuthHandler() {
@@ -154,7 +148,8 @@ export const Login = () => {
 				<HCaptcha
 					theme="dark"
 					sitekey={HCAPTCHA_SITEKEY}
-					onVerify={hCaptchaHandler}
+					onVerify={hCaptchaVerifyHandler}
+					onExpire={hCaptchaExpireHandler}
 				/>
 
 				<Button disabled={disableSubmit} variant="active" type="submit">
