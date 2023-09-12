@@ -9,6 +9,7 @@ import {
 	Loader,
 	GoogleAuth,
 	VKAuth,
+	ConfirmEmail,
 } from 'kuui-react'
 import HCaptcha from '@hcaptcha/react-hcaptcha'
 import { validateEmail, isObjectValuesEmpty, validatePassword } from '@/utils'
@@ -42,6 +43,11 @@ export const Registration = () => {
 	const [formErrors, setFormErrors] = useState<IFormErrors>(defaultFormErrors)
 	const [disableSubmit, setDisableSubmit] = useState<boolean>(true)
 	const [isLoading, setIsLoading] = useState<boolean>(false)
+	const [confirmEmail, setConfirmEmail] = useState<boolean>(false)
+
+	if (confirmEmail) {
+		return <ConfirmEmail />
+	}
 
 	async function submitHandler(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault()
@@ -57,6 +63,8 @@ export const Registration = () => {
 		setForm(defaultForm)
 
 		setIsLoading(false)
+
+		setConfirmEmail(true)
 	}
 
 	function emailHandler(e: ChangeEvent<HTMLInputElement>) {
