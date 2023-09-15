@@ -10,7 +10,7 @@ import {
 	GoogleAuth,
 	VKAuth,
 } from 'kuui-react'
-import { redirect, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import HCaptcha from '@hcaptcha/react-hcaptcha'
 import { validateEmail, isObjectValuesEmpty, validatePassword } from '@/utils'
 import { useAuthStore } from '@/storage'

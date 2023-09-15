@@ -14,6 +14,7 @@ import {
 import HCaptcha from '@hcaptcha/react-hcaptcha'
 import { validateEmail, isObjectValuesEmpty, validatePassword } from '@/utils'
 import { useAuthStore } from '@/storage'
+import { useGoogleLogin } from '@react-oauth/google'
 
 const HCAPTCHA_SITEKEY = import.meta.env.VITE_HCAPTCHA_SITEKEY as string
 
@@ -46,6 +47,9 @@ export const Registration = () => {
 	const [disableSubmit, setDisableSubmit] = useState<boolean>(true)
 	const [isLoading, setIsLoading] = useState<boolean>(false)
 	const registration = useAuthStore(state => state.registration)
+	const registrationWithGoogle = useAuthStore(
+		state => state.registrationWithGoogle,
+	)
 	const hCaptchaRef = useRef<HCaptcha>(null)
 
 	async function submitHandler(e: FormEvent<HTMLFormElement>) {
@@ -110,9 +114,10 @@ export const Registration = () => {
 		setForm(prev => ({ ...prev, token: '' }))
 	}
 
-	function googleAuthHandler() {
-		console.log('Google auth')
-	}
+	const googleAuthHandler = useGoogleLogin({
+		flow: 'auth-code',
+		onSuccess: token => registrationWithGoogle(token as any),
+	})
 
 	function vkAuthHandler() {
 		console.log('Vk auth')

@@ -13,18 +13,23 @@ export const useAuthStore = create(
 		(set, get) => ({
 			token: null,
 			async login(loginDto) {
-				const { data } = await axios.post<ILoginResponse>(
-					EUseAuthStoreApiRoutes.login,
-					loginDto,
-				)
+				try {
+					const { data } = await axios.post<ILoginResponse>(
+						EUseAuthStoreApiRoutes.login,
+						loginDto,
+					)
 
-				if (!data?.accessToken) {
-					return
+					if (!data?.accessToken) {
+						return false
+					}
+
+					set({ token: data.accessToken })
+
+					return true
+				} catch (e) {
+					console.error(e)
+					return false
 				}
-
-				set({ token: data.accessToken })
-
-				return data.accessToken
 			},
 			async registration(registrationDto) {
 				try {
@@ -33,7 +38,9 @@ export const useAuthStore = create(
 						registrationDto,
 					)
 
-					if (status === 400) {
+					const isError = status === 400
+
+					if (isError) {
 						return false
 					}
 
@@ -42,6 +49,9 @@ export const useAuthStore = create(
 					console.error(e)
 					return false
 				}
+			},
+			async registrationWithGoogle(token) {
+				console.log(token)
 			},
 		}),
 		{ name: 'auth-store' },

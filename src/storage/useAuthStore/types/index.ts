@@ -18,10 +18,13 @@ export interface IRegistrationResponse {
 	success: boolean
 }
 
+export interface IRegistrationWithGoogleDto {}
+
 export interface IAuthStore {
 	token: null | string
-	login: (loginDto: ILoginDto) => Promise<string | undefined>
+	login: (loginDto: ILoginDto) => Promise<boolean>
 	registration: (registrationDto: IRegistrationDto) => Promise<boolean>
+	registrationWithGoogle: (token: string) => void
 }
 
 export enum EUseAuthStoreApiRoutes {
