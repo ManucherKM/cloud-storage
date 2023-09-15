@@ -116,7 +116,7 @@ export const Registration = () => {
 
 	const googleAuthHandler = useGoogleLogin({
 		flow: 'auth-code',
-		onSuccess: token => registrationWithGoogle(token as any),
+		onSuccess: res => registrationWithGoogle(res),
 	})
 
 	function vkAuthHandler() {

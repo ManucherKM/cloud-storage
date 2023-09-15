@@ -50,8 +50,8 @@ export const useAuthStore = create(
 					return false
 				}
 			},
-			async registrationWithGoogle(token) {
-				console.log(token)
+			async registrationWithGoogle(res) {
+				console.log(res)
 			},
 		}),
 		{ name: 'auth-store' },
