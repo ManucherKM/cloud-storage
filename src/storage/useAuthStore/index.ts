@@ -10,7 +10,7 @@ import {
 
 export const useAuthStore = create(
 	persist<IAuthStore>(
-		(set, get) => ({
+		set => ({
 			token: null,
 			async login(loginDto) {
 				try {
