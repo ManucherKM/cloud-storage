@@ -62,8 +62,8 @@ export const Registration = () => {
 		if (!isRegistered) {
 			setForm(defaultForm)
 			setFormErrors(prev => ({ ...prev, email: 'Failed to register.' }))
-			setIsLoading(false)
 			hCaptchaRef.current?.resetCaptcha()
+			setIsLoading(false)
 			return
 		}
 

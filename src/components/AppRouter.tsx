@@ -1,9 +1,10 @@
 import { Routes, Route } from 'react-router'
 import { privateRoutes, publicRoutes } from '@/routes'
 import { NotFound } from 'kuui-react'
+import { useAuthStore } from '@/storage'
 
 export const AppRouter = () => {
-	const isAuth: boolean = false
+	const isAuth: boolean = !!useAuthStore(state => state.token)
 
 	return (
 		<Routes>

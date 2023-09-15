@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import type { ChangeEvent, FormEvent } from 'react'
 import {
 	Title,
@@ -10,9 +10,11 @@ import {
 	GoogleAuth,
 	VKAuth,
 } from 'kuui-react'
+import { redirect, useNavigate } from 'react-router-dom'
 import HCaptcha from '@hcaptcha/react-hcaptcha'
 import { validateEmail, isObjectValuesEmpty, validatePassword } from '@/utils'
 import { useAuthStore } from '@/storage'
+import { ERoutes } from '@/routes'
 
 const HCAPTCHA_SITEKEY = import.meta.env.VITE_HCAPTCHA_SITEKEY as string
 
@@ -44,6 +46,8 @@ export const Login = () => {
 	const [disableSubmit, setDisableSubmit] = useState<boolean>(true)
 	const [isLoading, setIsLoading] = useState<boolean>(false)
 	const login = useAuthStore(state => state.login)
+	const navigate = useNavigate()
+	const hCaptchaRef = useRef<HCaptcha>(null)
 
 	async function submitHandler(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault()
@@ -57,11 +61,18 @@ export const Login = () => {
 		const isLogin = await login(form)
 
 		if (!isLogin) {
-			setFormErrors(prev => ({ ...prev, email: 'Failed to login.' }))
+			setForm(defaultForm)
+			setFormErrors(prev => ({
+				...prev,
+				email: 'Incorrect login or password.',
+			}))
+			hCaptchaRef.current?.resetCaptcha()
+			setIsLoading(false)
+			return
 		}
 
+		navigate(ERoutes.storage)
 		setForm(defaultForm)
-
 		setIsLoading(false)
 	}
 
@@ -137,6 +148,7 @@ export const Login = () => {
 					fill="all"
 					type="text"
 					placeholder="email"
+					value={form.email}
 					onChange={emailHandler}
 				/>
 				{formErrors.password && (
@@ -148,10 +160,12 @@ export const Login = () => {
 					fill="all"
 					type="password"
 					placeholder="password"
+					value={form.password}
 					onChange={passwordHandler}
 				/>
 
 				<HCaptcha
+					ref={hCaptchaRef}
 					theme="dark"
 					sitekey={HCAPTCHA_SITEKEY}
 					onVerify={hCaptchaVerifyHandler}

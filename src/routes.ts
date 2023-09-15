@@ -5,24 +5,31 @@ export interface IRoute {
 	component: () => JSX.Element
 }
 
+export enum ERoutes {
+	home = '/',
+	login = '/login',
+	registration = '/registration',
+	storage = '/storage',
+}
+
 export const publicRoutes: IRoute[] = [
 	{
-		path: '/',
+		path: ERoutes.home,
 		component: Home,
 	},
 	{
-		path: '/login',
+		path: ERoutes.login,
 		component: Login,
 	},
 	{
-		path: '/registration',
+		path: ERoutes.registration,
 		component: Registration,
 	},
 ]
 
 export const privateRoutes: IRoute[] = [
 	{
-		path: '/storage',
+		path: ERoutes.storage,
 		component: Storage,
 	},
 ]
