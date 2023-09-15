@@ -1,7 +1,12 @@
 import axios from '@/axios'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { IAuthStore, ILoginResponse, IRegistrationResponse } from './types'
+import {
+	EUseAuthStoreApiRoutes,
+	IAuthStore,
+	ILoginResponse,
+	IRegistrationResponse,
+} from './types'
 
 export const useAuthStore = create(
 	persist<IAuthStore>(
@@ -9,7 +14,7 @@ export const useAuthStore = create(
 			token: null,
 			async login(loginDto) {
 				const { data } = await axios.post<ILoginResponse>(
-					'/auth/login',
+					EUseAuthStoreApiRoutes.login,
 					loginDto,
 				)
 
@@ -24,7 +29,7 @@ export const useAuthStore = create(
 			async registration(registrationDto) {
 				try {
 					const { status } = await axios.post<IRegistrationResponse>(
-						'/auth/registration',
+						EUseAuthStoreApiRoutes.registration,
 						registrationDto,
 					)
 

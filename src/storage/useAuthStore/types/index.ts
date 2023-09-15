@@ -23,3 +23,8 @@ export interface IAuthStore {
 	login: (loginDto: ILoginDto) => Promise<string | undefined>
 	registration: (registrationDto: IRegistrationDto) => Promise<boolean>
 }
+
+export enum EUseAuthStoreApiRoutes {
+	login = '/api/auth/login',
+	registration = '/api/auth/registration',
+}
