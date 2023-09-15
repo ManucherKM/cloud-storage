@@ -12,6 +12,7 @@ import {
 } from 'kuui-react'
 import HCaptcha from '@hcaptcha/react-hcaptcha'
 import { validateEmail, isObjectValuesEmpty, validatePassword } from '@/utils'
+import { useAuthStore } from '@/storage'
 
 const HCAPTCHA_SITEKEY = import.meta.env.VITE_HCAPTCHA_SITEKEY as string
 
@@ -42,6 +43,7 @@ export const Login = () => {
 	const [formErrors, setFormErrors] = useState<IFormErrors>(defaultFormErrors)
 	const [disableSubmit, setDisableSubmit] = useState<boolean>(true)
 	const [isLoading, setIsLoading] = useState<boolean>(false)
+	const login = useAuthStore(state => state.login)
 
 	async function submitHandler(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault()
@@ -52,7 +54,11 @@ export const Login = () => {
 
 		setIsLoading(true)
 
-		// API
+		const isLogin = await login(form)
+
+		if (!isLogin) {
+			setFormErrors(prev => ({ ...prev, email: 'Failed to login.' }))
+		}
 
 		setForm(defaultForm)
 

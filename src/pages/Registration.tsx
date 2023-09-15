@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import type { ChangeEvent, FormEvent } from 'react'
 import {
 	Title,
@@ -13,6 +13,7 @@ import {
 } from 'kuui-react'
 import HCaptcha from '@hcaptcha/react-hcaptcha'
 import { validateEmail, isObjectValuesEmpty, validatePassword } from '@/utils'
+import { useAuthStore } from '@/storage'
 
 const HCAPTCHA_SITEKEY = import.meta.env.VITE_HCAPTCHA_SITEKEY as string
 
@@ -40,14 +41,12 @@ const defaultFormErrors: IFormErrors = {
 
 export const Registration = () => {
 	const [form, setForm] = useState<IForm>(defaultForm)
+	const [confirmEmail, setConfirmEmail] = useState<boolean>(false)
 	const [formErrors, setFormErrors] = useState<IFormErrors>(defaultFormErrors)
 	const [disableSubmit, setDisableSubmit] = useState<boolean>(true)
 	const [isLoading, setIsLoading] = useState<boolean>(false)
-	const [confirmEmail, setConfirmEmail] = useState<boolean>(false)
-
-	if (confirmEmail) {
-		return <ConfirmEmail />
-	}
+	const registration = useAuthStore(state => state.registration)
+	const hCaptchaRef = useRef<HCaptcha>(null)
 
 	async function submitHandler(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault()
@@ -58,9 +57,15 @@ export const Registration = () => {
 
 		setIsLoading(true)
 
-		// API
+		const isRegistered = await registration(form)
 
-		setForm(defaultForm)
+		if (!isRegistered) {
+			setForm(defaultForm)
+			setFormErrors(prev => ({ ...prev, email: 'Failed to register.' }))
+			setIsLoading(false)
+			hCaptchaRef.current?.resetCaptcha()
+			return
+		}
 
 		setIsLoading(false)
 
@@ -120,6 +125,10 @@ export const Registration = () => {
 		setDisableSubmit(!isValid)
 	}, [form])
 
+	if (confirmEmail) {
+		return <ConfirmEmail email={form.email} />
+	}
+
 	return (
 		<div className="w-full h-full flex flex-col justify-center items-center">
 			{isLoading && <Loader />}
@@ -139,6 +148,7 @@ export const Registration = () => {
 					fill="all"
 					type="text"
 					placeholder="email"
+					value={form.email}
 					onChange={emailHandler}
 				/>
 				{formErrors.password && (
@@ -149,11 +159,13 @@ export const Registration = () => {
 				<Input
 					fill="all"
 					type="password"
+					value={form.password}
 					placeholder="password"
 					onChange={passwordHandler}
 				/>
 
 				<HCaptcha
+					ref={hCaptchaRef}
 					theme="dark"
 					sitekey={HCAPTCHA_SITEKEY}
 					onVerify={hCaptchaVerifyHandler}
