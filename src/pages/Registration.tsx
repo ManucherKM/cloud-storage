@@ -128,7 +128,7 @@ export const Registration = () => {
 		}
 
 		setIsLoading(false)
-		navigate(ERoutes.storage)
+		navigate(ERoutes.login)
 	}
 
 	const googleRegistrationPopup = useGoogleLogin({
