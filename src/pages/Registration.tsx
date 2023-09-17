@@ -14,11 +14,13 @@ import {
 import HCaptcha from '@hcaptcha/react-hcaptcha'
 import { validateEmail, isObjectValuesEmpty, validatePassword } from '@/utils'
 import { useAuthStore } from '@/storage'
-import { CodeResponse, useGoogleLogin } from '@react-oauth/google'
+import { useGoogleLogin } from '@react-oauth/google'
 import { useNavigate } from 'react-router'
 import { ERoutes } from '@/routes'
 
 const HCAPTCHA_SITEKEY = import.meta.env.VITE_HCAPTCHA_SITEKEY as string
+// const VK_CLIENT_ID = import.meta.env.VITE_VK_CLIENT_ID as string
+// const CLIENT_URL = import.meta.env.VITE_CLIENT_URL as string
 
 export interface IForm {
 	email: string
@@ -48,6 +50,7 @@ export const Registration = () => {
 	const [formErrors, setFormErrors] = useState<IFormErrors>(defaultFormErrors)
 	const [disableSubmit, setDisableSubmit] = useState<boolean>(true)
 	const [isLoading, setIsLoading] = useState<boolean>(false)
+
 	const navigate = useNavigate()
 	const registration = useAuthStore(state => state.registration)
 	const registrationWithGoogle = useAuthStore(
@@ -127,8 +130,8 @@ export const Registration = () => {
 			return
 		}
 
-		setIsLoading(false)
 		navigate(ERoutes.login)
+		setIsLoading(false)
 	}
 
 	const googleRegistrationPopup = useGoogleLogin({
@@ -141,7 +144,7 @@ export const Registration = () => {
 		googleRegistrationPopup()
 	}
 
-	function vkAuthHandler() {
+	async function vkAuthHandler() {
 		console.log('Vk auth')
 	}
 

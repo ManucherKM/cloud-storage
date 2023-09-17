@@ -15,7 +15,7 @@ import HCaptcha from '@hcaptcha/react-hcaptcha'
 import { validateEmail, isObjectValuesEmpty, validatePassword } from '@/utils'
 import { useAuthStore } from '@/storage'
 import { ERoutes } from '@/routes'
-import { CodeResponse, useGoogleLogin } from '@react-oauth/google'
+import { useGoogleLogin } from '@react-oauth/google'
 
 const HCAPTCHA_SITEKEY = import.meta.env.VITE_HCAPTCHA_SITEKEY as string
 
@@ -126,8 +126,8 @@ export const Login = () => {
 			return
 		}
 
-		setIsLoading(false)
 		navigate(ERoutes.storage)
+		setIsLoading(false)
 	}
 
 	const googleLoginPopup = useGoogleLogin({
