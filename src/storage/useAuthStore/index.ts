@@ -5,7 +5,9 @@ import {
 	EUseAuthStoreApiRoutes,
 	IAuthStore,
 	ILoginResponse,
+	ILoginWithGoogleResponse,
 	IRegistrationResponse,
+	IRegistrationWithGoogleResponse,
 } from './types'
 
 export const useAuthStore = create(
@@ -50,8 +52,45 @@ export const useAuthStore = create(
 					return false
 				}
 			},
-			async registrationWithGoogle(res) {
-				console.log(res)
+			async registrationWithGoogle(code) {
+				try {
+					const { status } = await axios.post<IRegistrationWithGoogleResponse>(
+						EUseAuthStoreApiRoutes.registrationWithGoogle,
+						{ code },
+					)
+
+					const isError = status === 400
+
+					if (isError) {
+						return false
+					}
+
+					return true
+				} catch (e) {
+					console.error(e)
+					return false
+				}
+			},
+			async loginWithGoogle(code) {
+				try {
+					const { data, status } = await axios.post<ILoginWithGoogleResponse>(
+						EUseAuthStoreApiRoutes.loginWithGoogle,
+						{ code },
+					)
+
+					const isError = status === 400
+
+					if (isError) {
+						return false
+					}
+
+					set({ token: data.accessToken })
+
+					return true
+				} catch (e) {
+					console.error(e)
+					return false
+				}
 			},
 		}),
 		{ name: 'auth-store' },

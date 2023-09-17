@@ -1,5 +1,3 @@
-import { CodeResponse } from '@react-oauth/google'
-
 export interface ILoginDto {
 	email: string
 	password: string
@@ -20,18 +18,25 @@ export interface IRegistrationResponse {
 	success: boolean
 }
 
-export interface IRegistrationWithGoogleDto {}
+export interface IRegistrationWithGoogleResponse {
+	success: boolean
+}
+
+export interface ILoginWithGoogleResponse {
+	accessToken: string
+}
 
 export interface IAuthStore {
 	token: null | string
 	login: (loginDto: ILoginDto) => Promise<boolean>
 	registration: (registrationDto: IRegistrationDto) => Promise<boolean>
-	registrationWithGoogle: (
-		res: Omit<CodeResponse, 'error' | 'error_description' | 'error_uri'>,
-	) => void
+	registrationWithGoogle: (code: string) => Promise<boolean>
+	loginWithGoogle: (code: string) => Promise<boolean>
 }
 
 export enum EUseAuthStoreApiRoutes {
 	login = '/api/auth/login',
 	registration = '/api/auth/registration',
+	loginWithGoogle = '/api/auth/login/google',
+	registrationWithGoogle = '/api/auth/registration/google',
 }

@@ -15,6 +15,7 @@ import HCaptcha from '@hcaptcha/react-hcaptcha'
 import { validateEmail, isObjectValuesEmpty, validatePassword } from '@/utils'
 import { useAuthStore } from '@/storage'
 import { ERoutes } from '@/routes'
+import { CodeResponse, useGoogleLogin } from '@react-oauth/google'
 
 const HCAPTCHA_SITEKEY = import.meta.env.VITE_HCAPTCHA_SITEKEY as string
 
@@ -46,6 +47,7 @@ export const Login = () => {
 	const [disableSubmit, setDisableSubmit] = useState<boolean>(true)
 	const [isLoading, setIsLoading] = useState<boolean>(false)
 	const login = useAuthStore(state => state.login)
+	const loginWithGoogle = useAuthStore(state => state.loginWithGoogle)
 	const navigate = useNavigate()
 	const hCaptchaRef = useRef<HCaptcha>(null)
 
@@ -114,8 +116,32 @@ export const Login = () => {
 		setForm(prev => ({ ...prev, token: '' }))
 	}
 
-	function googleAuthHandler() {
-		console.log('Google auth')
+	async function googleLoginOnSuccess(code: string) {
+		const isSuccess = await loginWithGoogle(code)
+
+		if (!isSuccess) {
+			setFormErrors(prev => ({ ...prev, email: 'Failed to register.' }))
+			return
+		}
+
+		navigate(ERoutes.storage)
+	}
+
+	async function googleLoginOnError(
+		e: Pick<CodeResponse, 'error' | 'error_description' | 'error_uri'>,
+	) {
+		console.error(e)
+	}
+
+	const googleLoginPopup = useGoogleLogin({
+		flow: 'auth-code',
+		onError: googleLoginOnError,
+		onSuccess: async ({ code }) => googleLoginOnSuccess(code),
+	})
+
+	async function googleAuthHandler() {
+		setIsLoading(true)
+		googleLoginPopup()
 	}
 
 	function vkAuthHandler() {

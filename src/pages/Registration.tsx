@@ -15,6 +15,8 @@ import HCaptcha from '@hcaptcha/react-hcaptcha'
 import { validateEmail, isObjectValuesEmpty, validatePassword } from '@/utils'
 import { useAuthStore } from '@/storage'
 import { useGoogleLogin } from '@react-oauth/google'
+import { useNavigate } from 'react-router'
+import { ERoutes } from '@/routes'
 
 const HCAPTCHA_SITEKEY = import.meta.env.VITE_HCAPTCHA_SITEKEY as string
 
@@ -46,6 +48,7 @@ export const Registration = () => {
 	const [formErrors, setFormErrors] = useState<IFormErrors>(defaultFormErrors)
 	const [disableSubmit, setDisableSubmit] = useState<boolean>(true)
 	const [isLoading, setIsLoading] = useState<boolean>(false)
+	const navigate = useNavigate()
 	const registration = useAuthStore(state => state.registration)
 	const registrationWithGoogle = useAuthStore(
 		state => state.registrationWithGoogle,
@@ -116,7 +119,16 @@ export const Registration = () => {
 
 	const googleAuthHandler = useGoogleLogin({
 		flow: 'auth-code',
-		onSuccess: res => registrationWithGoogle(res),
+		onSuccess: async res => {
+			const isSuccess = await registrationWithGoogle(res.code)
+
+			if (!isSuccess) {
+				setFormErrors(prev => ({ ...prev, email: 'Failed to register.' }))
+				return
+			}
+
+			navigate(ERoutes.login)
+		},
 	})
 
 	function vkAuthHandler() {
