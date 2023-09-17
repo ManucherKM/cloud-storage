@@ -117,30 +117,26 @@ export const Login = () => {
 	}
 
 	async function googleLoginOnSuccess(code: string) {
+		setIsLoading(true)
 		const isSuccess = await loginWithGoogle(code)
 
 		if (!isSuccess) {
-			setFormErrors(prev => ({ ...prev, email: 'Failed to register.' }))
+			setFormErrors(prev => ({ ...prev, email: 'Failed to login.' }))
+			setIsLoading(false)
 			return
 		}
 
+		setIsLoading(false)
 		navigate(ERoutes.storage)
-	}
-
-	async function googleLoginOnError(
-		e: Pick<CodeResponse, 'error' | 'error_description' | 'error_uri'>,
-	) {
-		console.error(e)
 	}
 
 	const googleLoginPopup = useGoogleLogin({
 		flow: 'auth-code',
-		onError: googleLoginOnError,
-		onSuccess: async ({ code }) => googleLoginOnSuccess(code),
+		onError: console.error,
+		onSuccess: async ({ code }) => await googleLoginOnSuccess(code),
 	})
 
 	async function googleAuthHandler() {
-		setIsLoading(true)
 		googleLoginPopup()
 	}
 

@@ -14,7 +14,7 @@ import {
 import HCaptcha from '@hcaptcha/react-hcaptcha'
 import { validateEmail, isObjectValuesEmpty, validatePassword } from '@/utils'
 import { useAuthStore } from '@/storage'
-import { useGoogleLogin } from '@react-oauth/google'
+import { CodeResponse, useGoogleLogin } from '@react-oauth/google'
 import { useNavigate } from 'react-router'
 import { ERoutes } from '@/routes'
 
@@ -117,19 +117,29 @@ export const Registration = () => {
 		setForm(prev => ({ ...prev, token: '' }))
 	}
 
-	const googleAuthHandler = useGoogleLogin({
+	async function googleRegistrationOnSuccess(code: string) {
+		setIsLoading(true)
+		const isSuccess = await registrationWithGoogle(code)
+
+		if (!isSuccess) {
+			setFormErrors(prev => ({ ...prev, email: 'Failed to register.' }))
+			setIsLoading(false)
+			return
+		}
+
+		setIsLoading(false)
+		navigate(ERoutes.storage)
+	}
+
+	const googleRegistrationPopup = useGoogleLogin({
 		flow: 'auth-code',
-		onSuccess: async res => {
-			const isSuccess = await registrationWithGoogle(res.code)
-
-			if (!isSuccess) {
-				setFormErrors(prev => ({ ...prev, email: 'Failed to register.' }))
-				return
-			}
-
-			navigate(ERoutes.login)
-		},
+		onError: console.error,
+		onSuccess: async ({ code }) => await googleRegistrationOnSuccess(code),
 	})
+
+	function googleAuthHandler() {
+		googleRegistrationPopup()
+	}
 
 	function vkAuthHandler() {
 		console.log('Vk auth')
