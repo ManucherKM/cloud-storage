@@ -7,18 +7,9 @@ const defaultErrors: IUseVKAuthError = {
 	errorDescription: '',
 }
 
-export function useVKAuth(target: IUseVKAuthTarget) {
+export function useVKAuth() {
 	const [code, setIsCode] = useState<string>('')
 	const [error, setError] = useState<IUseVKAuthError>(defaultErrors)
-
-	if (code.length || error.error?.length) {
-		return {
-			code,
-			error,
-		}
-	}
-
-	const url = getVKAuthUrl(target)
 
 	useEffect(() => {
 		const isCodeExist = window.location.href.includes('?code=')
@@ -45,5 +36,10 @@ export function useVKAuth(target: IUseVKAuthTarget) {
 		}
 	}, [window.location.href])
 
+	return [code, error]
+}
+
+export function redirectToVkAuthPage(target: IUseVKAuthTarget) {
+	const url = getVKAuthUrl(target)
 	window.location.href = url
 }
