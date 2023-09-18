@@ -122,7 +122,6 @@ export const Registration = () => {
 			setIsLoading(false)
 
 			// Stop further execution of the function.
-
 			return
 		}
 

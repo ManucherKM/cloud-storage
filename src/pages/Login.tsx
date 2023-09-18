@@ -50,65 +50,126 @@ const defaultFormErrors: ILoginFormErrors = {
 
 /** Component for user authorization. */
 export const Login = () => {
+	/** The state for the user's form. */
 	const [form, setForm] = useState<ILoginForm>(defaultForm)
+
+	/** The state for a form with user errors. */
 	const [formErrors, setFormErrors] =
 		useState<ILoginFormErrors>(defaultFormErrors)
+
+	/** The state to lock the submit button. */
 	const [disableSubmit, setDisableSubmit] = useState<boolean>(true)
+
+	/** The state for rendering the `Loader` component. */
 	const [isLoading, setIsLoading] = useState<boolean>(false)
-	const login = useAuthStore(state => state.login)
-	const loginWithGoogle = useAuthStore(state => state.loginWithGoogle)
+
+	/** State with authorization juice for VK. */
 	const [VKUserCode, _] = useVKAuth()
-	const loginWithVK = useAuthStore(state => state.loginWithVK)
+
+	/** With this feature, you can redirect the user to another route. */
 	const navigate = useNavigate()
+
+	/** You can use this function to send user data for authorization. */
+	const login = useAuthStore(state => state.login)
+
+	/**
+	 * With this feature, you can send your user details for authorization with
+	 * Google.
+	 */
+	const loginWithGoogle = useAuthStore(state => state.loginWithGoogle)
+
+	/**
+	 * With this feature, you can send your user details for authorization with
+	 * VK.
+	 */
+	const loginWithVK = useAuthStore(state => state.loginWithVK)
+
+	/** Link to the HCaptcha component in the DOM. */
 	const hCaptchaRef = useRef<HCaptcha>(null)
 
+	/** A handler function for submitting a form. */
 	async function submitHandler(e: FormEvent<HTMLFormElement>) {
+		// We prevent the default browser behavior so that the form is not submitted.
 		e.preventDefault()
 
+		// Check to see if the form submit button is disabled.
 		if (disableSubmit) {
+			// Stop further execution of the function.
 			return
 		}
 
+		// Showing the user the Loader.
 		setIsLoading(true)
 
+		// We get the result of sending data to the API.
 		const isLogin = await login(form)
 
+		// If authorization failed.
 		if (!isLogin) {
+			// Clearing the form.
 			setForm(defaultForm)
+
+			// We show an error message in the form.
 			setFormErrors(prev => ({
 				...prev,
 				email: 'Incorrect login or password.',
 			}))
+
+			// Reset the captcha.
 			hCaptchaRef.current?.resetCaptcha()
+
+			// We remove the Loader.
 			setIsLoading(false)
+
+			// Stop further execution of the function.
 			return
 		}
 
+		// We redirect the user to the storage page.
 		navigate(ERoutes.storage)
+
+		// Clearing the form.
 		setForm(defaultForm)
+
+		// We remove the Loader.
 		setIsLoading(false)
 	}
 
+	/** Handler function to retrieve the user's email. */
 	function emailHandler(e: ChangeEvent<HTMLInputElement>) {
+		// We receive the email entered by the user.
 		const email = e.target.value
+
+		// The result of validating the user's email.
 		const isValid = validateEmail(email)
 
+		// If the result is valid.
 		if (isValid) {
+			// Clearing the email field in an object with form errors.
 			setFormErrors(prev => ({ ...prev, email: '' }))
 		} else {
+			// Add an error message to the email field in the form errors object.
 			setFormErrors(prev => ({ ...prev, email: 'Enter a valid email' }))
 		}
 
+		// We add the email specified by the user to the form object.
 		setForm(prev => ({ ...prev, email }))
 	}
 
+	/** Handler function to retrieve the user's password. */
 	function passwordHandler(e: ChangeEvent<HTMLInputElement>) {
+		// We receive the password entered by the user.
 		const password = e.target.value
+
+		// The result of validating the user's password.
 		const isValid = validatePassword(password)
 
+		// If the result is valid.
 		if (isValid) {
+			// Clearing the password field in an object with form errors.
 			setFormErrors(prev => ({ ...prev, password: '' }))
 		} else {
+			// Add an error message to the password field in the form errors object.
 			setFormErrors(prev => ({
 				...prev,
 				password:
@@ -116,46 +177,80 @@ export const Login = () => {
 			}))
 		}
 
+		// We add the password specified by the user to the form object.
 		setForm(prev => ({ ...prev, password }))
 	}
 
+	/** A handler function to retrieve solved captcha data. */
 	function hCaptchaVerifyHandler(token: string) {
+		// Add the resulting token to the form object.
 		setForm(prev => ({ ...prev, token }))
 	}
 
+	/** Handler function to delete a token when it expires. */
 	function hCaptchaExpireHandler() {
+		// Delete the old token in the form object.
 		setForm(prev => ({ ...prev, token: '' }))
 	}
 
+	/**
+	 * Handler function to send user data to the API on successful authorization
+	 * via Google.
+	 */
 	async function googleLoginOnSuccess(code: string) {
+		// Showing the user the Loader.
 		setIsLoading(true)
+
+		// We get the result of sending data to the API.
 		const isSuccess = await loginWithGoogle(code)
 
+		// If the result is unsuccessful.
 		if (!isSuccess) {
+			// We show an error message in the form.
 			setFormErrors(prev => ({ ...prev, email: 'Failed to login.' }))
+
+			// We remove the Loader.
 			setIsLoading(false)
+
+			// Stop further execution of the function.
 			return
 		}
 
+		// We redirect the user to the storage page.
 		navigate(ERoutes.storage)
+
+		// We remove the Loader.
 		setIsLoading(false)
 	}
 
+	/** Function to bring up a popup window for authorization via Google. */
 	const googleLoginPopup = useGoogleLogin({
 		flow: 'auth-code',
 		onError: console.error,
 		onSuccess: async ({ code }) => await googleLoginOnSuccess(code),
 	})
 
+	/**
+	 * Function handler that will be called when you click on the authorization
+	 * button through Google.
+	 */
 	async function googleAuthHandler() {
+		// Call a pop-up window to authorization using Google.
 		googleLoginPopup()
 	}
 
+	/**
+	 * Function handler that will be called when you click on the authorization
+	 * button through VK.
+	 */
 	function vkAuthHandler() {
+		// If VKUserCode exists.
 		if (VKUserCode) {
+			// Stop further execution of the function.
 			return
 		}
 
+		// We redirect the user to the page for authorization via VK.
 		redirectToVkAuthPage({
 			clientId: VK_CLIENT_ID,
 			redirectUri: CLIENT_URL + '/login',
@@ -164,29 +259,48 @@ export const Login = () => {
 	}
 
 	useEffect(() => {
+		// If the code for registration via VK does not exist.
 		if (!VKUserCode) {
+			// Stop further execution of the function.
 			return
 		}
 
-		;(async () => {
+		/** Function for sending data of a user who authorization via VK to API. */
+		const fetchDataToApi = async () => {
+			// Showing the user the Loader.
 			setIsLoading(true)
+
+			// We get the result of sending data to the API.
 			const isSuccess = await loginWithVK(VKUserCode)
 
+			// If the result is unsuccessful.
 			if (!isSuccess) {
+				// We show an error message in the form.
 				setFormErrors(prev => ({ ...prev, email: 'Failed to login.' }))
+
+				// We remove the Loader.
 				setIsLoading(false)
+
+				// Stop further execution of the function.
 				return
 			}
 
+			// We redirect the user to the storage page.
 			navigate(ERoutes.storage)
+
+			// We remove the Loader.
 			setIsLoading(false)
-		})()
+		}
+
+		fetchDataToApi()
 	}, [VKUserCode])
 
 	useEffect(() => {
+		// The result of validating the form for errors.
 		const isValid =
 			isObjectValuesEmpty(formErrors) && !isObjectValuesEmpty(form)
 
+		// Change the disableSubmit state.
 		setDisableSubmit(!isValid)
 	}, [form])
 
