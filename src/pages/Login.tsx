@@ -22,31 +22,37 @@ const HCAPTCHA_SITEKEY = import.meta.env.VITE_HCAPTCHA_SITEKEY as string
 const VK_CLIENT_ID = import.meta.env.VITE_VK_CLIENT_ID as string
 const CLIENT_URL = import.meta.env.VITE_CLIENT_URL as string
 
-export interface IForm {
+/** Interface for the authorization form. */
+export interface ILoginForm {
 	email: string
 	password: string
 	token: string
 }
 
-const defaultForm: IForm = {
+/** The default value for the authorization form. */
+const defaultForm: ILoginForm = {
 	email: '',
 	password: '',
 	token: '',
 }
 
-export interface IFormErrors {
+/** Form interface with authorization errors. */
+export interface ILoginFormErrors {
 	email: string
 	password: string
 }
 
-const defaultFormErrors: IFormErrors = {
+/** Default value for a form with authorization errors. */
+const defaultFormErrors: ILoginFormErrors = {
 	email: '',
 	password: '',
 }
 
+/** Component for user authorization. */
 export const Login = () => {
-	const [form, setForm] = useState<IForm>(defaultForm)
-	const [formErrors, setFormErrors] = useState<IFormErrors>(defaultFormErrors)
+	const [form, setForm] = useState<ILoginForm>(defaultForm)
+	const [formErrors, setFormErrors] =
+		useState<ILoginFormErrors>(defaultFormErrors)
 	const [disableSubmit, setDisableSubmit] = useState<boolean>(true)
 	const [isLoading, setIsLoading] = useState<boolean>(false)
 	const login = useAuthStore(state => state.login)

@@ -51,65 +51,123 @@ const defaultFormErrors: IRegistrationFormErrors = {
 
 /** Component for user registration. */
 export const Registration = () => {
+	/** The state for the user's form. */
 	const [form, setForm] = useState<IRegistrationForm>(defaultForm)
+
+	/** The state for rendering the `ConfirmEmail` component. */
 	const [confirmEmail, setConfirmEmail] = useState<boolean>(false)
+
+	/** The state for a form with user errors. */
 	const [formErrors, setFormErrors] =
 		useState<IRegistrationFormErrors>(defaultFormErrors)
+
+	/** The state to lock the submit button. */
 	const [disableSubmit, setDisableSubmit] = useState<boolean>(true)
+
+	/** The state for rendering the `Loader` component. */
 	const [isLoading, setIsLoading] = useState<boolean>(false)
+
+	/** State with authorization juice for VK. */
 	const [VKUserCode, _] = useVKAuth()
+
+	/** With this feature, you can redirect the user to another route. */
 	const navigate = useNavigate()
+
+	/** You can use this function to send user data for registration. */
 	const registration = useAuthStore(state => state.registration)
+
+	/**
+	 * With this feature, you can send your user details for registration with
+	 * Google.
+	 */
 	const registrationWithGoogle = useAuthStore(
 		state => state.registrationWithGoogle,
 	)
+
+	/** With this feature, you can send your user details for registration with VK. */
 	const registrationWithVk = useAuthStore(state => state.registrationWithVk)
+
+	/** Link to the HCaptcha component in the DOM. */
 	const hCaptchaRef = useRef<HCaptcha>(null)
 
+	/** A handler function for submitting a form. */
 	async function submitHandler(e: FormEvent<HTMLFormElement>) {
+		// We prevent the default browser behavior so that the form is not submitted.
 		e.preventDefault()
 
+		// Check to see if the form submit button is disabled.
 		if (disableSubmit) {
+			// Stop further execution of the function.
 			return
 		}
 
+		// Showing the user the Loader.
 		setIsLoading(true)
 
+		// We get the result of sending data to the API.
 		const isRegistered = await registration(form)
 
+		// If registration failed.
 		if (!isRegistered) {
+			// Clearing the form.
 			setForm(defaultForm)
+
+			// We show an error message in the form.
 			setFormErrors(prev => ({ ...prev, email: 'Failed to register.' }))
+
+			// Reset the captcha.
 			hCaptchaRef.current?.resetCaptcha()
+
+			// We remove the Loader.
 			setIsLoading(false)
+
+			// Stop further execution of the function.
+
 			return
 		}
 
+		// We remove the Loader.
 		setIsLoading(false)
 
+		// Change the state of confirmEmail.
 		setConfirmEmail(true)
 	}
 
+	/** Handler function to retrieve the user's email. */
 	function emailHandler(e: ChangeEvent<HTMLInputElement>) {
+		// We receive the email entered by the user.
 		const email = e.target.value
+
+		// The result of validating the user's email.
 		const isValid = validateEmail(email)
 
+		// If the result is valid.
 		if (isValid) {
+			// Clearing the email field in an object with form errors.
 			setFormErrors(prev => ({ ...prev, email: '' }))
 		} else {
+			// Add an error message to the email field in the form errors object.
 			setFormErrors(prev => ({ ...prev, email: 'Enter a valid email' }))
 		}
 
+		// We add the email specified by the user to the form object.
 		setForm(prev => ({ ...prev, email }))
 	}
 
+	/** Handler function to retrieve the user's password. */
 	function passwordHandler(e: ChangeEvent<HTMLInputElement>) {
+		// We receive the password entered by the user.
 		const password = e.target.value
+
+		// The result of validating the user's password.
 		const isValid = validatePassword(password)
 
+		// If the result is valid.
 		if (isValid) {
+			// Clearing the password field in an object with form errors.
 			setFormErrors(prev => ({ ...prev, password: '' }))
 		} else {
+			// Add an error message to the password field in the form errors object.
 			setFormErrors(prev => ({
 				...prev,
 				password:
@@ -117,46 +175,80 @@ export const Registration = () => {
 			}))
 		}
 
+		// We add the password specified by the user to the form object.
 		setForm(prev => ({ ...prev, password }))
 	}
 
+	/** A handler function to retrieve solved captcha data. */
 	function hCaptchaVerifyHandler(token: string) {
+		// Add the resulting token to the form object.
 		setForm(prev => ({ ...prev, token }))
 	}
 
+	/** Handler function to delete a token when it expires. */
 	function hCaptchaExpireHandler() {
+		// Delete the old token in the form object.
 		setForm(prev => ({ ...prev, token: '' }))
 	}
 
+	/**
+	 * Handler function to send user data to the API on successful authorization
+	 * via Google.
+	 */
 	async function googleRegistrationOnSuccess(code: string) {
+		// Showing the user the Loader.
 		setIsLoading(true)
+
+		// We get the result of sending data to the API.
 		const isSuccess = await registrationWithGoogle(code)
 
+		// If the result is unsuccessful.
 		if (!isSuccess) {
+			// We show an error message in the form.
 			setFormErrors(prev => ({ ...prev, email: 'Failed to register.' }))
+
+			// We remove the Loader.
 			setIsLoading(false)
+
+			// Stop further execution of the function.
 			return
 		}
 
+		// We redirect the user to the authorization page.
 		navigate(ERoutes.login)
+
+		// We remove the Loader.
 		setIsLoading(false)
 	}
 
+	/** Function to bring up a popup window for registration via Google. */
 	const googleRegistrationPopup = useGoogleLogin({
 		flow: 'auth-code',
 		onError: console.error,
 		onSuccess: async ({ code }) => await googleRegistrationOnSuccess(code),
 	})
 
+	/**
+	 * Function handler that will be called when you click on the registration
+	 * button through Google.
+	 */
 	function googleAuthHandler() {
+		// Call a pop-up window to register using Google.
 		googleRegistrationPopup()
 	}
 
+	/**
+	 * Function handler that will be called when you click on the registration
+	 * button through VK.
+	 */
 	async function vkAuthHandler() {
+		// If VKUserCode exists.
 		if (VKUserCode) {
+			// Stop further execution of the function.
 			return
 		}
 
+		// We redirect the user to the page for registration via VK.
 		redirectToVkAuthPage({
 			clientId: VK_CLIENT_ID,
 			redirectUri: CLIENT_URL + '/registration',
@@ -165,32 +257,52 @@ export const Registration = () => {
 	}
 
 	useEffect(() => {
+		// If the code for registration via VK does not exist.
 		if (!VKUserCode) {
+			// Stop further execution of the function.
 			return
 		}
 
-		;(async () => {
+		/** Function for sending data of a user who registers via VK to API. */
+		const fetchDataToApi = async () => {
+			// Showing the user the Loader.
 			setIsLoading(true)
+
+			// We get the result of sending data to the API.
 			const isSuccess = await registrationWithVk(VKUserCode)
 
+			// If the result is unsuccessful.
 			if (!isSuccess) {
+				// We show an error message in the form.
 				setFormErrors(prev => ({ ...prev, email: 'Failed to register.' }))
+
+				// We remove the Loader.
 				setIsLoading(false)
+
+				// Stop further execution of the function.
 				return
 			}
 
+			// We redirect the user to the authorization page.
 			navigate(ERoutes.login)
+
+			// We remove the Loader.
 			setIsLoading(false)
-		})()
+		}
+
+		fetchDataToApi()
 	}, [VKUserCode])
 
 	useEffect(() => {
+		// The result of validating the form for errors.
 		const isValid =
 			isObjectValuesEmpty(formErrors) && !isObjectValuesEmpty(form)
 
+		// Change the disableSubmit state.
 		setDisableSubmit(!isValid)
 	}, [form])
 
+	// If the user needs to verify their account.
 	if (confirmEmail) {
 		return <ConfirmEmail email={form.email} />
 	}
