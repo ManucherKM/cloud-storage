@@ -1,30 +1,33 @@
 import { useEffect, useState } from 'react'
 import { getVKAuthUrl } from './utils/getVKAuthUrl'
-import { IUseVKAuthError, IUseVKAuthTarget } from './types'
+import { IRedirectVKAuthTarget, IUseVKAuthError } from './types'
 
+/** Default value for an object with `useVKAuth` hook errors. */
 const defaultErrors: IUseVKAuthError = {
 	error: '',
 	errorDescription: '',
 }
 
+/** With this hook you can get code for authorization via VK. */
 export function useVKAuth() {
 	const [code, setIsCode] = useState<string>('')
 	const [error, setError] = useState<IUseVKAuthError>(defaultErrors)
 
+	const params = new URLSearchParams(window.location.search)
+
 	useEffect(() => {
-		const isCodeExist = window.location.href.includes('?code=')
+		const currentCode = params.get('code')
+		const isCodeExist = !!currentCode
 
 		if (isCodeExist) {
-			const code = window.location.href.split('?code=')[1]
-			setIsCode(code)
+			setIsCode(currentCode)
 			return
 		}
 
-		const isErrorExist = window.location.href.includes('?error=')
+		const currentError = params.get('error')
+		const isErrorExist = !!currentError
 
 		if (isErrorExist) {
-			const params = new URLSearchParams(window.location.search)
-
 			const error = params.get('error')
 			const errorDescription = params.get('error_description')
 
@@ -36,10 +39,11 @@ export function useVKAuth() {
 		}
 	}, [window.location.href])
 
-	return [code, error]
+	return [code, error] as [string, IUseVKAuthError]
 }
 
-export function redirectToVkAuthPage(target: IUseVKAuthTarget) {
+/** With this feature, you can redirect the user to the VK authorization page. */
+export function redirectToVkAuthPage(target: IRedirectVKAuthTarget) {
 	const url = getVKAuthUrl(target)
 	window.location.href = url
 }

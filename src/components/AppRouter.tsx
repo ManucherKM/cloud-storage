@@ -1,8 +1,9 @@
-import { Routes, Route } from 'react-router'
-import { privateRoutes, publicRoutes } from '@/routes'
-import { NotFound } from 'kuui-react'
+import { privateRoutes, publicRoutes } from '@/configuration/routes'
 import { useAuthStore } from '@/storage'
+import { NotFound } from 'kuui-react'
+import { Route, Routes } from 'react-router'
 
+/** The component responsible for drawing routes. */
 export const AppRouter = () => {
 	const isAuth: boolean = !!useAuthStore(state => state.token)
 

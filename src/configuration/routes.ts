@@ -1,10 +1,12 @@
 import { Home, Login, Registration, Storage } from '@/pages'
 
+/** Application Routing Interface. */
 export interface IRoute {
 	path: string
 	component: () => JSX.Element
 }
 
+/** Enumeration of possible application routes. */
 export enum ERoutes {
 	home = '/',
 	login = '/login',
@@ -12,6 +14,7 @@ export enum ERoutes {
 	storage = '/storage',
 }
 
+/** Public Routes */
 export const publicRoutes: IRoute[] = [
 	{
 		path: ERoutes.home,
@@ -27,6 +30,7 @@ export const publicRoutes: IRoute[] = [
 	},
 ]
 
+/** Private Routes */
 export const privateRoutes: IRoute[] = [
 	{
 		path: ERoutes.storage,

@@ -1,4 +1,4 @@
-import axios from '@/axios'
+import axios from '@/configuration/axios'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import {
@@ -6,10 +6,13 @@ import {
 	IAuthStore,
 	ILoginResponse,
 	ILoginWithGoogleResponse,
+	ILoginWithVKResponse,
 	IRegistrationResponse,
 	IRegistrationWithGoogleResponse,
+	IRegistrationWithVKResponse,
 } from './types'
 
+/** With this hook you can access the authorization repository. */
 export const useAuthStore = create(
 	persist<IAuthStore>(
 		set => ({
@@ -35,14 +38,12 @@ export const useAuthStore = create(
 			},
 			async registration(registrationDto) {
 				try {
-					const { status } = await axios.post<IRegistrationResponse>(
+					const { data } = await axios.post<IRegistrationResponse>(
 						EUseAuthStoreApiRoutes.registration,
 						registrationDto,
 					)
 
-					const isError = status === 400
-
-					if (isError) {
+					if (!data?.success) {
 						return false
 					}
 
@@ -54,14 +55,12 @@ export const useAuthStore = create(
 			},
 			async registrationWithGoogle(code) {
 				try {
-					const { status } = await axios.post<IRegistrationWithGoogleResponse>(
+					const { data } = await axios.post<IRegistrationWithGoogleResponse>(
 						EUseAuthStoreApiRoutes.registrationWithGoogle,
 						{ code },
 					)
 
-					const isError = status === 400
-
-					if (isError) {
+					if (!data?.success) {
 						return false
 					}
 
@@ -73,18 +72,52 @@ export const useAuthStore = create(
 			},
 			async loginWithGoogle(code) {
 				try {
-					const { data, status } = await axios.post<ILoginWithGoogleResponse>(
+					const { data } = await axios.post<ILoginWithGoogleResponse>(
 						EUseAuthStoreApiRoutes.loginWithGoogle,
 						{ code },
 					)
 
-					const isError = status === 400
-
-					if (isError) {
+					if (!data?.accessToken) {
 						return false
 					}
 
 					set({ token: data.accessToken })
+
+					return true
+				} catch (e) {
+					console.error(e)
+					return false
+				}
+			},
+			async registrationWithVk(code) {
+				try {
+					console.log(code)
+
+					const { data } = await axios.post<IRegistrationWithVKResponse>(
+						EUseAuthStoreApiRoutes.registrationWithVK,
+						{ code },
+					)
+
+					if (!data?.success) {
+						return false
+					}
+
+					return true
+				} catch (e) {
+					console.error(e)
+					return false
+				}
+			},
+			async loginWithVK(code) {
+				try {
+					const { data } = await axios.post<ILoginWithVKResponse>(
+						EUseAuthStoreApiRoutes.loginWithVK,
+						{ code },
+					)
+
+					if (!data?.accessToken) {
+						return false
+					}
 
 					return true
 				} catch (e) {

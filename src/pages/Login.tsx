@@ -1,23 +1,26 @@
-import { useEffect, useState, useRef } from 'react'
-import type { ChangeEvent, FormEvent } from 'react'
+import { ERoutes } from '@/configuration/routes'
+import { redirectToVkAuthPage, useVKAuth } from '@/hooks'
+import { useAuthStore } from '@/storage'
+import { isObjectValuesEmpty, validateEmail, validatePassword } from '@/utils'
+import HCaptcha from '@hcaptcha/react-hcaptcha'
+import { useGoogleLogin } from '@react-oauth/google'
 import {
-	Title,
-	Form,
-	Input,
 	Button,
-	TextError,
-	Loader,
+	Form,
 	GoogleAuth,
+	Input,
+	Loader,
+	TextError,
+	Title,
 	VKAuth,
 } from 'kuui-react'
+import type { ChangeEvent, FormEvent } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import HCaptcha from '@hcaptcha/react-hcaptcha'
-import { validateEmail, isObjectValuesEmpty, validatePassword } from '@/utils'
-import { useAuthStore } from '@/storage'
-import { ERoutes } from '@/routes'
-import { useGoogleLogin } from '@react-oauth/google'
 
 const HCAPTCHA_SITEKEY = import.meta.env.VITE_HCAPTCHA_SITEKEY as string
+const VK_CLIENT_ID = import.meta.env.VITE_VK_CLIENT_ID as string
+const CLIENT_URL = import.meta.env.VITE_CLIENT_URL as string
 
 export interface IForm {
 	email: string
@@ -48,6 +51,8 @@ export const Login = () => {
 	const [isLoading, setIsLoading] = useState<boolean>(false)
 	const login = useAuthStore(state => state.login)
 	const loginWithGoogle = useAuthStore(state => state.loginWithGoogle)
+	const [VKUserCode, _] = useVKAuth()
+	const loginWithVK = useAuthStore(state => state.loginWithVK)
 	const navigate = useNavigate()
 	const hCaptchaRef = useRef<HCaptcha>(null)
 
@@ -141,8 +146,36 @@ export const Login = () => {
 	}
 
 	function vkAuthHandler() {
-		console.log('Vk auth')
+		if (VKUserCode) {
+			return
+		}
+
+		redirectToVkAuthPage({
+			clientId: VK_CLIENT_ID,
+			redirectUri: CLIENT_URL + '/login',
+			display: 'page',
+		})
 	}
+
+	useEffect(() => {
+		if (!VKUserCode) {
+			return
+		}
+
+		;(async () => {
+			setIsLoading(true)
+			const isSuccess = await loginWithVK(VKUserCode)
+
+			if (!isSuccess) {
+				setFormErrors(prev => ({ ...prev, email: 'Failed to login.' }))
+				setIsLoading(false)
+				return
+			}
+
+			navigate(ERoutes.storage)
+			setIsLoading(false)
+		})()
+	}, [VKUserCode])
 
 	useEffect(() => {
 		const isValid =

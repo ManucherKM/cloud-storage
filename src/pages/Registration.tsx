@@ -1,62 +1,69 @@
-import { useEffect, useState, useRef } from 'react'
-import type { ChangeEvent, FormEvent } from 'react'
-import {
-	Title,
-	Form,
-	Input,
-	Button,
-	TextError,
-	Loader,
-	GoogleAuth,
-	VKAuth,
-	ConfirmEmail,
-} from 'kuui-react'
-import HCaptcha from '@hcaptcha/react-hcaptcha'
-import { validateEmail, isObjectValuesEmpty, validatePassword } from '@/utils'
+import { ERoutes } from '@/configuration/routes'
+import { redirectToVkAuthPage, useVKAuth } from '@/hooks'
 import { useAuthStore } from '@/storage'
+import { isObjectValuesEmpty, validateEmail, validatePassword } from '@/utils'
+import HCaptcha from '@hcaptcha/react-hcaptcha'
 import { useGoogleLogin } from '@react-oauth/google'
+import {
+	Button,
+	ConfirmEmail,
+	Form,
+	GoogleAuth,
+	Input,
+	Loader,
+	TextError,
+	Title,
+	VKAuth,
+} from 'kuui-react'
+import type { ChangeEvent, FormEvent } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
-import { ERoutes } from '@/routes'
-import { redirectToVkAuthPage, useVKAuth } from '@/hooks/useVKAuth'
 
 const HCAPTCHA_SITEKEY = import.meta.env.VITE_HCAPTCHA_SITEKEY as string
 const VK_CLIENT_ID = import.meta.env.VITE_VK_CLIENT_ID as string
 const CLIENT_URL = import.meta.env.VITE_CLIENT_URL as string
 
-export interface IForm {
+/** Interface for the enrollment form. */
+export interface IRegistrationForm {
 	email: string
 	password: string
 	token: string
 }
 
-const defaultForm: IForm = {
+/** The default value for the enrollment form. */
+const defaultForm: IRegistrationForm = {
 	email: '',
 	password: '',
 	token: '',
 }
 
-export interface IFormErrors {
+/** Form interface with registration errors. */
+export interface IRegistrationFormErrors {
 	email: string
 	password: string
 }
 
-const defaultFormErrors: IFormErrors = {
+/** Default value for a form with registration errors. */
+const defaultFormErrors: IRegistrationFormErrors = {
 	email: '',
 	password: '',
 }
 
+/** Component for user registration. */
 export const Registration = () => {
-	const [form, setForm] = useState<IForm>(defaultForm)
+	const [form, setForm] = useState<IRegistrationForm>(defaultForm)
 	const [confirmEmail, setConfirmEmail] = useState<boolean>(false)
-	const [formErrors, setFormErrors] = useState<IFormErrors>(defaultFormErrors)
+	const [formErrors, setFormErrors] =
+		useState<IRegistrationFormErrors>(defaultFormErrors)
 	const [disableSubmit, setDisableSubmit] = useState<boolean>(true)
 	const [isLoading, setIsLoading] = useState<boolean>(false)
-	const [VKUserCode] = useVKAuth()
+	const [VKUserCode, _] = useVKAuth()
 	const navigate = useNavigate()
 	const registration = useAuthStore(state => state.registration)
 	const registrationWithGoogle = useAuthStore(
 		state => state.registrationWithGoogle,
 	)
+	const registrationWithVk = useAuthStore(state => state.registrationWithVk)
 	const hCaptchaRef = useRef<HCaptcha>(null)
 
 	async function submitHandler(e: FormEvent<HTMLFormElement>) {
@@ -158,7 +165,23 @@ export const Registration = () => {
 	}
 
 	useEffect(() => {
-		console.log(VKUserCode)
+		if (!VKUserCode) {
+			return
+		}
+
+		;(async () => {
+			setIsLoading(true)
+			const isSuccess = await registrationWithVk(VKUserCode)
+
+			if (!isSuccess) {
+				setFormErrors(prev => ({ ...prev, email: 'Failed to register.' }))
+				setIsLoading(false)
+				return
+			}
+
+			navigate(ERoutes.login)
+			setIsLoading(false)
+		})()
 	}, [VKUserCode])
 
 	useEffect(() => {
