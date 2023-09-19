@@ -51,7 +51,7 @@ export interface IRegistrationWithGoogleResponse {
  */
 
 export interface ILoginWithVKResponse {
-	accessToken: boolean
+	accessToken: string
 }
 
 /**

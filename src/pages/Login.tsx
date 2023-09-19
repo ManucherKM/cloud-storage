@@ -84,10 +84,7 @@ export const Login = () => {
 	 */
 	const loginWithVK = useAuthStore(state => state.loginWithVK)
 
-	/**
-	 * URi to which the user will be redirected after authorization on the VK
-	 * page.
-	 */
+	/** The URI that was used during registration. */
 	const vkRedirectUri = CLIENT_URL + '/login'
 
 	/** Link to the HCaptcha component in the DOM. */

@@ -91,8 +91,6 @@ export const useAuthStore = create(
 			},
 			async registrationWithVk(code, redirectUri) {
 				try {
-					console.log(code)
-
 					const { data } = await axios.post<IRegistrationWithVKResponse>(
 						EUseAuthStoreApiRoutes.registrationWithVK,
 						{ code, redirectUri },
@@ -118,6 +116,8 @@ export const useAuthStore = create(
 					if (!data?.accessToken) {
 						return false
 					}
+
+					set({ token: data.accessToken })
 
 					return true
 				} catch (e) {
