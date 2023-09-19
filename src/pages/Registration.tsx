@@ -87,7 +87,10 @@ export const Registration = () => {
 	/** With this feature, you can send your user details for registration with VK. */
 	const registrationWithVk = useAuthStore(state => state.registrationWithVk)
 
-	/** URi to which the user will be redirected after authorization on the VK page. */
+	/**
+	 * URi to which the user will be redirected after authorization on the VK
+	 * page.
+	 */
 	const vkRedirectUri = CLIENT_URL + '/registration'
 
 	/** Link to the HCaptcha component in the DOM. */
