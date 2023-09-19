@@ -84,6 +84,9 @@ export const Login = () => {
 	 */
 	const loginWithVK = useAuthStore(state => state.loginWithVK)
 
+	/** URi to which the user will be redirected after authorization on the VK page. */
+	const vkRedirectUri = CLIENT_URL + '/login'
+
 	/** Link to the HCaptcha component in the DOM. */
 	const hCaptchaRef = useRef<HCaptcha>(null)
 
@@ -244,16 +247,10 @@ export const Login = () => {
 	 * button through VK.
 	 */
 	function vkAuthHandler() {
-		// If VKUserCode exists.
-		if (VKUserCode) {
-			// Stop further execution of the function.
-			return
-		}
-
 		// We redirect the user to the page for authorization via VK.
 		redirectToVkAuthPage({
 			clientId: VK_CLIENT_ID,
-			redirectUri: CLIENT_URL + '/login',
+			redirectUri: vkRedirectUri,
 			display: 'page',
 		})
 	}
@@ -271,7 +268,7 @@ export const Login = () => {
 			setIsLoading(true)
 
 			// We get the result of sending data to the API.
-			const isSuccess = await loginWithVK(VKUserCode)
+			const isSuccess = await loginWithVK(VKUserCode, vkRedirectUri)
 
 			// If the result is unsuccessful.
 			if (!isSuccess) {

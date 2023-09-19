@@ -69,8 +69,8 @@ export interface IAuthStore {
 	registration: (registrationDto: IRegistrationTarget) => Promise<boolean>
 	registrationWithGoogle: (code: string) => Promise<boolean>
 	loginWithGoogle: (code: string) => Promise<boolean>
-	registrationWithVk: (code: string) => Promise<boolean>
-	loginWithVK: (code: string) => Promise<boolean>
+	registrationWithVk: (code: string, redirectUri: string) => Promise<boolean>
+	loginWithVK: (code: string, redirectUri: string) => Promise<boolean>
 }
 
 /** Routes for api requests to the authorization store. */

@@ -87,6 +87,9 @@ export const Registration = () => {
 	/** With this feature, you can send your user details for registration with VK. */
 	const registrationWithVk = useAuthStore(state => state.registrationWithVk)
 
+	/** URi to which the user will be redirected after authorization on the VK page. */
+	const vkRedirectUri = CLIENT_URL + '/registration'
+
 	/** Link to the HCaptcha component in the DOM. */
 	const hCaptchaRef = useRef<HCaptcha>(null)
 
@@ -241,16 +244,10 @@ export const Registration = () => {
 	 * button through VK.
 	 */
 	async function vkAuthHandler() {
-		// If VKUserCode exists.
-		if (VKUserCode) {
-			// Stop further execution of the function.
-			return
-		}
-
 		// We redirect the user to the page for registration via VK.
 		redirectToVkAuthPage({
 			clientId: VK_CLIENT_ID,
-			redirectUri: CLIENT_URL + '/registration',
+			redirectUri: vkRedirectUri,
 			display: 'page',
 		})
 	}
@@ -268,7 +265,7 @@ export const Registration = () => {
 			setIsLoading(true)
 
 			// We get the result of sending data to the API.
-			const isSuccess = await registrationWithVk(VKUserCode)
+			const isSuccess = await registrationWithVk(VKUserCode, vkRedirectUri)
 
 			// If the result is unsuccessful.
 			if (!isSuccess) {

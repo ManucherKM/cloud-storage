@@ -89,13 +89,13 @@ export const useAuthStore = create(
 					return false
 				}
 			},
-			async registrationWithVk(code) {
+			async registrationWithVk(code, redirectUri) {
 				try {
 					console.log(code)
 
 					const { data } = await axios.post<IRegistrationWithVKResponse>(
 						EUseAuthStoreApiRoutes.registrationWithVK,
-						{ code },
+						{ code, redirectUri },
 					)
 
 					if (!data?.success) {
@@ -108,11 +108,11 @@ export const useAuthStore = create(
 					return false
 				}
 			},
-			async loginWithVK(code) {
+			async loginWithVK(code, redirectUri) {
 				try {
 					const { data } = await axios.post<ILoginWithVKResponse>(
 						EUseAuthStoreApiRoutes.loginWithVK,
-						{ code },
+						{ code, redirectUri },
 					)
 
 					if (!data?.accessToken) {
