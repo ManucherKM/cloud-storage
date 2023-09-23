@@ -15,7 +15,7 @@ import {
 	Title,
 	VKAuth,
 } from 'kuui-react'
-import type { ChangeEvent, FormEvent } from 'react'
+import type { ChangeEvent, FC, FormEvent } from 'react'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 
@@ -50,7 +50,7 @@ const defaultFormErrors: IRegistrationFormErrors = {
 }
 
 /** Component for user registration. */
-export const Registration = () => {
+export const Registration: FC = () => {
 	/** The state for the user's form. */
 	const [form, setForm] = useState<IRegistrationForm>(defaultForm)
 

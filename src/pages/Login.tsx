@@ -14,7 +14,7 @@ import {
 	Title,
 	VKAuth,
 } from 'kuui-react'
-import type { ChangeEvent, FormEvent } from 'react'
+import type { ChangeEvent, FC, FormEvent } from 'react'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -49,7 +49,7 @@ const defaultFormErrors: ILoginFormErrors = {
 }
 
 /** Component for user authorization. */
-export const Login = () => {
+export const Login: FC = () => {
 	/** The state for the user's form. */
 	const [form, setForm] = useState<ILoginForm>(defaultForm)
 
