@@ -1,5 +1,5 @@
 import { ERoutes } from '@/configuration/routes'
-import { useAuthStore, useStore } from '@/storage'
+import { useAuthStore, useFileStore, useStore } from '@/storage'
 import { Alert, ListItem, Title } from 'kuui-react'
 import { FC, useState } from 'react'
 import { useNavigate } from 'react-router'
@@ -8,10 +8,20 @@ export const Menu: FC = () => {
 	const [serverError, setServerError] = useState<string>('')
 	const logout = useAuthStore(store => store.logout)
 	const setLoading = useStore(store => store.setLoading)
+	const getFiles = useFileStore(store => store.getFiles)
 	const navigate = useNavigate()
 
-	function storageHandler() {
-		console.log('Storage')
+	async function storageHandler() {
+		setLoading(true)
+		const isSucces = await getFiles()
+
+		if (isSucces) {
+			setServerError('Failed to retrieve user files.')
+			setLoading(false)
+			return
+		}
+
+		setLoading(false)
 	}
 
 	function settingHandler() {
