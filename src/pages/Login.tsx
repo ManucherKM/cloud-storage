@@ -5,6 +5,7 @@ import { isObjectValuesEmpty, validateEmail, validatePassword } from '@/utils'
 import HCaptcha from '@hcaptcha/react-hcaptcha'
 import { useGoogleLogin } from '@react-oauth/google'
 import {
+	Alert,
 	Button,
 	Form,
 	GoogleAuth,
@@ -57,6 +58,8 @@ export const Login: FC = () => {
 	const [formErrors, setFormErrors] =
 		useState<ILoginFormErrors>(defaultFormErrors)
 
+	const [serverError, setServerError] = useState<string>('')
+
 	/** The state to lock the submit button. */
 	const [disableSubmit, setDisableSubmit] = useState<boolean>(true)
 
@@ -70,19 +73,19 @@ export const Login: FC = () => {
 	const navigate = useNavigate()
 
 	/** You can use this function to send user data for authorization. */
-	const login = useAuthStore(state => state.login)
+	const login = useAuthStore(store => store.login)
 
 	/**
 	 * With this feature, you can send your user details for authorization with
 	 * Google.
 	 */
-	const loginWithGoogle = useAuthStore(state => state.loginWithGoogle)
+	const loginWithGoogle = useAuthStore(store => store.loginWithGoogle)
 
 	/**
 	 * With this feature, you can send your user details for authorization with
 	 * VK.
 	 */
-	const loginWithVK = useAuthStore(state => state.loginWithVK)
+	const loginWithVK = useAuthStore(store => store.loginWithVK)
 
 	/** The URI that was used during registration. */
 	const vkRedirectUri = CLIENT_URL + '/login'
@@ -112,11 +115,7 @@ export const Login: FC = () => {
 			// Clearing the form.
 			setForm(defaultForm)
 
-			// We show an error message in the form.
-			setFormErrors(prev => ({
-				...prev,
-				email: 'Incorrect login or password.',
-			}))
+			setServerError('Incorrect login or password.')
 
 			// Reset the captcha.
 			hCaptchaRef.current?.resetCaptcha()
@@ -209,8 +208,7 @@ export const Login: FC = () => {
 
 		// If the result is unsuccessful.
 		if (!isSuccess) {
-			// We show an error message in the form.
-			setFormErrors(prev => ({ ...prev, email: 'Failed to login.' }))
+			setServerError('Failed to login.')
 
 			// We remove the Loader.
 			setIsLoading(false)
@@ -272,8 +270,7 @@ export const Login: FC = () => {
 
 			// If the result is unsuccessful.
 			if (!isSuccess) {
-				// We show an error message in the form.
-				setFormErrors(prev => ({ ...prev, email: 'Failed to login.' }))
+				setServerError('Failed to login.')
 
 				// We remove the Loader.
 				setIsLoading(false)
@@ -292,6 +289,10 @@ export const Login: FC = () => {
 		fetchDataToApi()
 	}, [VKUserCode])
 
+	function serverErrorTimeHandler() {
+		setServerError('')
+	}
+
 	useEffect(() => {
 		// The result of validating the form for errors.
 		const isValid =
@@ -303,6 +304,15 @@ export const Login: FC = () => {
 
 	return (
 		<div className="w-full h-full flex flex-col justify-center items-center">
+			{serverError.length !== 0 && (
+				<Alert
+					text={serverError}
+					variant="error"
+					time={8}
+					onTimeUp={serverErrorTimeHandler}
+				/>
+			)}
+
 			{isLoading && <Loader />}
 
 			<Title className="mb-5">Authorization</Title>

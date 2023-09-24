@@ -1,9 +1,10 @@
 import { Home, Login, Registration, Storage } from '@/pages'
+import { FC } from 'react'
 
 /** Application Routing Interface. */
 export interface IRoute {
 	path: string
-	component: () => JSX.Element
+	component: FC
 }
 
 /** Enumeration of possible application routes. */

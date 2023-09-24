@@ -14,6 +14,7 @@ import {
 	TextError,
 	Title,
 	VKAuth,
+	Alert,
 } from 'kuui-react'
 import type { ChangeEvent, FC, FormEvent } from 'react'
 import { useEffect, useRef, useState } from 'react'
@@ -61,6 +62,8 @@ export const Registration: FC = () => {
 	const [formErrors, setFormErrors] =
 		useState<IRegistrationFormErrors>(defaultFormErrors)
 
+	const [serverError, setServerError] = useState<string>('')
+
 	/** The state to lock the submit button. */
 	const [disableSubmit, setDisableSubmit] = useState<boolean>(true)
 
@@ -74,7 +77,7 @@ export const Registration: FC = () => {
 	const navigate = useNavigate()
 
 	/** You can use this function to send user data for registration. */
-	const registration = useAuthStore(state => state.registration)
+	const registration = useAuthStore(store => store.registration)
 
 	/**
 	 * With this feature, you can send your user details for registration with
@@ -85,7 +88,7 @@ export const Registration: FC = () => {
 	)
 
 	/** With this feature, you can send your user details for registration with VK. */
-	const registrationWithVk = useAuthStore(state => state.registrationWithVk)
+	const registrationWithVk = useAuthStore(store => store.registrationWithVk)
 
 	/**
 	 * URi to which the user will be redirected after authorization on the VK
@@ -118,8 +121,7 @@ export const Registration: FC = () => {
 			// Clearing the form.
 			setForm(defaultForm)
 
-			// We show an error message in the form.
-			setFormErrors(prev => ({ ...prev, email: 'Failed to register.' }))
+			setServerError('Failed to register.')
 
 			// Reset the captcha.
 			hCaptchaRef.current?.resetCaptcha()
@@ -209,8 +211,7 @@ export const Registration: FC = () => {
 
 		// If the result is unsuccessful.
 		if (!isSuccess) {
-			// We show an error message in the form.
-			setFormErrors(prev => ({ ...prev, email: 'Failed to register.' }))
+			setServerError('Failed to register.')
 
 			// We remove the Loader.
 			setIsLoading(false)
@@ -255,6 +256,10 @@ export const Registration: FC = () => {
 		})
 	}
 
+	function serverErrorTimeHandler() {
+		setServerError('')
+	}
+
 	useEffect(() => {
 		// If the code for registration via VK does not exist.
 		if (!VKUserCode) {
@@ -272,8 +277,7 @@ export const Registration: FC = () => {
 
 			// If the result is unsuccessful.
 			if (!isSuccess) {
-				// We show an error message in the form.
-				setFormErrors(prev => ({ ...prev, email: 'Failed to register.' }))
+				setServerError('Failed to register.')
 
 				// We remove the Loader.
 				setIsLoading(false)
@@ -308,6 +312,15 @@ export const Registration: FC = () => {
 
 	return (
 		<div className="w-full h-full flex flex-col justify-center items-center">
+			{serverError.length !== 0 && (
+				<Alert
+					text={serverError}
+					variant="error"
+					time={8}
+					onTimeUp={serverErrorTimeHandler}
+				/>
+			)}
+
 			{isLoading && <Loader />}
 
 			<Title className="mb-5">Registration</Title>

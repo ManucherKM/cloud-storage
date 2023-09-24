@@ -62,6 +62,10 @@ export interface IRegistrationWithVKResponse {
 	success: boolean
 }
 
+export interface ILogoutResponse {
+	success: boolean
+}
+
 /** Interface to the authorization store. */
 export interface IAuthStore {
 	token: null | string
@@ -71,6 +75,7 @@ export interface IAuthStore {
 	loginWithGoogle: (code: string) => Promise<boolean>
 	registrationWithVk: (code: string, redirectUri: string) => Promise<boolean>
 	loginWithVK: (code: string, redirectUri: string) => Promise<boolean>
+	logout: () => Promise<boolean>
 }
 
 /** Routes for api requests to the authorization store. */
@@ -81,4 +86,5 @@ export enum EUseAuthStoreApiRoutes {
 	registrationWithGoogle = '/api/auth/registration/google',
 	registrationWithVK = '/api/auth/registration/vk',
 	loginWithVK = '/api/auth/login/vk',
+	logout = 'api/auth/logout',
 }

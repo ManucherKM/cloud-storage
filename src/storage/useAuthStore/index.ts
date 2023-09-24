@@ -7,6 +7,7 @@ import {
 	ILoginResponse,
 	ILoginWithGoogleResponse,
 	ILoginWithVKResponse,
+	ILogoutResponse,
 	IRegistrationResponse,
 	IRegistrationWithGoogleResponse,
 	IRegistrationWithVKResponse,
@@ -124,6 +125,19 @@ export const useAuthStore = create(
 					console.error(e)
 					return false
 				}
+			},
+			async logout() {
+				const { data } = await axios.get<ILogoutResponse>(
+					EUseAuthStoreApiRoutes.logout,
+				)
+
+				if (!data.success) {
+					return false
+				}
+
+				set({ token: '' })
+
+				return true
 			},
 		}),
 		{ name: 'auth-store' },
