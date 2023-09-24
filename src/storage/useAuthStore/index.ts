@@ -127,17 +127,22 @@ export const useAuthStore = create(
 				}
 			},
 			async logout() {
-				const { data } = await axios.get<ILogoutResponse>(
-					EUseAuthStoreApiRoutes.logout,
-				)
+				try {
+					const { data } = await axios.get<ILogoutResponse>(
+						EUseAuthStoreApiRoutes.logout,
+					)
 
-				if (!data.success) {
+					if (!data?.success) {
+						return false
+					}
+
+					set({ token: '' })
+
+					return true
+				} catch (e) {
+					console.error(e)
 					return false
 				}
-
-				set({ token: '' })
-
-				return true
 			},
 		}),
 		{ name: 'auth-store' },
