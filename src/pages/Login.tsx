@@ -1,6 +1,6 @@
 import { ERoutes } from '@/configuration/routes'
 import { redirectToVkAuthPage, useVKAuth } from '@/hooks'
-import { useAuthStore } from '@/storage'
+import { useAuthStore, useStore } from '@/storage'
 import { isObjectValuesEmpty, validateEmail, validatePassword } from '@/utils'
 import HCaptcha from '@hcaptcha/react-hcaptcha'
 import { useGoogleLogin } from '@react-oauth/google'
@@ -64,7 +64,7 @@ export const Login: FC = () => {
 	const [disableSubmit, setDisableSubmit] = useState<boolean>(true)
 
 	/** The state for rendering the `Loader` component. */
-	const [isLoading, setIsLoading] = useState<boolean>(false)
+	const setLoading = useStore(store => store.setLoading)
 
 	/** State with authorization juice for VK. */
 	const [VKUserCode, _] = useVKAuth()
@@ -105,7 +105,7 @@ export const Login: FC = () => {
 		}
 
 		// Showing the user the Loader.
-		setIsLoading(true)
+		setLoading(true)
 
 		// We get the result of sending data to the API.
 		const isLogin = await login(form)
@@ -121,7 +121,7 @@ export const Login: FC = () => {
 			hCaptchaRef.current?.resetCaptcha()
 
 			// We remove the Loader.
-			setIsLoading(false)
+			setLoading(false)
 
 			// Stop further execution of the function.
 			return
@@ -134,7 +134,7 @@ export const Login: FC = () => {
 		setForm(defaultForm)
 
 		// We remove the Loader.
-		setIsLoading(false)
+		setLoading(false)
 	}
 
 	/** Handler function to retrieve the user's email. */
@@ -201,7 +201,7 @@ export const Login: FC = () => {
 	 */
 	async function googleLoginOnSuccess(code: string) {
 		// Showing the user the Loader.
-		setIsLoading(true)
+		setLoading(true)
 
 		// We get the result of sending data to the API.
 		const isSuccess = await loginWithGoogle(code)
@@ -211,7 +211,7 @@ export const Login: FC = () => {
 			setServerError('Failed to login.')
 
 			// We remove the Loader.
-			setIsLoading(false)
+			setLoading(false)
 
 			// Stop further execution of the function.
 			return
@@ -221,7 +221,7 @@ export const Login: FC = () => {
 		navigate(ERoutes.storage)
 
 		// We remove the Loader.
-		setIsLoading(false)
+		setLoading(false)
 	}
 
 	/** Function to bring up a popup window for authorization via Google. */
@@ -263,7 +263,7 @@ export const Login: FC = () => {
 		/** Function for sending data of a user who authorization via VK to API. */
 		const fetchDataToApi = async () => {
 			// Showing the user the Loader.
-			setIsLoading(true)
+			setLoading(true)
 
 			// We get the result of sending data to the API.
 			const isSuccess = await loginWithVK(VKUserCode, vkRedirectUri)
@@ -273,7 +273,7 @@ export const Login: FC = () => {
 				setServerError('Failed to login.')
 
 				// We remove the Loader.
-				setIsLoading(false)
+				setLoading(false)
 
 				// Stop further execution of the function.
 				return
@@ -283,7 +283,7 @@ export const Login: FC = () => {
 			navigate(ERoutes.storage)
 
 			// We remove the Loader.
-			setIsLoading(false)
+			setLoading(false)
 		}
 
 		fetchDataToApi()
@@ -312,8 +312,6 @@ export const Login: FC = () => {
 					onTimeUp={serverErrorTimeHandler}
 				/>
 			)}
-
-			{isLoading && <Loader />}
 
 			<Title className="mb-5">Authorization</Title>
 

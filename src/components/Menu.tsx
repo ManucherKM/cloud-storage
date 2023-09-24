@@ -1,5 +1,5 @@
 import { ERoutes } from '@/configuration/routes'
-import { useAuthStore } from '@/storage'
+import { useAuthStore, useStore } from '@/storage'
 import { Alert, ListItem, Title } from 'kuui-react'
 import { FC, useState } from 'react'
 import { useNavigate } from 'react-router'
@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router'
 export const Menu: FC = () => {
 	const [serverError, setServerError] = useState<string>('')
 	const logout = useAuthStore(store => store.logout)
+	const setLoading = useStore(store => store.setLoading)
 	const navigate = useNavigate()
 
 	function storageHandler() {
@@ -22,14 +23,17 @@ export const Menu: FC = () => {
 	}
 
 	async function logoutHandler() {
+		setLoading(true)
 		const isSuccess = await logout()
 
 		if (!isSuccess) {
+			setLoading(false)
 			setServerError('Failed to logout.')
 			return
 		}
 
 		navigate(ERoutes.home)
+		setLoading(false)
 	}
 
 	function serverErrorTimeHandler() {

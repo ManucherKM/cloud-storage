@@ -1,6 +1,6 @@
 import { ERoutes } from '@/configuration/routes'
 import { redirectToVkAuthPage, useVKAuth } from '@/hooks'
-import { useAuthStore } from '@/storage'
+import { useAuthStore, useStore } from '@/storage'
 import { isObjectValuesEmpty, validateEmail, validatePassword } from '@/utils'
 import HCaptcha from '@hcaptcha/react-hcaptcha'
 import { useGoogleLogin } from '@react-oauth/google'
@@ -67,9 +67,6 @@ export const Registration: FC = () => {
 	/** The state to lock the submit button. */
 	const [disableSubmit, setDisableSubmit] = useState<boolean>(true)
 
-	/** The state for rendering the `Loader` component. */
-	const [isLoading, setIsLoading] = useState<boolean>(false)
-
 	/** State with authorization juice for VK. */
 	const [VKUserCode, _] = useVKAuth()
 
@@ -78,6 +75,9 @@ export const Registration: FC = () => {
 
 	/** You can use this function to send user data for registration. */
 	const registration = useAuthStore(store => store.registration)
+
+	/** The state for rendering the `Loader` component. */
+	const setLoading = useStore(store => store.setLoading)
 
 	/**
 	 * With this feature, you can send your user details for registration with
@@ -111,7 +111,7 @@ export const Registration: FC = () => {
 		}
 
 		// Showing the user the Loader.
-		setIsLoading(true)
+		setLoading(true)
 
 		// We get the result of sending data to the API.
 		const isRegistered = await registration(form)
@@ -127,14 +127,14 @@ export const Registration: FC = () => {
 			hCaptchaRef.current?.resetCaptcha()
 
 			// We remove the Loader.
-			setIsLoading(false)
+			setLoading(false)
 
 			// Stop further execution of the function.
 			return
 		}
 
 		// We remove the Loader.
-		setIsLoading(false)
+		setLoading(false)
 
 		// Change the state of confirmEmail.
 		setConfirmEmail(true)
@@ -204,7 +204,7 @@ export const Registration: FC = () => {
 	 */
 	async function googleRegistrationOnSuccess(code: string) {
 		// Showing the user the Loader.
-		setIsLoading(true)
+		setLoading(true)
 
 		// We get the result of sending data to the API.
 		const isSuccess = await registrationWithGoogle(code)
@@ -214,7 +214,7 @@ export const Registration: FC = () => {
 			setServerError('Failed to register.')
 
 			// We remove the Loader.
-			setIsLoading(false)
+			setLoading(false)
 
 			// Stop further execution of the function.
 			return
@@ -224,7 +224,7 @@ export const Registration: FC = () => {
 		navigate(ERoutes.login)
 
 		// We remove the Loader.
-		setIsLoading(false)
+		setLoading(false)
 	}
 
 	/** Function to bring up a popup window for registration via Google. */
@@ -270,7 +270,7 @@ export const Registration: FC = () => {
 		/** Function for sending data of a user who registers via VK to API. */
 		const fetchDataToApi = async () => {
 			// Showing the user the Loader.
-			setIsLoading(true)
+			setLoading(true)
 
 			// We get the result of sending data to the API.
 			const isSuccess = await registrationWithVk(VKUserCode, vkRedirectUri)
@@ -280,7 +280,7 @@ export const Registration: FC = () => {
 				setServerError('Failed to register.')
 
 				// We remove the Loader.
-				setIsLoading(false)
+				setLoading(false)
 
 				// Stop further execution of the function.
 				return
@@ -290,7 +290,7 @@ export const Registration: FC = () => {
 			navigate(ERoutes.login)
 
 			// We remove the Loader.
-			setIsLoading(false)
+			setLoading(false)
 		}
 
 		fetchDataToApi()
@@ -320,8 +320,6 @@ export const Registration: FC = () => {
 					onTimeUp={serverErrorTimeHandler}
 				/>
 			)}
-
-			{isLoading && <Loader />}
 
 			<Title className="mb-5">Registration</Title>
 
