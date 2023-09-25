@@ -30,6 +30,7 @@ export const Menu: FC<IMenu> = ({ title }) => {
 		<>
 			<Title className="px-4 py-2">{title}</Title>
 			<ListItem
+				to={ERoutes.storage}
 				align="left"
 				title="Storage"
 				svgIcon={
@@ -40,6 +41,7 @@ export const Menu: FC<IMenu> = ({ title }) => {
 				}
 			/>
 			<ListItem
+				to={ERoutes.trash}
 				align="left"
 				title="Trash"
 				svgIcon={
@@ -49,6 +51,7 @@ export const Menu: FC<IMenu> = ({ title }) => {
 				}
 			/>
 			<ListItem
+				to={ERoutes.setting}
 				align="left"
 				title="Setting"
 				svgIcon={
@@ -58,6 +61,7 @@ export const Menu: FC<IMenu> = ({ title }) => {
 				}
 			/>
 			<ListItem
+				to={'#'}
 				align="left"
 				title="Logout"
 				onClick={logoutHandler}
