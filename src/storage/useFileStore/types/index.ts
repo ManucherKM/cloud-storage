@@ -8,8 +8,10 @@ export interface IFile {
 export interface IFileStore {
 	files: IFile[]
 	getFiles: () => Promise<boolean>
+	sendFiles: (files: FileList) => Promise<boolean>
 }
 
 export enum EFileStoreApiRoutes {
-	files = '/api/file/userId',
+	getFilesByUserId = '/api/file/userId',
+	sendFiles = '/api/file',
 }

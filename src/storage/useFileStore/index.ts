@@ -19,7 +19,7 @@ export const useFileStore = create(
 					}
 
 					const { data, status } = await axios.get<IFile[]>(
-						EFileStoreApiRoutes.files,
+						EFileStoreApiRoutes.getFilesByUserId,
 						{
 							headers: {
 								Authorization: getAuthorization(token),
@@ -32,6 +32,50 @@ export const useFileStore = create(
 					}
 
 					set({ files: data })
+
+					return true
+				} catch (e) {
+					console.error(e)
+					return false
+				}
+			},
+
+			async sendFiles(files) {
+				try {
+					const token = useAuthStore.getState().token
+
+					if (!token) {
+						console.log('The token could not be found.')
+						return false
+					}
+
+					const promises = []
+
+					for (const file of files) {
+						const formData = new FormData()
+
+						formData.append('file', file)
+
+						const promise = axios.post<IFile>(
+							EFileStoreApiRoutes.sendFiles,
+							formData,
+							{
+								headers: {
+									Authorization: getAuthorization(token),
+								},
+							},
+						)
+
+						promises.push(promise)
+					}
+
+					const data = await Promise.all(promises)
+
+					const formatedData = data.map(({ data }) => data)
+
+					set(prev => ({
+						files: [...prev.files, ...formatedData],
+					}))
 
 					return true
 				} catch (e) {

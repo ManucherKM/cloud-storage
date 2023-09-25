@@ -1,19 +1,28 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useState, ChangeEvent } from 'react'
 import { Menu } from '@/components/Menu'
 import { IFile } from '@/storage/useFileStore/types'
 import { useFileStore } from '@/storage'
 import { List } from '@/components'
-import { FileItem } from 'kuui-react'
+import { FileAdd, FileItem } from 'kuui-react'
 import { getExtension } from '@/utils'
 
 const filterValidFiles = (arr: IFile[]) => arr.filter(item => !item.inTheTrash)
 
 export const Storage: FC = () => {
-	// const [files, setFiles] = useState<IFile[]>([])
-
 	const files = useFileStore(store => store.files)
+	const sendFiles = useFileStore(store => store.sendFiles)
 
 	const [showFiles, setShowFiles] = useState<IFile[]>([])
+
+	async function changeFilesHandler(e: ChangeEvent<HTMLInputElement>) {
+		const selectedFiles = e.target.files
+
+		if (!selectedFiles) {
+			return
+		}
+
+		const isSuccess = await sendFiles(selectedFiles)
+	}
 
 	useEffect(() => {
 		const filteredFiles = filterValidFiles(files)
@@ -36,11 +45,12 @@ export const Storage: FC = () => {
 									key={item.id}
 									name={name}
 									extension={extension}
-									onClick={() => console.log(item.fileName)}
+									onClick={() => console.log}
 								/>
 							)
 						}}
 					/>
+					<FileAdd onChange={changeFilesHandler} fill="all" multiple />
 				</div>
 			</div>
 		</div>
