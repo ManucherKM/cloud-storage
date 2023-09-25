@@ -79,7 +79,7 @@ export interface IAuthStore {
 }
 
 /** Routes for api requests to the authorization store. */
-export enum EUseAuthStoreApiRoutes {
+export enum EAuthStoreApiRoutes {
 	login = '/api/auth/login',
 	registration = '/api/auth/registration',
 	loginWithGoogle = '/api/auth/login/google',

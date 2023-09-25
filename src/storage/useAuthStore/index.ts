@@ -2,7 +2,7 @@ import axios from '@/configuration/axios'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import {
-	EUseAuthStoreApiRoutes,
+	EAuthStoreApiRoutes,
 	IAuthStore,
 	ILoginResponse,
 	ILoginWithGoogleResponse,
@@ -21,7 +21,7 @@ export const useAuthStore = create(
 			async login(loginDto) {
 				try {
 					const { data } = await axios.post<ILoginResponse>(
-						EUseAuthStoreApiRoutes.login,
+						EAuthStoreApiRoutes.login,
 						loginDto,
 					)
 
@@ -40,7 +40,7 @@ export const useAuthStore = create(
 			async registration(registrationDto) {
 				try {
 					const { data } = await axios.post<IRegistrationResponse>(
-						EUseAuthStoreApiRoutes.registration,
+						EAuthStoreApiRoutes.registration,
 						registrationDto,
 					)
 
@@ -57,7 +57,7 @@ export const useAuthStore = create(
 			async registrationWithGoogle(code) {
 				try {
 					const { data } = await axios.post<IRegistrationWithGoogleResponse>(
-						EUseAuthStoreApiRoutes.registrationWithGoogle,
+						EAuthStoreApiRoutes.registrationWithGoogle,
 						{ code },
 					)
 
@@ -74,7 +74,7 @@ export const useAuthStore = create(
 			async loginWithGoogle(code) {
 				try {
 					const { data } = await axios.post<ILoginWithGoogleResponse>(
-						EUseAuthStoreApiRoutes.loginWithGoogle,
+						EAuthStoreApiRoutes.loginWithGoogle,
 						{ code },
 					)
 
@@ -93,7 +93,7 @@ export const useAuthStore = create(
 			async registrationWithVk(code, redirectUri) {
 				try {
 					const { data } = await axios.post<IRegistrationWithVKResponse>(
-						EUseAuthStoreApiRoutes.registrationWithVK,
+						EAuthStoreApiRoutes.registrationWithVK,
 						{ code, redirectUri },
 					)
 
@@ -110,7 +110,7 @@ export const useAuthStore = create(
 			async loginWithVK(code, redirectUri) {
 				try {
 					const { data } = await axios.post<ILoginWithVKResponse>(
-						EUseAuthStoreApiRoutes.loginWithVK,
+						EAuthStoreApiRoutes.loginWithVK,
 						{ code, redirectUri },
 					)
 
@@ -129,7 +129,7 @@ export const useAuthStore = create(
 			async logout() {
 				try {
 					const { data } = await axios.get<ILogoutResponse>(
-						EUseAuthStoreApiRoutes.logout,
+						EAuthStoreApiRoutes.logout,
 					)
 
 					if (!data?.success) {

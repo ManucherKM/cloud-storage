@@ -14,7 +14,6 @@ export const useFileStore = create(
 					const token = useAuthStore.getState().token
 
 					if (!token) {
-						console.log('The token could not be found.')
 						return false
 					}
 
@@ -45,7 +44,6 @@ export const useFileStore = create(
 					const token = useAuthStore.getState().token
 
 					if (!token) {
-						console.log('The token could not be found.')
 						return false
 					}
 

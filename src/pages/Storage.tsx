@@ -1,40 +1,76 @@
 import { FC, useEffect, useState, ChangeEvent } from 'react'
-import { Menu } from '@/components/Menu'
+import { Menu } from '@/components'
 import { IFile } from '@/storage/useFileStore/types'
-import { useFileStore } from '@/storage'
-import { List } from '@/components'
-import { FileAdd, FileItem } from 'kuui-react'
-import { getExtension } from '@/utils'
-
-const filterValidFiles = (arr: IFile[]) => arr.filter(item => !item.inTheTrash)
+import { useFileStore, useStore } from '@/storage'
+import { List, Dashboard } from '@/components'
+import { Alert, FileAdd, FileItem } from 'kuui-react'
+import { getExtension, getValidFiles } from '@/utils'
 
 export const Storage: FC = () => {
+	const [serverError, setServerError] = useState<string>('')
+	const [showFiles, setShowFiles] = useState<IFile[]>([])
 	const files = useFileStore(store => store.files)
 	const sendFiles = useFileStore(store => store.sendFiles)
-
-	const [showFiles, setShowFiles] = useState<IFile[]>([])
+	const getFiles = useFileStore(store => store.getFiles)
+	const setLoading = useStore(store => store.setLoading)
 
 	async function changeFilesHandler(e: ChangeEvent<HTMLInputElement>) {
+		setLoading(true)
 		const selectedFiles = e.target.files
 
 		if (!selectedFiles) {
+			setLoading(false)
 			return
 		}
 
 		const isSuccess = await sendFiles(selectedFiles)
+
+		if (!isSuccess) {
+			setServerError('Failed to send file.')
+			setLoading(false)
+			return
+		}
+
+		setServerError('')
+		setLoading(false)
+	}
+
+	function serverErrorTimeHandler() {
+		setServerError('')
 	}
 
 	useEffect(() => {
-		const filteredFiles = filterValidFiles(files)
+		const filteredFiles = getValidFiles(files)
 		setShowFiles(filteredFiles)
 	}, [files])
-	return (
-		<div className="w-full h-full p-5">
-			<div className="w-full h-full bg-[--kuui-black-500] rounded-xl flex overflow-hidden">
-				<div className="w-full min-w-[150px] max-w-[200px] border-solid border-0 border-r border-[--kuui-black-250]">
-					<Menu />
-				</div>
 
+	useEffect(() => {
+		const fetchFiles = async () => {
+			setLoading(true)
+			const isSuccess = await getFiles()
+
+			if (!isSuccess) {
+				setServerError('Failed to receive files.')
+				setLoading(false)
+				return
+			}
+
+			setLoading(false)
+		}
+
+		fetchFiles()
+	}, [])
+	return (
+		<>
+			{serverError.length !== 0 && (
+				<Alert
+					text={serverError}
+					variant="error"
+					time={8}
+					onTimeUp={serverErrorTimeHandler}
+				/>
+			)}
+			<Dashboard title="Storage">
 				<div className="w-full p-5 grid grid-cols-8 grid-rows-4 tb_lg:grid-cols-6 tb_sm:grid-cols-4 tb_sm:grid-rows-6">
 					<List
 						arr={showFiles}
@@ -52,7 +88,7 @@ export const Storage: FC = () => {
 					/>
 					<FileAdd onChange={changeFilesHandler} fill="all" multiple />
 				</div>
-			</div>
-		</div>
+			</Dashboard>
+		</>
 	)
 }

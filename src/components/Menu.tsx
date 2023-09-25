@@ -4,33 +4,14 @@ import { Alert, ListItem, Title } from 'kuui-react'
 import { FC, useState } from 'react'
 import { useNavigate } from 'react-router'
 
-export const Menu: FC = () => {
-	const [serverError, setServerError] = useState<string>('')
+export interface IMenu {
+	title: string
+}
+
+export const Menu: FC<IMenu> = ({ title }) => {
 	const logout = useAuthStore(store => store.logout)
 	const setLoading = useStore(store => store.setLoading)
-	const getFiles = useFileStore(store => store.getFiles)
 	const navigate = useNavigate()
-
-	async function storageHandler() {
-		setLoading(true)
-		const isSucces = await getFiles()
-
-		if (!isSucces) {
-			setServerError('Failed to retrieve user files.')
-			setLoading(false)
-			return
-		}
-
-		setLoading(false)
-	}
-
-	function settingHandler() {
-		console.log('Setting')
-	}
-
-	function trashHandler() {
-		console.log('Trash')
-	}
 
 	async function logoutHandler() {
 		setLoading(true)
@@ -38,7 +19,6 @@ export const Menu: FC = () => {
 
 		if (!isSuccess) {
 			setLoading(false)
-			setServerError('Failed to logout.')
 			return
 		}
 
@@ -46,25 +26,12 @@ export const Menu: FC = () => {
 		setLoading(false)
 	}
 
-	function serverErrorTimeHandler() {
-		setServerError('')
-	}
-
 	return (
 		<>
-			{serverError.length !== 0 && (
-				<Alert
-					text={serverError}
-					variant="error"
-					time={8}
-					onTimeUp={serverErrorTimeHandler}
-				/>
-			)}
-			<Title className="px-4 py-2">Menu</Title>
+			<Title className="px-4 py-2">{title}</Title>
 			<ListItem
 				align="left"
 				title="Storage"
-				onClick={storageHandler}
 				svgIcon={
 					<svg width="20px" height="20px" viewBox="0 0 35 35">
 						<path d="M17.5,34.75A17.25,17.25,0,1,1,34.75,17.5,17.269,17.269,0,0,1,17.5,34.75Zm0-32A14.75,14.75,0,1,0,32.25,17.5,14.766,14.766,0,0,0,17.5,2.75Z" />
@@ -75,7 +42,6 @@ export const Menu: FC = () => {
 			<ListItem
 				align="left"
 				title="Trash"
-				onClick={trashHandler}
 				svgIcon={
 					<svg width="20" height="20" viewBox="0 0 24 24">
 						<path d="M 10 2 L 9 3 L 4 3 L 4 5 L 5 5 L 5 20 C 5 20.522222 5.1913289 21.05461 5.5683594 21.431641 C 5.9453899 21.808671 6.4777778 22 7 22 L 17 22 C 17.522222 22 18.05461 21.808671 18.431641 21.431641 C 18.808671 21.05461 19 20.522222 19 20 L 19 5 L 20 5 L 20 3 L 15 3 L 14 2 L 10 2 z M 7 5 L 17 5 L 17 20 L 7 20 L 7 5 z M 9 7 L 9 18 L 11 18 L 11 7 L 9 7 z M 13 7 L 13 18 L 15 18 L 15 7 L 13 7 z"></path>
@@ -85,7 +51,6 @@ export const Menu: FC = () => {
 			<ListItem
 				align="left"
 				title="Setting"
-				onClick={settingHandler}
 				svgIcon={
 					<svg width="20" height="20" viewBox="0 0 50 50">
 						<path d="M47.16,21.221l-5.91-0.966c-0.346-1.186-0.819-2.326-1.411-3.405l3.45-4.917c0.279-0.397,0.231-0.938-0.112-1.282 l-3.889-3.887c-0.347-0.346-0.893-0.391-1.291-0.104l-4.843,3.481c-1.089-0.602-2.239-1.08-3.432-1.427l-1.031-5.886 C28.607,2.35,28.192,2,27.706,2h-5.5c-0.49,0-0.908,0.355-0.987,0.839l-0.956,5.854c-1.2,0.345-2.352,0.818-3.437,1.412l-4.83-3.45 c-0.399-0.285-0.942-0.239-1.289,0.106L6.82,10.648c-0.343,0.343-0.391,0.883-0.112,1.28l3.399,4.863 c-0.605,1.095-1.087,2.254-1.438,3.46l-5.831,0.971c-0.482,0.08-0.836,0.498-0.836,0.986v5.5c0,0.485,0.348,0.9,0.825,0.985 l5.831,1.034c0.349,1.203,0.831,2.362,1.438,3.46l-3.441,4.813c-0.284,0.397-0.239,0.942,0.106,1.289l3.888,3.891 c0.343,0.343,0.884,0.391,1.281,0.112l4.87-3.411c1.093,0.601,2.248,1.078,3.445,1.424l0.976,5.861C21.3,47.647,21.717,48,22.206,48 h5.5c0.485,0,0.9-0.348,0.984-0.825l1.045-5.89c1.199-0.353,2.348-0.833,3.43-1.435l4.905,3.441 c0.398,0.281,0.938,0.232,1.282-0.111l3.888-3.891c0.346-0.347,0.391-0.894,0.104-1.292l-3.498-4.857 c0.593-1.08,1.064-2.222,1.407-3.408l5.918-1.039c0.479-0.084,0.827-0.5,0.827-0.985v-5.5C47.999,21.718,47.644,21.3,47.16,21.221z M25,32c-3.866,0-7-3.134-7-7c0-3.866,3.134-7,7-7s7,3.134,7,7C32,28.866,28.866,32,25,32z"></path>

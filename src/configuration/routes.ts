@@ -1,4 +1,4 @@
-import { Home, Login, Registration, Storage } from '@/pages'
+import { Home, Login, Registration, Setting, Storage, Trash } from '@/pages'
 import { FC } from 'react'
 
 /** Application Routing Interface. */
@@ -13,6 +13,8 @@ export enum ERoutes {
 	login = '/login',
 	registration = '/registration',
 	storage = '/storage',
+	trash = '/trash',
+	setting = '/setting',
 }
 
 /** Public Routes */
@@ -36,5 +38,13 @@ export const privateRoutes: IRoute[] = [
 	{
 		path: ERoutes.storage,
 		component: Storage,
+	},
+	{
+		path: ERoutes.trash,
+		component: Trash,
+	},
+	{
+		path: ERoutes.setting,
+		component: Setting,
 	},
 ]
