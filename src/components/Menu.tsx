@@ -15,7 +15,7 @@ export const Menu: FC = () => {
 		setLoading(true)
 		const isSucces = await getFiles()
 
-		if (isSucces) {
+		if (!isSucces) {
 			setServerError('Failed to retrieve user files.')
 			setLoading(false)
 			return
