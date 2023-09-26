@@ -1,18 +1,20 @@
 import { FC, useEffect, useState, ChangeEvent } from 'react'
-import { Menu } from '@/components'
 import { IFile } from '@/storage/useFileStore/types'
 import { useFileStore, useStore } from '@/storage'
 import { List, Dashboard } from '@/components'
 import { Alert, FileAdd, FileItem } from 'kuui-react'
 import { getExtension, getValidFiles } from '@/utils'
+import { useWindowFilesTransfer } from '@/hooks'
 
 export const Storage: FC = () => {
+	const [isTransferFiles, setIsTransferFiles] = useState<boolean>(false)
 	const [serverError, setServerError] = useState<string>('')
 	const [showFiles, setShowFiles] = useState<IFile[]>([])
 	const files = useFileStore(store => store.files)
 	const sendFiles = useFileStore(store => store.sendFiles)
 	const getFiles = useFileStore(store => store.getFiles)
 	const setLoading = useStore(store => store.setLoading)
+	const isTransferFilesOnWindow = useWindowFilesTransfer()
 
 	async function changeFilesHandler(e: ChangeEvent<HTMLInputElement>) {
 		setLoading(true)
@@ -38,6 +40,36 @@ export const Storage: FC = () => {
 	function serverErrorTimeHandler() {
 		setServerError('')
 	}
+
+	function closeFillAddHandler() {
+		setIsTransferFiles(false)
+	}
+
+	async function changeFilesFileAddHandler(files: FileList | null) {
+		setIsTransferFiles(false)
+		setLoading(true)
+
+		if (!files) {
+			return
+		}
+
+		const isSuccess = await sendFiles(files)
+
+		if (!isSuccess) {
+			setServerError('Failed to send file.')
+			setLoading(false)
+			return
+		}
+
+		setServerError('')
+		setLoading(false)
+	}
+
+	useEffect(() => {
+		if (isTransferFilesOnWindow) {
+			setIsTransferFiles(true)
+		}
+	}, [isTransferFilesOnWindow])
 
 	useEffect(() => {
 		const filteredFiles = getValidFiles(files)
@@ -66,28 +98,41 @@ export const Storage: FC = () => {
 				<Alert
 					text={serverError}
 					variant="error"
-					time={8}
+					time={6}
 					onTimeUp={serverErrorTimeHandler}
 				/>
 			)}
 			<Dashboard title="Storage">
-				<div className="w-full p-5 grid grid-cols-8 grid-rows-4 gap-2 overflow-auto tb_lg:grid-cols-6 tb_sm:grid-cols-4 tb_sm:grid-rows-6 ph_lg:grid-cols-2">
-					<List
-						arr={showFiles}
-						callback={item => {
-							const [name, extension] = getExtension(item.originalName)
-							return (
-								<FileItem
-									key={item.id}
-									name={name}
-									extension={extension}
-									onClick={() => console.log}
-								/>
-							)
-						}}
+				{isTransferFiles ? (
+					<FileAdd
+						variant="dragAndDrop"
+						onClose={closeFillAddHandler}
+						onChangeFiles={changeFilesFileAddHandler}
 					/>
-					<FileAdd onChange={changeFilesHandler} fill="all" multiple />
-				</div>
+				) : (
+					<div className="w-full p-5 grid grid-cols-8 grid-rows-4 gap-2 overflow-auto tb_lg:grid-cols-6 tb_sm:grid-cols-4 tb_sm:grid-rows-6 ph_lg:grid-cols-2">
+						<List
+							arr={showFiles}
+							callback={item => {
+								const [name, extension] = getExtension(item.originalName)
+								return (
+									<FileItem
+										key={item.id}
+										name={name}
+										extension={extension}
+										onClick={() => console.log}
+									/>
+								)
+							}}
+						/>
+						<FileAdd
+							onChange={changeFilesHandler}
+							variant="area"
+							fill="all"
+							multiple
+						/>
+					</div>
+				)}
 			</Dashboard>
 		</>
 	)

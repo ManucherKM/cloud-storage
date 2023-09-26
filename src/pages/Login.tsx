@@ -308,7 +308,7 @@ export const Login: FC = () => {
 				<Alert
 					text={serverError}
 					variant="error"
-					time={8}
+					time={6}
 					onTimeUp={serverErrorTimeHandler}
 				/>
 			)}
