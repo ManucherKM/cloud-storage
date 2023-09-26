@@ -71,7 +71,7 @@ export const Storage: FC = () => {
 				/>
 			)}
 			<Dashboard title="Storage">
-				<div className="w-full p-5 grid grid-cols-8 grid-rows-4 tb_lg:grid-cols-6 tb_sm:grid-cols-4 tb_sm:grid-rows-6">
+				<div className="w-full p-5 grid grid-cols-8 grid-rows-4 gap-2 overflow-auto tb_lg:grid-cols-6 tb_sm:grid-cols-4 tb_sm:grid-rows-6 ph_lg:grid-cols-2">
 					<List
 						arr={showFiles}
 						callback={item => {
