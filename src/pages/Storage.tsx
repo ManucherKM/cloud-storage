@@ -143,6 +143,7 @@ export const Storage: FC = () => {
 								onChange={changeFilesHandler}
 								variant="area"
 								fill="all"
+								className="min-w-[100px] min-h-[100px]"
 								multiple
 							/>
 						</div>
