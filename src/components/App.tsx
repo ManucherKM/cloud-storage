@@ -1,7 +1,7 @@
 import { AppRouter } from '@/components'
+import { useStore } from '@/storage'
+import { Loader } from 'kuui-react'
 import { FC } from 'react'
-import { useAuthStore, useStore } from '@/storage'
-import { Loader, NotFound } from 'kuui-react'
 
 import '@/assets/styles/index.scss'
 

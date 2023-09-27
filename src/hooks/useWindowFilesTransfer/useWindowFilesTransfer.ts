@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 export const useWindowFilesTransfer = () => {
 	const [isTransfer, setIsTransfer] = useState<boolean>(false)

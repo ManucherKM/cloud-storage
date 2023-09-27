@@ -1,9 +1,9 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
-import { EFileStoreApiRoutes, IFile, IFileStore } from './types'
 import axios from '@/configuration/axios'
 import { getAuthorization } from '@/utils'
+import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 import { useAuthStore } from '..'
+import { EFileStoreApiRoutes, IFile, IFileStore } from './types'
 
 export const useFileStore = create(
 	persist<IFileStore>(

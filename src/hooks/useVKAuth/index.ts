@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { getVKAuthUrl } from './utils/getVKAuthUrl'
 import { IRedirectVKAuthTarget, IUseVKAuthError } from './types'
+import { getVKAuthUrl } from './utils/getVKAuthUrl'
 
 /** Default value for an object with `useVKAuth` hook errors. */
 const defaultErrors: IUseVKAuthError = {

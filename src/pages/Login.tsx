@@ -10,7 +10,6 @@ import {
 	Form,
 	GoogleAuth,
 	Input,
-	Loader,
 	TextError,
 	Title,
 	VKAuth,

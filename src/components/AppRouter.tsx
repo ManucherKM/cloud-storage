@@ -1,8 +1,8 @@
 import { privateRoutes, publicRoutes } from '@/configuration/routes'
-import { useAuthStore, useStore } from '@/storage'
-import { Loader, NotFound } from 'kuui-react'
-import { Route, Routes } from 'react-router'
+import { useAuthStore } from '@/storage'
+import { NotFound } from 'kuui-react'
 import { FC } from 'react'
+import { Route, Routes } from 'react-router'
 
 /** The component responsible for drawing routes. */
 export const AppRouter: FC = () => {

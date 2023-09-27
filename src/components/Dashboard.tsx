@@ -1,5 +1,5 @@
 import { FC, ReactNode } from 'react'
-import { Menu, IMenu } from './Menu'
+import { IMenu, Menu } from './Menu'
 
 export interface IDashboard extends IMenu {
 	children: ReactNode

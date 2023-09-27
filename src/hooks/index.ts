@@ -1,2 +1,2 @@
-export { useVKAuth, redirectToVkAuthPage } from './useVKAuth'
+export { redirectToVkAuthPage, useVKAuth } from './useVKAuth'
 export { useWindowFilesTransfer } from './useWindowFilesTransfer/useWindowFilesTransfer'

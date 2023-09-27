@@ -1,5 +1,5 @@
 {
-	"plugins": ["prettier-plugin-jsdoc"],
+	"plugins": ["prettier-plugin-jsdoc", "prettier-plugin-organize-imports"],
 	"semi": false,
 	"tabWidth": 2,
 	"printWidth": 80,
@@ -11,5 +11,6 @@
 	"arrowParens": "avoid",
 	"proseWrap": "always",
 	"endOfLine": "lf",
-	"embeddedLanguageFormatting": "off"
+	"embeddedLanguageFormatting": "off",
+	"organizeImportsSkipDestructiveCodeActions": true
 }

@@ -1,11 +1,11 @@
-import { FC, useEffect, useState, ChangeEvent, useRef } from 'react'
-import { IFile } from '@/storage/useFileStore/types'
-import { useFileStore, useStore } from '@/storage'
-import { List, Dashboard, DashboardNavBar } from '@/components'
-import { Alert, FileAdd, FileItem, Input } from 'kuui-react'
-import { getExtension, getValidFiles } from '@/utils'
+import { Dashboard, DashboardNavBar, FileList } from '@/components'
 import { useWindowFilesTransfer } from '@/hooks'
+import { useFileStore, useStore } from '@/storage'
+import { IFile } from '@/storage/useFileStore/types'
+import { getValidFiles } from '@/utils'
 import { getSearchedFiles } from '@/utils/getSearchedFiles'
+import { Alert, FileAdd } from 'kuui-react'
+import { ChangeEvent, FC, useEffect, useRef, useState } from 'react'
 import Selecto from 'react-selecto'
 
 export const Storage: FC = () => {
@@ -138,21 +138,7 @@ export const Storage: FC = () => {
 							ref={blockForSelection}
 							className="w-full h-[90%] mb-14 overflow-auto p-5 grid grid-cols-8 auto-rows-min gap-4 tb_lg:grid-cols-6 tb_sm:grid-cols-4 ph_lg:grid-cols-2"
 						>
-							<List
-								arr={showFiles}
-								callback={item => {
-									const [name, extension] = getExtension(item.originalName)
-									return (
-										<FileItem
-											key={item.id}
-											name={name}
-											extension={extension}
-											onClick={() => console.log}
-											className="file"
-										/>
-									)
-								}}
-							/>
+							<FileList files={showFiles} />
 							<FileAdd
 								onChange={changeFilesHandler}
 								variant="area"

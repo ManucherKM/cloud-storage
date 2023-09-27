@@ -1,8 +1,8 @@
+import { App } from '@/components'
+import { GoogleOAuthProvider } from '@react-oauth/google'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { GoogleOAuthProvider } from '@react-oauth/google'
 import { BrowserRouter } from 'react-router-dom'
-import { App } from '@/components'
 
 const root = ReactDOM.createRoot(document.getElementById('root')!)
 

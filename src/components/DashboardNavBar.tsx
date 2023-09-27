@@ -1,6 +1,6 @@
 import { clsx } from 'clsx'
 import { Input } from 'kuui-react'
-import { FC, HTMLAttributes, ChangeEvent } from 'react'
+import { ChangeEvent, FC, HTMLAttributes } from 'react'
 
 export interface IDashboardNavBar extends HTMLAttributes<HTMLDivElement> {
 	onSearch: (e: ChangeEvent<HTMLInputElement> | undefined) => void

@@ -5,16 +5,15 @@ import { isObjectValuesEmpty, validateEmail, validatePassword } from '@/utils'
 import HCaptcha from '@hcaptcha/react-hcaptcha'
 import { useGoogleLogin } from '@react-oauth/google'
 import {
+	Alert,
 	Button,
 	ConfirmEmail,
 	Form,
 	GoogleAuth,
 	Input,
-	Loader,
 	TextError,
 	Title,
 	VKAuth,
-	Alert,
 } from 'kuui-react'
 import type { ChangeEvent, FC, FormEvent } from 'react'
 import { useEffect, useRef, useState } from 'react'

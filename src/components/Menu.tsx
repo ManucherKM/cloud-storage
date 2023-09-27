@@ -1,9 +1,9 @@
-import { ERoutes } from '@/configuration/routes'
-import { useAuthStore, useFileStore, useStore } from '@/storage'
-import { Alert, ListItem, Title } from 'kuui-react'
-import { FC, useState } from 'react'
-import { useNavigate } from 'react-router'
 import * as icons from '@/assets/icons'
+import { ERoutes } from '@/configuration/routes'
+import { useAuthStore, useStore } from '@/storage'
+import { ListItem, Title } from 'kuui-react'
+import { FC } from 'react'
+import { useNavigate } from 'react-router'
 
 export interface IMenu {
 	title: string
