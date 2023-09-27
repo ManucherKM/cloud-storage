@@ -1,14 +1,17 @@
 import { FC, useEffect, useState, ChangeEvent } from 'react'
 import { IFile } from '@/storage/useFileStore/types'
 import { useFileStore, useStore } from '@/storage'
-import { List, Dashboard } from '@/components'
-import { Alert, FileAdd, FileItem } from 'kuui-react'
+import { List, Dashboard, DashboardNavBar } from '@/components'
+import { Alert, FileAdd, FileItem, Input } from 'kuui-react'
 import { getExtension, getValidFiles } from '@/utils'
 import { useWindowFilesTransfer } from '@/hooks'
+import { getSearchedFiles } from '@/utils/getSearchedFiles'
 
 export const Storage: FC = () => {
+	const [search, setSearch] = useState<string>('')
 	const [isTransferFiles, setIsTransferFiles] = useState<boolean>(false)
 	const [serverError, setServerError] = useState<string>('')
+	const [validFiles, setValidFiles] = useState<IFile[]>([])
 	const [showFiles, setShowFiles] = useState<IFile[]>([])
 	const files = useFileStore(store => store.files)
 	const sendFiles = useFileStore(store => store.sendFiles)
@@ -65,6 +68,14 @@ export const Storage: FC = () => {
 		setLoading(false)
 	}
 
+	function searchHandler(e: ChangeEvent<HTMLInputElement> | undefined) {
+		if (!e) {
+			return
+		}
+
+		setSearch(e.target.value)
+	}
+
 	useEffect(() => {
 		if (isTransferFilesOnWindow) {
 			setIsTransferFiles(true)
@@ -72,8 +83,17 @@ export const Storage: FC = () => {
 	}, [isTransferFilesOnWindow])
 
 	useEffect(() => {
+		const searchedFiles = getSearchedFiles(search, validFiles)
+		setShowFiles(searchedFiles)
+	}, [search])
+
+	useEffect(() => {
+		setShowFiles(validFiles)
+	}, [validFiles])
+
+	useEffect(() => {
 		const filteredFiles = getValidFiles(files)
-		setShowFiles(filteredFiles)
+		setValidFiles(filteredFiles)
 	}, [files])
 
 	useEffect(() => {
@@ -110,27 +130,30 @@ export const Storage: FC = () => {
 						onChangeFiles={changeFilesFileAddHandler}
 					/>
 				) : (
-					<div className="w-full p-5 grid grid-cols-8 grid-rows-4 gap-2 overflow-auto tb_lg:grid-cols-6 tb_sm:grid-cols-4 tb_sm:grid-rows-6 ph_lg:grid-cols-2">
-						<List
-							arr={showFiles}
-							callback={item => {
-								const [name, extension] = getExtension(item.originalName)
-								return (
-									<FileItem
-										key={item.id}
-										name={name}
-										extension={extension}
-										onClick={() => console.log}
-									/>
-								)
-							}}
-						/>
-						<FileAdd
-							onChange={changeFilesHandler}
-							variant="area"
-							fill="all"
-							multiple
-						/>
+					<div className="w-full h-full">
+						<DashboardNavBar search={search} onSearch={searchHandler} />
+						<div className="w-full h-[90%] mb-14 overflow-auto p-5 grid grid-cols-8 auto-rows-min gap-4 tb_lg:grid-cols-6 tb_sm:grid-cols-4 ph_lg:grid-cols-2">
+							<List
+								arr={showFiles}
+								callback={item => {
+									const [name, extension] = getExtension(item.originalName)
+									return (
+										<FileItem
+											key={item.id}
+											name={name}
+											extension={extension}
+											onClick={() => console.log}
+										/>
+									)
+								}}
+							/>
+							<FileAdd
+								onChange={changeFilesHandler}
+								variant="area"
+								fill="all"
+								multiple
+							/>
+						</div>
 					</div>
 				)}
 			</Dashboard>
