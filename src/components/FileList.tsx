@@ -24,6 +24,7 @@ export const FileList: FC<IFileList> = ({ files }) => {
 						name={name}
 						extension={extension}
 						onClick={() => clickHandler(file)}
+						className="file"
 					/>
 				)
 			}}

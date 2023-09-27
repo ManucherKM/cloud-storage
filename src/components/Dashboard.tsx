@@ -13,7 +13,7 @@ export const Dashboard: FC<IDashboard> = ({ title, children }) => {
 					<Menu title={title} />
 				</div>
 
-				{children}
+				<div className="w-full h-full">{children}</div>
 			</div>
 		</div>
 	)

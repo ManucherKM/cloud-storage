@@ -132,7 +132,7 @@ export const Storage: FC = () => {
 						onChangeFiles={changeFilesFileAddHandler}
 					/>
 				) : (
-					<div className="w-full h-full">
+					<>
 						<DashboardNavBar search={search} onSearch={searchHandler} />
 						<div
 							ref={blockForSelection}
@@ -147,34 +147,22 @@ export const Storage: FC = () => {
 							/>
 						</div>
 						<Selecto
-							// The container to add a selection element
 							container={blockForSelection.current}
-							// The area to drag selection element (default: container)
 							dragContainer={window}
-							// Targets to select. You can register a queryselector or an Element.
 							selectableTargets={['.file']}
-							// Whether to select by click (default: true)
 							selectByClick={true}
-							// Whether to select from the target inside (default: true)
 							selectFromInside={true}
-							// After the select, whether to select the next target with the selected target (deselected if the target is selected again).
 							continueSelect={false}
-							// Determines which key to continue selecting the next target via keydown and keyup.
 							toggleContinueSelect={'shift'}
-							// The container for keydown and keyup events
 							keyContainer={window}
-							// The rate at which the target overlaps the drag area to be selected. (default: 100)
 							hitRate={100}
 							onSelect={e => {
-								e.added.forEach(el => {
-									el.classList.add('FILE')
-								})
-								e.removed.forEach(el => {
-									el.classList.remove('FILE')
-								})
+								const activeClass = '_active_kq2ra_39'
+								e.added.forEach(el => el.classList.add(activeClass))
+								e.removed.forEach(el => el.classList.remove(activeClass))
 							}}
 						/>
-					</div>
+					</>
 				)}
 			</Dashboard>
 		</>
