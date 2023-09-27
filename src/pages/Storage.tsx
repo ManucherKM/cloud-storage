@@ -1,4 +1,4 @@
-import { FC, useEffect, useState, ChangeEvent } from 'react'
+import { FC, useEffect, useState, ChangeEvent, useRef } from 'react'
 import { IFile } from '@/storage/useFileStore/types'
 import { useFileStore, useStore } from '@/storage'
 import { List, Dashboard, DashboardNavBar } from '@/components'
@@ -6,6 +6,7 @@ import { Alert, FileAdd, FileItem, Input } from 'kuui-react'
 import { getExtension, getValidFiles } from '@/utils'
 import { useWindowFilesTransfer } from '@/hooks'
 import { getSearchedFiles } from '@/utils/getSearchedFiles'
+import Selecto from 'react-selecto'
 
 export const Storage: FC = () => {
 	const [search, setSearch] = useState<string>('')
@@ -18,6 +19,7 @@ export const Storage: FC = () => {
 	const getFiles = useFileStore(store => store.getFiles)
 	const setLoading = useStore(store => store.setLoading)
 	const isTransferFilesOnWindow = useWindowFilesTransfer()
+	const blockForSelection = useRef(null)
 
 	async function changeFilesHandler(e: ChangeEvent<HTMLInputElement>) {
 		setLoading(true)
@@ -132,7 +134,10 @@ export const Storage: FC = () => {
 				) : (
 					<div className="w-full h-full">
 						<DashboardNavBar search={search} onSearch={searchHandler} />
-						<div className="w-full h-[90%] mb-14 overflow-auto p-5 grid grid-cols-8 auto-rows-min gap-4 tb_lg:grid-cols-6 tb_sm:grid-cols-4 ph_lg:grid-cols-2">
+						<div
+							ref={blockForSelection}
+							className="w-full h-[90%] mb-14 overflow-auto p-5 grid grid-cols-8 auto-rows-min gap-4 tb_lg:grid-cols-6 tb_sm:grid-cols-4 ph_lg:grid-cols-2"
+						>
 							<List
 								arr={showFiles}
 								callback={item => {
@@ -143,6 +148,7 @@ export const Storage: FC = () => {
 											name={name}
 											extension={extension}
 											onClick={() => console.log}
+											className="file"
 										/>
 									)
 								}}
@@ -154,6 +160,34 @@ export const Storage: FC = () => {
 								multiple
 							/>
 						</div>
+						<Selecto
+							// The container to add a selection element
+							container={blockForSelection.current}
+							// The area to drag selection element (default: container)
+							dragContainer={window}
+							// Targets to select. You can register a queryselector or an Element.
+							selectableTargets={['.file']}
+							// Whether to select by click (default: true)
+							selectByClick={true}
+							// Whether to select from the target inside (default: true)
+							selectFromInside={true}
+							// After the select, whether to select the next target with the selected target (deselected if the target is selected again).
+							continueSelect={false}
+							// Determines which key to continue selecting the next target via keydown and keyup.
+							toggleContinueSelect={'shift'}
+							// The container for keydown and keyup events
+							keyContainer={window}
+							// The rate at which the target overlaps the drag area to be selected. (default: 100)
+							hitRate={100}
+							onSelect={e => {
+								e.added.forEach(el => {
+									el.classList.add('FILE')
+								})
+								e.removed.forEach(el => {
+									el.classList.remove('FILE')
+								})
+							}}
+						/>
 					</div>
 				)}
 			</Dashboard>
