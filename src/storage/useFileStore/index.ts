@@ -120,7 +120,7 @@ export const useFileStore = create(
 						}
 
 						return {
-							files: [...currentFiles],
+							files: currentFiles,
 						}
 					})
 
