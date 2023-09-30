@@ -6,17 +6,18 @@ import { getValidFiles } from '@/utils'
 import { getSearchedFiles } from '@/utils/getSearchedFiles'
 import { Alert, FileAdd } from 'kuui-react'
 import { ChangeEvent, FC, useEffect, useRef, useState } from 'react'
-import Selecto from 'react-selecto'
 
 export const Storage: FC = () => {
 	const [search, setSearch] = useState<string>('')
 	const [isTransferFiles, setIsTransferFiles] = useState<boolean>(false)
+	const [idOfTheSelectedFiles, setIdOfTheSelectedFiles] = useState<string[]>([])
 	const [serverError, setServerError] = useState<string>('')
 	const [validFiles, setValidFiles] = useState<IFile[]>([])
 	const [showFiles, setShowFiles] = useState<IFile[]>([])
 	const files = useFileStore(store => store.files)
 	const sendFiles = useFileStore(store => store.sendFiles)
 	const getFiles = useFileStore(store => store.getFiles)
+	const addFileToTrash = useFileStore(store => store.addFileToTrash)
 	const setLoading = useStore(store => store.setLoading)
 	const isTransferFilesOnWindow = useWindowFilesTransfer()
 	const blockForSelection = useRef(null)
@@ -33,11 +34,13 @@ export const Storage: FC = () => {
 		const isSuccess = await sendFiles(selectedFiles)
 
 		if (!isSuccess) {
+			e.target.value = ''
 			setServerError('Failed to send file.')
 			setLoading(false)
 			return
 		}
 
+		e.target.value = ''
 		setServerError('')
 		setLoading(false)
 	}
@@ -76,6 +79,29 @@ export const Storage: FC = () => {
 		}
 
 		setSearch(e.target.value)
+	}
+
+	function shareFilesHandler() {
+		if (!idOfTheSelectedFiles.length) {
+			return
+		}
+		console.log(idOfTheSelectedFiles)
+	}
+
+	async function removeFilesHandler() {
+		if (!idOfTheSelectedFiles.length) {
+			return
+		}
+		setLoading(true)
+
+		const isSuccess = await addFileToTrash(idOfTheSelectedFiles)
+
+		if (!isSuccess) {
+			setServerError('Failed to move files to Recycle Bin.')
+			setLoading(false)
+		}
+
+		setLoading(false)
 	}
 
 	useEffect(() => {
@@ -133,12 +159,24 @@ export const Storage: FC = () => {
 					/>
 				) : (
 					<>
-						<DashboardNavBar search={search} onSearch={searchHandler} />
+						<DashboardNavBar
+							search={search}
+							onSearch={searchHandler}
+							share={true}
+							onShare={shareFilesHandler}
+							remove={true}
+							onRemove={removeFilesHandler}
+						/>
 						<div
 							ref={blockForSelection}
 							className="w-full h-[90%] mb-14 overflow-auto p-5 grid grid-cols-8 auto-rows-min gap-4 tb_lg:grid-cols-6 tb_sm:grid-cols-4 ph_lg:grid-cols-2"
 						>
-							<FileList files={showFiles} />
+							<FileList
+								files={showFiles}
+								container={blockForSelection.current}
+								selectedFiles={idOfTheSelectedFiles}
+								setSelectedFiles={setIdOfTheSelectedFiles}
+							/>
 							<FileAdd
 								onChange={changeFilesHandler}
 								variant="area"
@@ -147,22 +185,6 @@ export const Storage: FC = () => {
 								multiple
 							/>
 						</div>
-						<Selecto
-							container={blockForSelection.current}
-							dragContainer={window}
-							selectableTargets={['.file']}
-							selectByClick={true}
-							selectFromInside={true}
-							continueSelect={false}
-							toggleContinueSelect={'shift'}
-							keyContainer={window}
-							hitRate={100}
-							onSelect={e => {
-								const activeClass = '_active_kq2ra_39'
-								e.added.forEach(el => el.classList.add(activeClass))
-								e.removed.forEach(el => el.classList.remove(activeClass))
-							}}
-						/>
 					</>
 				)}
 			</Dashboard>

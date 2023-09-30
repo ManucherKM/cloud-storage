@@ -81,6 +81,55 @@ export const useFileStore = create(
 					return false
 				}
 			},
+			async addFileToTrash(files) {
+				try {
+					const token = useAuthStore.getState().token
+
+					if (!token) {
+						return false
+					}
+
+					const promises = []
+
+					for (const id of files) {
+						const url = EFileStoreApiRoutes.addFileToTrash + '/' + id
+
+						const promise = axios.get<IFile>(url, {
+							headers: {
+								Authorization: getAuthorization(token),
+							},
+						})
+
+						promises.push(promise)
+					}
+
+					await Promise.all(promises)
+
+					set(store => {
+						const prevFiles = store.files
+
+						let currentFiles: IFile[] = []
+
+						for (let file of prevFiles) {
+							if (files.includes(file.id)) {
+								file.inTheTrash = true
+								currentFiles.push(file)
+								continue
+							}
+							currentFiles.push(file)
+						}
+
+						return {
+							files: [...currentFiles],
+						}
+					})
+
+					return true
+				} catch (e) {
+					console.error(e)
+					return false
+				}
+			},
 		}),
 		{ name: 'file-store' },
 	),
