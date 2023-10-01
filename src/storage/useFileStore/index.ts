@@ -1,9 +1,15 @@
 import axios from '@/configuration/axios'
-import { getAuthorization } from '@/utils'
+import { downloadFileFromBuffer, getAuthorization } from '@/utils'
+import { AxiosRequestConfig } from 'axios'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { useAuthStore } from '..'
-import { EFileStoreApiRoutes, IFile, IFileStore } from './types'
+import {
+	EFileStoreApiRoutes,
+	ICreateArchiveResponse,
+	IFile,
+	IFileStore,
+} from './types'
 
 export const useFileStore = create(
 	persist<IFileStore>(
@@ -38,7 +44,6 @@ export const useFileStore = create(
 					return false
 				}
 			},
-
 			async sendFiles(files) {
 				try {
 					const token = useAuthStore.getState().token
@@ -123,6 +128,71 @@ export const useFileStore = create(
 							files: currentFiles,
 						}
 					})
+
+					return true
+				} catch (e) {
+					console.error(e)
+					return false
+				}
+			},
+
+			async createArchive(files) {
+				try {
+					const token = useAuthStore.getState().token
+
+					if (!token) {
+						return false
+					}
+
+					const config: AxiosRequestConfig = {
+						headers: {
+							Authorization: getAuthorization(token),
+						},
+					}
+
+					const payload: { fileIds: string[] } = {
+						fileIds: files,
+					}
+
+					const { data } = await axios.post<ICreateArchiveResponse>(
+						EFileStoreApiRoutes.createArchive,
+						payload,
+						config,
+					)
+
+					if (!data.id) {
+						return false
+					}
+
+					return data.id
+				} catch (e) {
+					console.error(e)
+					return false
+				}
+			},
+
+			async downloadArchive(id: string) {
+				try {
+					const token = useAuthStore.getState().token
+
+					if (!token) {
+						return false
+					}
+
+					const url = EFileStoreApiRoutes.downloadArchive + '/' + id
+
+					const { data } = await axios.get<Buffer>(url, {
+						responseType: 'arraybuffer',
+						headers: {
+							Authorization: getAuthorization(token),
+						},
+					})
+
+					if (!data) {
+						return false
+					}
+
+					downloadFileFromBuffer(data)
 
 					return true
 				} catch (e) {

@@ -7,6 +7,8 @@ import { getSearchedFiles } from '@/utils/getSearchedFiles'
 import { Alert, FileAdd } from 'kuui-react'
 import { ChangeEvent, FC, useEffect, useRef, useState } from 'react'
 
+const CLIENT_URL = import.meta.env.VITE_CLIENT_URL as string
+
 export const Storage: FC = () => {
 	const [search, setSearch] = useState<string>('')
 	const [isTransferFiles, setIsTransferFiles] = useState<boolean>(false)
@@ -18,6 +20,7 @@ export const Storage: FC = () => {
 	const sendFiles = useFileStore(store => store.sendFiles)
 	const getFiles = useFileStore(store => store.getFiles)
 	const addFileToTrash = useFileStore(store => store.addFileToTrash)
+	const createArchive = useFileStore(store => store.createArchive)
 	const setLoading = useStore(store => store.setLoading)
 	const isTransferFilesOnWindow = useWindowFilesTransfer()
 	const blockForSelection = useRef(null)
@@ -81,11 +84,25 @@ export const Storage: FC = () => {
 		setSearch(e.target.value)
 	}
 
-	function shareFilesHandler() {
+	async function shareFilesHandler() {
 		if (!idOfTheSelectedFiles.length) {
 			return
 		}
-		console.log(idOfTheSelectedFiles)
+		setLoading(true)
+
+		const id = await createArchive(idOfTheSelectedFiles)
+
+		if (!id) {
+			setServerError('Failed to share files.')
+			setLoading(false)
+			return
+		}
+
+		const url = CLIENT_URL + '/download/' + id
+
+		console.log(url)
+
+		setLoading(false)
 	}
 
 	async function removeFilesHandler() {

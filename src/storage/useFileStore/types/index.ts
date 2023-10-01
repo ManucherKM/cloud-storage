@@ -5,15 +5,23 @@ export interface IFile {
 	inTheTrash: boolean
 }
 
+export interface ICreateArchiveResponse {
+	id: string
+}
+
 export interface IFileStore {
 	files: IFile[]
 	getFiles: () => Promise<boolean>
 	sendFiles: (files: FileList) => Promise<boolean>
 	addFileToTrash: (files: string[]) => Promise<boolean>
+	createArchive: (files: string[]) => Promise<boolean | string>
+	downloadArchive: (id: string) => Promise<boolean>
 }
 
 export enum EFileStoreApiRoutes {
 	getFilesByUserId = '/api/file/userId',
 	sendFiles = '/api/file',
 	addFileToTrash = '/api/file/trash/on',
+	createArchive = '/api/archive',
+	downloadArchive = '/api/archive/share',
 }

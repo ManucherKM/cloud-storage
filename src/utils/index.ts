@@ -1,3 +1,4 @@
+export { downloadFileFromBuffer } from './downloadFileFromBuffer'
 export { getAuthorization } from './getAuthorization'
 export { getExtension } from './getExtension'
 export { getValidFiles } from './getValidFiles'
