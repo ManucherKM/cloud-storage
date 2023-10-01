@@ -2,7 +2,7 @@ import { Dashboard, DashboardNavBar, FileList } from '@/components'
 import { useWindowFilesTransfer } from '@/hooks'
 import { useFileStore, useStore } from '@/storage'
 import { IFile } from '@/storage/useFileStore/types'
-import { getValidFiles } from '@/utils'
+import { getValidFiles, writeTextIntoClipboard } from '@/utils'
 import { getSearchedFiles } from '@/utils/getSearchedFiles'
 import { Alert, FileAdd } from 'kuui-react'
 import { ChangeEvent, FC, useEffect, useRef, useState } from 'react'
@@ -13,7 +13,8 @@ export const Storage: FC = () => {
 	const [search, setSearch] = useState<string>('')
 	const [isTransferFiles, setIsTransferFiles] = useState<boolean>(false)
 	const [idOfTheSelectedFiles, setIdOfTheSelectedFiles] = useState<string[]>([])
-	const [serverError, setServerError] = useState<string>('')
+	const [error, setError] = useState<string>('')
+	const [message, setMessage] = useState<string>('')
 	const [validFiles, setValidFiles] = useState<IFile[]>([])
 	const [showFiles, setShowFiles] = useState<IFile[]>([])
 	const files = useFileStore(store => store.files)
@@ -38,18 +39,22 @@ export const Storage: FC = () => {
 
 		if (!isSuccess) {
 			e.target.value = ''
-			setServerError('Failed to send file.')
+			setError('Failed to send file.')
 			setLoading(false)
 			return
 		}
 
 		e.target.value = ''
-		setServerError('')
+		setError('')
 		setLoading(false)
 	}
 
-	function serverErrorTimeHandler() {
-		setServerError('')
+	function errorTimeHandler() {
+		setError('')
+	}
+
+	function messageTimeHandler() {
+		setMessage('')
 	}
 
 	function closeFillAddHandler() {
@@ -67,12 +72,12 @@ export const Storage: FC = () => {
 		const isSuccess = await sendFiles(files)
 
 		if (!isSuccess) {
-			setServerError('Failed to send file.')
+			setError('Failed to send file.')
 			setLoading(false)
 			return
 		}
 
-		setServerError('')
+		setError('')
 		setLoading(false)
 	}
 
@@ -93,15 +98,22 @@ export const Storage: FC = () => {
 		const id = await createArchive(idOfTheSelectedFiles)
 
 		if (!id) {
-			setServerError('Failed to share files.')
+			setError('Failed to share files.')
 			setLoading(false)
 			return
 		}
 
 		const url = CLIENT_URL + '/download/' + id
 
-		console.log(url)
+		const isSuccess = await writeTextIntoClipboard(url)
 
+		if (!isSuccess) {
+			setError('Failed to move link to clipboard.')
+			setLoading(false)
+			return
+		}
+
+		setMessage('Link copied to clipboard.')
 		setLoading(false)
 	}
 
@@ -114,7 +126,7 @@ export const Storage: FC = () => {
 		const isSuccess = await addFileToTrash(idOfTheSelectedFiles)
 
 		if (!isSuccess) {
-			setServerError('Failed to move files to Recycle Bin.')
+			setError('Failed to move files to Recycle Bin.')
 			setLoading(false)
 		}
 
@@ -147,7 +159,7 @@ export const Storage: FC = () => {
 			const isSuccess = await getFiles()
 
 			if (!isSuccess) {
-				setServerError('Failed to receive files.')
+				setError('Failed to receive files.')
 				setLoading(false)
 				return
 			}
@@ -159,12 +171,20 @@ export const Storage: FC = () => {
 	}, [])
 	return (
 		<>
-			{serverError.length !== 0 && (
+			{error.length !== 0 && (
 				<Alert
-					text={serverError}
+					text={error}
 					variant="error"
 					time={6}
-					onTimeUp={serverErrorTimeHandler}
+					onTimeUp={errorTimeHandler}
+				/>
+			)}
+			{message.length !== 0 && (
+				<Alert
+					text={message}
+					variant="message"
+					time={6}
+					onTimeUp={messageTimeHandler}
 				/>
 			)}
 			<Dashboard title="Storage">
