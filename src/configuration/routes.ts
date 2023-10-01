@@ -16,7 +16,7 @@ export enum ERoutes {
 	storage = '/storage',
 	trash = '/trash',
 	setting = '/setting',
-	download = '/download/:id',
+	download = '/download',
 }
 
 /** Public Routes */
@@ -34,7 +34,7 @@ export const publicRoutes: IRoute[] = [
 		component: Registration,
 	},
 	{
-		path: ERoutes.download,
+		path: ERoutes.download + '/:id',
 		component: Download,
 	},
 ]

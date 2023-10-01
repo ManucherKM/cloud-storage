@@ -1,4 +1,5 @@
 import { Dashboard, DashboardNavBar, FileList } from '@/components'
+import { ERoutes } from '@/configuration/routes'
 import { useWindowFilesTransfer } from '@/hooks'
 import { useFileStore, useStore } from '@/storage'
 import { IFile } from '@/storage/useFileStore/types'
@@ -103,7 +104,7 @@ export const Storage: FC = () => {
 			return
 		}
 
-		const url = CLIENT_URL + '/download/' + id
+		const url = CLIENT_URL + ERoutes.download + '/' + id
 
 		const isSuccess = await writeTextIntoClipboard(url)
 
