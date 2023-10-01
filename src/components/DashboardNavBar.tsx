@@ -1,3 +1,4 @@
+import { Remove, Restore, Share } from '@/assets/icons'
 import { clsx } from 'clsx'
 import { Button, Input } from 'kuui-react'
 import { ChangeEvent, FC, HTMLAttributes, MouseEvent } from 'react'
@@ -62,7 +63,10 @@ export const DashboardNavBar: FC<IDashboardNavBar> = ({
 						variant="navigate"
 						className="text-[--kuui-black-250]"
 					>
-						Share
+						<div className="flex items-center gap-1">
+							<Share />
+							Share
+						</div>
 					</Button>
 				)}
 				{remove && (
@@ -71,7 +75,10 @@ export const DashboardNavBar: FC<IDashboardNavBar> = ({
 						variant="navigate"
 						className="text-[--kuui-black-250]"
 					>
-						Remove
+						<div className="flex items-center gap-1">
+							<Remove />
+							Remove
+						</div>
 					</Button>
 				)}
 				{restore && (
@@ -80,7 +87,10 @@ export const DashboardNavBar: FC<IDashboardNavBar> = ({
 						variant="navigate"
 						className="text-[--kuui-black-250]"
 					>
-						Restore
+						<div className="flex items-center gap-1">
+							<Restore />
+							Restore
+						</div>
 					</Button>
 				)}
 			</div>
