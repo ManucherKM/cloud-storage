@@ -21,7 +21,7 @@ export const FileList: FC<IFileList> = ({
 	selectedFiles,
 	setSelectedFiles,
 }) => {
-	const activeClass = useRef<string>('_active_kq2ra_39')
+	const activeClass = useRef<string>('_active_17w3d_39')
 
 	function clickHandler(file: IFile) {
 		console.log('Click file: ', file)
