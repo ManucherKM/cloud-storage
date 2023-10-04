@@ -332,8 +332,8 @@ export const Registration: FC = () => {
 					</TextError>
 				)}
 				<Input
+					variant="text"
 					fill="all"
-					type="text"
 					placeholder="email"
 					value={form.email}
 					onChange={emailHandler}
@@ -345,7 +345,7 @@ export const Registration: FC = () => {
 				)}
 				<Input
 					fill="all"
-					type="password"
+					variant="password"
 					value={form.password}
 					placeholder="password"
 					onChange={passwordHandler}

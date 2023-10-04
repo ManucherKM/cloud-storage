@@ -325,7 +325,7 @@ export const Login: FC = () => {
 				)}
 				<Input
 					fill="all"
-					type="text"
+					variant="text"
 					placeholder="email"
 					value={form.email}
 					onChange={emailHandler}
@@ -337,7 +337,7 @@ export const Login: FC = () => {
 				)}
 				<Input
 					fill="all"
-					type="password"
+					variant="password"
 					placeholder="password"
 					value={form.password}
 					onChange={passwordHandler}

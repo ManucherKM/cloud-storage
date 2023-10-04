@@ -34,26 +34,26 @@ export const Menu: FC<IMenu> = ({ title }) => {
 				to={ERoutes.storage}
 				align="left"
 				title="Storage"
-				svgIcon={<icons.Storage />}
+				icon={<icons.Storage />}
 			/>
 			<ListItem
 				to={ERoutes.trash}
 				align="left"
 				title="Trash"
-				svgIcon={<icons.Trash />}
+				icon={<icons.Trash />}
 			/>
 			<ListItem
 				to={ERoutes.setting}
 				align="left"
 				title="Setting"
-				svgIcon={<icons.Gear />}
+				icon={<icons.Gear />}
 			/>
 			<ListItem
 				to={'#'}
 				align="left"
 				title="Logout"
 				onClick={logoutHandler}
-				svgIcon={<icons.Logout />}
+				icon={<icons.Logout />}
 			/>
 		</>
 	)

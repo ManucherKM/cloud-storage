@@ -15,7 +15,7 @@
 		"@react-oauth/google": "^0.11.1",
 		"axios": "^1.5.0",
 		"clsx": "^2.0.0",
-		"kuui-react": "^0.0.21",
+		"kuui-react": "^0.0.23",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"react-router": "^6.15.0",
