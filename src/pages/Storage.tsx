@@ -3,8 +3,11 @@ import { ERoutes } from '@/configuration/routes'
 import { useWindowFilesTransfer } from '@/hooks'
 import { useFileStore, useStore } from '@/storage'
 import { IFile } from '@/storage/useFileStore/types'
-import { getValidFiles, writeTextIntoClipboard } from '@/utils'
-import { getSearchedFiles } from '@/utils/getSearchedFiles'
+import {
+	getSearchedFiles,
+	getValidFiles,
+	writeTextIntoClipboard,
+} from '@/utils'
 import { Alert, FileAdd } from 'kuui-react'
 import { ChangeEvent, FC, useEffect, useRef, useState } from 'react'
 

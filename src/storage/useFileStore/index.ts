@@ -135,7 +135,103 @@ export const useFileStore = create(
 					return false
 				}
 			},
+			async restoreFileFromTrash(files) {
+				try {
+					const token = useAuthStore.getState().token
 
+					if (!token) {
+						return false
+					}
+
+					const promises = []
+
+					for (const id of files) {
+						const url = EFileStoreApiRoutes.restoreFileFromTrash + '/' + id
+
+						const promise = axios.get<IFile>(url, {
+							headers: {
+								Authorization: getAuthorization(token),
+							},
+						})
+
+						promises.push(promise)
+					}
+
+					await Promise.all(promises)
+
+					set(store => {
+						const prevFiles = store.files
+
+						let currentFiles: IFile[] = []
+
+						for (let file of prevFiles) {
+							if (files.includes(file.id)) {
+								file.inTheTrash = false
+								currentFiles.push(file)
+								continue
+							}
+							currentFiles.push(file)
+						}
+
+						return {
+							files: currentFiles,
+						}
+					})
+
+					return true
+				} catch (e) {
+					console.error(e)
+					return false
+				}
+			},
+			async removeFile(files) {
+				try {
+					const token = useAuthStore.getState().token
+
+					if (!token) {
+						return false
+					}
+
+					const promises = []
+
+					for (const id of files) {
+						const url = EFileStoreApiRoutes.removeFile + '/' + id
+
+						const promise = axios.delete<IFile>(url, {
+							headers: {
+								Authorization: getAuthorization(token),
+							},
+						})
+
+						promises.push(promise)
+					}
+
+					await Promise.all(promises)
+
+					set(store => {
+						const prevFiles = store.files
+
+						let currentFiles: IFile[] = []
+
+						for (let file of prevFiles) {
+							if (files.includes(file.id)) {
+								continue
+							}
+
+							currentFiles.push(file)
+						}
+
+						return {
+							files: currentFiles,
+						}
+					})
+
+					return true
+				} catch (e) {
+					console.error(e)
+					return false
+				}
+			},
 			async createArchive(files) {
 				try {
 					const token = useAuthStore.getState().token
@@ -170,7 +266,6 @@ export const useFileStore = create(
 					return false
 				}
 			},
-
 			async downloadArchive(id: string) {
 				try {
 					const token = useAuthStore.getState().token

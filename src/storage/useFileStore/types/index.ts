@@ -14,6 +14,8 @@ export interface IFileStore {
 	getFiles: () => Promise<boolean>
 	sendFiles: (files: FileList) => Promise<boolean>
 	addFileToTrash: (files: string[]) => Promise<boolean>
+	restoreFileFromTrash: (files: string[]) => Promise<boolean>
+	removeFile: (files: string[]) => Promise<boolean>
 	createArchive: (files: string[]) => Promise<boolean | string>
 	downloadArchive: (id: string) => Promise<boolean>
 }
@@ -24,4 +26,6 @@ export enum EFileStoreApiRoutes {
 	addFileToTrash = '/api/file/trash/on',
 	createArchive = '/api/archive',
 	downloadArchive = '/api/archive/share',
+	restoreFileFromTrash = '/api/file/trash/off',
+	removeFile = '/api/file',
 }

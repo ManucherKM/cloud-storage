@@ -1,6 +1,8 @@
 export { downloadFileFromBuffer } from './downloadFileFromBuffer'
 export { getAuthorization } from './getAuthorization'
 export { getExtension } from './getExtension'
+export { getTrashFiles } from './getFilesTrash'
+export { getSearchedFiles } from './getSearchedFiles'
 export { getValidFiles } from './getValidFiles'
 export { isObjectValuesEmpty } from './isObjectValuesEmpty'
 export { validateEmail } from './validateEmail'
