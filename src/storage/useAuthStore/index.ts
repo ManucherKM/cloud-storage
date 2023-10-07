@@ -1,6 +1,7 @@
 import axios from '@/configuration/axios'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { useFileStore, useStore } from '..'
 import {
 	EAuthStoreApiRoutes,
 	IAuthStore,
@@ -13,11 +14,15 @@ import {
 	IRegistrationWithVKResponse,
 } from './types'
 
+const defaultAuthStore = {
+	token: null,
+}
+
 /** With this hook you can access the authorization repository. */
 export const useAuthStore = create(
 	persist<IAuthStore>(
-		set => ({
-			token: null,
+		(set, get) => ({
+			...defaultAuthStore,
 			async login(loginDto) {
 				try {
 					const { data } = await axios.post<ILoginResponse>(
@@ -136,13 +141,18 @@ export const useAuthStore = create(
 						return false
 					}
 
-					set({ token: '' })
+					useFileStore.getState().reset()
+					useStore.getState().reset()
+					get().reset()
 
 					return true
 				} catch (e) {
 					console.error(e)
 					return false
 				}
+			},
+			reset() {
+				set(defaultAuthStore)
 			},
 		}),
 		{ name: 'auth-store' },

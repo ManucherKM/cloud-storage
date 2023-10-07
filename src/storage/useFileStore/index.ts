@@ -4,6 +4,7 @@ import { AxiosRequestConfig } from 'axios'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { useAuthStore } from '..'
+
 import {
 	EFileStoreApiRoutes,
 	ICreateArchiveResponse,
@@ -11,10 +12,14 @@ import {
 	IFileStore,
 } from './types'
 
+const defaultFileStore = {
+	files: [],
+}
+
 export const useFileStore = create(
 	persist<IFileStore>(
 		set => ({
-			files: [],
+			...defaultFileStore,
 			async getFiles() {
 				try {
 					const token = useAuthStore.getState().token
@@ -294,6 +299,9 @@ export const useFileStore = create(
 					console.error(e)
 					return false
 				}
+			},
+			reset() {
+				set(defaultFileStore)
 			},
 		}),
 		{ name: 'file-store' },

@@ -18,6 +18,7 @@ export interface IFileStore {
 	removeFile: (files: string[]) => Promise<boolean>
 	createArchive: (files: string[]) => Promise<boolean | string>
 	downloadArchive: (id: string) => Promise<boolean>
+	reset: () => void
 }
 
 export enum EFileStoreApiRoutes {

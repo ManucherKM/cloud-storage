@@ -76,6 +76,7 @@ export interface IAuthStore {
 	registrationWithVk: (code: string, redirectUri: string) => Promise<boolean>
 	loginWithVK: (code: string, redirectUri: string) => Promise<boolean>
 	logout: () => Promise<boolean>
+	reset: () => void
 }
 
 /** Routes for api requests to the authorization store. */
