@@ -1,4 +1,5 @@
 import { Dashboard, DashboardNavBar, FileList } from '@/components'
+import { env } from '@/configuration/env'
 import { ERoutes } from '@/configuration/routes'
 import { useWindowFilesTransfer } from '@/hooks'
 import { useFileStore, useStore } from '@/storage'
@@ -11,7 +12,7 @@ import {
 import { Alert, FileAdd } from 'kuui-react'
 import { ChangeEvent, FC, useEffect, useRef, useState } from 'react'
 
-const CLIENT_URL = import.meta.env.VITE_CLIENT_URL as string
+const CLIENT_URL = env.get('CLIENT_URL').required().asString()
 
 export const Storage: FC = () => {
 	const [search, setSearch] = useState<string>('')

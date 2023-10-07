@@ -1,3 +1,4 @@
+import { env } from '@/configuration/env'
 import { ERoutes } from '@/configuration/routes'
 import { redirectToVkAuthPage, useVKAuth } from '@/hooks'
 import { useAuthStore, useStore } from '@/storage'
@@ -19,9 +20,9 @@ import type { ChangeEvent, FC, FormEvent } from 'react'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 
-const HCAPTCHA_SITEKEY = import.meta.env.VITE_HCAPTCHA_SITEKEY as string
-const VK_CLIENT_ID = import.meta.env.VITE_VK_CLIENT_ID as string
-const CLIENT_URL = import.meta.env.VITE_CLIENT_URL as string
+const HCAPTCHA_SITEKEY = env.get('HCAPTCHA_SITEKEY').required().asString()
+const VK_CLIENT_ID = env.get('VK_CLIENT_ID').required().asString()
+const CLIENT_URL = env.get('CLIENT_URL').required().asString()
 
 /** Interface for the enrollment form. */
 export interface IRegistrationForm {

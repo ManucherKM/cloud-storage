@@ -1,6 +1,6 @@
 import { Remove, Restore, Share } from '@/assets/icons'
 import { clsx } from 'clsx'
-import { Button, Input } from 'kuui-react'
+import { Input } from 'kuui-react'
 import { ChangeEvent, FC, HTMLAttributes, MouseEvent } from 'react'
 import { LayoutNavigateButton } from '.'
 

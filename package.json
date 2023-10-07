@@ -28,6 +28,7 @@
 		"@types/react-dom": "^18.2.7",
 		"@vitejs/plugin-react": "^4.0.3",
 		"autoprefixer": "^10.4.15",
+		"env-var": "^7.4.1",
 		"postcss": "^8.4.29",
 		"prettier": "^3.0.3",
 		"prettier-plugin-jsdoc": "^1.0.2",

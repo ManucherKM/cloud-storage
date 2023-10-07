@@ -14,6 +14,8 @@ export const Download: FC = () => {
 		}
 
 		const isSuccess = downloadArchive(id)
+
+		console.log(isSuccess)
 	}
 
 	return (

@@ -1,8 +1,8 @@
 import { IFile } from '@/storage/useFileStore/types'
 import { getExtension } from '@/utils'
 import { FileItem } from 'kuui-react'
-import { Dispatch, FC, SetStateAction, useRef } from 'react'
-import Selecto, { OnSelect, SelectoProps } from 'react-selecto'
+import { Dispatch, FC, SetStateAction } from 'react'
+import Selecto, { OnSelect } from 'react-selecto'
 import { List } from './List'
 
 export interface IFileList {

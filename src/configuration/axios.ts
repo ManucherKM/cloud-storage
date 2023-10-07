@@ -1,11 +1,12 @@
 import axios from 'axios'
+import { env } from './env'
 
 // Getting the URL for API requests.
-const url = import.meta.env.VITE_API_URL
+const API_URL = env.get('API_URL').required().asString()
 
 // Set the base URL for axios.
 const instance = axios.create({
-	baseURL: url,
+	baseURL: API_URL,
 })
 
 export default instance
