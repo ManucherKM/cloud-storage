@@ -2,6 +2,7 @@ import { Remove, Restore, Share } from '@/assets/icons'
 import { clsx } from 'clsx'
 import { Button, Input } from 'kuui-react'
 import { ChangeEvent, FC, HTMLAttributes, MouseEvent } from 'react'
+import { LayoutNavigateButton } from '.'
 
 export interface IDashboardNavBar extends HTMLAttributes<HTMLDivElement> {
 	search?: string
@@ -58,44 +59,27 @@ export const DashboardNavBar: FC<IDashboardNavBar> = ({
 		<div className={styles} {...props}>
 			<div className="flex justify-start items-center gap-2">
 				{share && (
-					<Button
-						onClick={shareHandler}
-						variant="navigate"
-						className="text-[--kuui-black-250]"
-					>
-						<div className="flex items-center gap-1">
-							<Share />
-							Share
-						</div>
-					</Button>
+					<LayoutNavigateButton onClick={shareHandler}>
+						<Share />
+						Share
+					</LayoutNavigateButton>
 				)}
 				{remove && (
-					<Button
-						onClick={removeHandler}
-						variant="navigate"
-						className="text-[--kuui-black-250]"
-					>
-						<div className="flex items-center gap-1">
-							<Remove />
-							Remove
-						</div>
-					</Button>
+					<LayoutNavigateButton onClick={removeHandler}>
+						<Remove />
+						Remove
+					</LayoutNavigateButton>
 				)}
 				{restore && (
-					<Button
-						onClick={restoreHandler}
-						variant="navigate"
-						className="text-[--kuui-black-250]"
-					>
-						<div className="flex items-center gap-1">
-							<Restore />
-							Restore
-						</div>
-					</Button>
+					<LayoutNavigateButton onClick={restoreHandler}>
+						<Restore />
+						Restore
+					</LayoutNavigateButton>
 				)}
 			</div>
 
 			<Input
+				variant="text"
 				className="border-[--kuui-black-250]"
 				placeholder="Search"
 				value={search}

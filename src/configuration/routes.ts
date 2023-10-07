@@ -1,4 +1,12 @@
-import { Home, Login, Registration, Setting, Storage, Trash } from '@/pages'
+import {
+	Home,
+	Login,
+	Registration,
+	RestoreAccount,
+	Setting,
+	Storage,
+	Trash,
+} from '@/pages'
 import { Download } from '@/pages/Download'
 import { FC } from 'react'
 
@@ -11,8 +19,9 @@ export interface IRoute {
 /** Enumeration of possible application routes. */
 export enum ERoutes {
 	home = '/',
-	login = '/login',
-	registration = '/registration',
+	login = '/auth/login',
+	registration = '/auth/registration',
+	restoreAccount = '/auth/restore',
 	storage = '/storage',
 	trash = '/trash',
 	setting = '/setting',
@@ -32,6 +41,10 @@ export const publicRoutes: IRoute[] = [
 	{
 		path: ERoutes.registration,
 		component: Registration,
+	},
+	{
+		path: ERoutes.restoreAccount,
+		component: RestoreAccount,
 	},
 	{
 		path: ERoutes.download + '/:id',

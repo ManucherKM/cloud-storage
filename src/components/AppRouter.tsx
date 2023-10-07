@@ -11,17 +11,24 @@ export const AppRouter: FC = () => {
 	return (
 		<Routes>
 			{publicRoutes.map(route => (
-				<Route key={route.path} path={route.path} Component={route.component} />
+				<Route
+					key={route.path}
+					path={route.path}
+					element={<route.component />}
+				/>
 			))}
-			{isAuth &&
-				privateRoutes.map(route => (
-					<Route
-						key={route.path}
-						path={route.path}
-						Component={route.component}
-					/>
-				))}
-			<Route path="/*" Component={NotFound} />
+			{isAuth && (
+				<>
+					{privateRoutes.map(route => (
+						<Route
+							key={route.path}
+							path={route.path}
+							element={<route.component />}
+						/>
+					))}
+				</>
+			)}
+			<Route path="/*" element={<NotFound />} />
 		</Routes>
 	)
 }

@@ -2,7 +2,7 @@ import { IFile } from '@/storage/useFileStore/types'
 import { getExtension } from '@/utils'
 import { FileItem } from 'kuui-react'
 import { Dispatch, FC, SetStateAction, useRef } from 'react'
-import Selecto from 'react-selecto'
+import Selecto, { OnSelect, SelectoProps } from 'react-selecto'
 import { List } from './List'
 
 export interface IFileList {
@@ -21,10 +21,25 @@ export const FileList: FC<IFileList> = ({
 	selectedFiles,
 	setSelectedFiles,
 }) => {
-	const activeClass = useRef<string>('_active_17w3d_39')
+	function selectHandler(e: OnSelect) {
+		e.added.forEach(el => {
+			const fileId = el.dataset.id
+			if (!fileId) {
+				return
+			}
 
-	function clickHandler(file: IFile) {
-		console.log('Click file: ', file)
+			setSelectedFiles(prev => [...prev, fileId])
+		})
+
+		e.removed.forEach(el => {
+			const fileId = el.dataset.id
+
+			if (!fileId) {
+				return
+			}
+
+			setSelectedFiles(prev => prev.filter(id => id !== fileId))
+		})
 	}
 
 	return (
@@ -38,8 +53,8 @@ export const FileList: FC<IFileList> = ({
 							data-id={file.id}
 							key={file.id}
 							name={name}
+							isActive={selectedFiles.includes(file.id)}
 							extension={extension}
-							onClick={() => clickHandler(file)}
 							className="file"
 						/>
 					)
@@ -53,31 +68,7 @@ export const FileList: FC<IFileList> = ({
 				continueSelect={false}
 				toggleContinueSelect={'shift'}
 				hitRate={100}
-				onSelect={e => {
-					e.added.forEach(el => {
-						el.classList.add(activeClass.current)
-
-						const fileId = el.dataset.id
-
-						if (!fileId) {
-							return
-						}
-
-						setSelectedFiles(prev => [...prev, fileId])
-					})
-
-					e.removed.forEach(el => {
-						el.classList.remove(activeClass.current)
-
-						const fileId = el.dataset.id
-
-						if (!fileId) {
-							return
-						}
-
-						setSelectedFiles(prev => prev.filter(id => id !== fileId))
-					})
-				}}
+				onSelect={selectHandler}
 			/>
 		</>
 	)

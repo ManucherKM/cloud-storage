@@ -1,6 +1,7 @@
 export { Home } from './Home'
 export { Login } from './Login'
 export { Registration } from './Registration'
+export { RestoreAccount } from './RestoreAccount'
 export { Setting } from './Setting'
 export { Storage } from './Storage'
 export { Trash } from './Trash'

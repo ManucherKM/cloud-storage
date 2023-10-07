@@ -10,6 +10,7 @@ import {
 	Form,
 	GoogleAuth,
 	Input,
+	Link,
 	TextError,
 	Title,
 	VKAuth,
@@ -342,6 +343,9 @@ export const Login: FC = () => {
 					value={form.password}
 					onChange={passwordHandler}
 				/>
+				<Link to={ERoutes.restoreAccount} align="right" dimension="extraSmall">
+					Forgot your password?
+				</Link>
 
 				<HCaptcha
 					ref={hCaptchaRef}
