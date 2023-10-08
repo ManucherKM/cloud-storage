@@ -61,6 +61,7 @@ export const FileList: FC<IFileList> = ({
 				}}
 			/>
 			<Selecto
+				className="!bg-dominant-1-50 !border-dominant-1"
 				container={container}
 				selectableTargets={['.file']}
 				selectByClick

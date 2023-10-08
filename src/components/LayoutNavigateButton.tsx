@@ -11,7 +11,7 @@ export const LayoutNavigateButton: FC<ILayoutNavigateButton> = ({
 	...props
 }) => {
 	return (
-		<Button variant="navigate" className="text-[--kuui-black-250]" {...props}>
+		<Button variant="navigate" className="text-black-250" {...props}>
 			<div className="flex items-center gap-1">{children}</div>
 		</Button>
 	)

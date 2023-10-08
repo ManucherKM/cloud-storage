@@ -364,7 +364,7 @@ export const Registration: FC = () => {
 					Submit
 				</Button>
 
-				<div className="w-full h-[1px] bg-[--kuui-black-500]" />
+				<div className="w-full h-[1px] bg-black-500" />
 
 				<GoogleAuth variant="large" onClick={googleAuthHandler} />
 				<VKAuth variant="large" onClick={vkAuthHandler} />

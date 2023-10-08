@@ -52,7 +52,7 @@ export const DashboardNavBar: FC<IDashboardNavBar> = ({
 	}
 
 	const styles = clsx([
-		'w-full flex justify-between px-5 py-3 border-solid border-0 border-b border-[--kuui-black-250]',
+		'w-full flex justify-between px-5 py-3 border-solid border-0 border-b border-black-250',
 		className,
 	])
 	return (
@@ -80,7 +80,7 @@ export const DashboardNavBar: FC<IDashboardNavBar> = ({
 
 			<Input
 				variant="text"
-				className="border-[--kuui-black-250]"
+				className="border-black-250"
 				placeholder="Search"
 				value={search}
 				onChange={searchHandler}
