@@ -1,4 +1,10 @@
-import { Dashboard, DashboardNavBar, FileList } from '@/components'
+import {
+	AlertError,
+	AlertMessage,
+	Dashboard,
+	DashboardNavBar,
+	FileList,
+} from '@/components'
 import { env } from '@/configuration/env'
 import { ERoutes } from '@/configuration/routes'
 import { useWindowFilesTransfer } from '@/hooks'
@@ -9,7 +15,7 @@ import {
 	getValidFiles,
 	writeTextIntoClipboard,
 } from '@/utils'
-import { Alert, FileAdd } from 'kuui-react'
+import { FileAdd } from 'kuui-react'
 import { ChangeEvent, FC, useEffect, useRef, useState } from 'react'
 
 const CLIENT_URL = env.get('CLIENT_URL').required().asString()
@@ -176,22 +182,8 @@ export const Storage: FC = () => {
 	}, [])
 	return (
 		<>
-			{error.length !== 0 && (
-				<Alert
-					text={error}
-					variant="error"
-					time={6}
-					onTimeUp={errorTimeHandler}
-				/>
-			)}
-			{message.length !== 0 && (
-				<Alert
-					text={message}
-					variant="message"
-					time={6}
-					onTimeUp={messageTimeHandler}
-				/>
-			)}
+			<AlertError error={error} onTimeUp={errorTimeHandler} />
+			<AlertMessage message={message} onTimeUp={messageTimeHandler} />
 			<Dashboard title="Storage">
 				{isTransferFiles ? (
 					<FileAdd

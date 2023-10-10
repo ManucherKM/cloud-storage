@@ -1,8 +1,7 @@
-import { Dashboard, DashboardNavBar, FileList } from '@/components'
+import { AlertError, Dashboard, DashboardNavBar, FileList } from '@/components'
 import { useFileStore, useStore } from '@/storage'
 import { IFile } from '@/storage/useFileStore/types'
 import { getSearchedFiles, getTrashFiles } from '@/utils'
-import { Alert } from 'kuui-react'
 import { ChangeEvent, FC, useEffect, useRef, useState } from 'react'
 
 export const Trash: FC = () => {
@@ -94,14 +93,7 @@ export const Trash: FC = () => {
 	}, [])
 	return (
 		<>
-			{error.length !== 0 && (
-				<Alert
-					text={error}
-					variant="error"
-					time={6}
-					onTimeUp={errorTimeHandler}
-				/>
-			)}
+			<AlertError error={error} onTimeUp={errorTimeHandler} />
 			<Dashboard title="Storage">
 				<DashboardNavBar
 					search={search}

@@ -6,20 +6,11 @@ import { isObjectValuesEmpty, validateEmail, validatePassword } from '@/utils'
 import HCaptcha from '@hcaptcha/react-hcaptcha'
 import { useGoogleLogin } from '@react-oauth/google'
 import clsx from 'clsx'
-import {
-	Alert,
-	Button,
-	Form,
-	GoogleAuth,
-	Input,
-	Link,
-	TextError,
-	Title,
-	VKAuth,
-} from 'kuui-react'
+import { Button, Form, GoogleAuth, Link, Title, VKAuth } from 'kuui-react'
 import type { ChangeEvent, FC, FormEvent, HTMLAttributes } from 'react'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { AlertError, InputEmail, InputPassword } from '.'
 
 const HCAPTCHA_SITEKEY = env.get('HCAPTCHA_SITEKEY').required().asString()
 const VK_CLIENT_ID = env.get('VK_CLIENT_ID').required().asString()
@@ -309,44 +300,25 @@ export const FormLogin: FC<IFormLogin> = ({ className, ...props }) => {
 
 	return (
 		<div className={styles} {...props}>
-			{serverError.length !== 0 && (
-				<Alert
-					text={serverError}
-					variant="error"
-					time={6}
-					onTimeUp={serverErrorTimeHandler}
-				/>
-			)}
+			<AlertError error={serverError} onTimeUp={serverErrorTimeHandler} />
 
 			<Title className="mb-5" align="center">
 				Authorization
 			</Title>
 
 			<Form onSubmit={submitHandler} className="flex flex-col gap-3 w-full">
-				{formErrors.email && (
-					<TextError dimension="small" className="text-justify">
-						{formErrors.email}
-					</TextError>
-				)}
-				<Input
-					fill="all"
-					variant="text"
-					placeholder="email"
+				<InputEmail
+					error={formErrors.email}
 					value={form.email}
 					onChange={emailHandler}
 				/>
-				{formErrors.password && (
-					<TextError dimension="small" className="text-justify">
-						{formErrors.password}
-					</TextError>
-				)}
-				<Input
-					fill="all"
-					variant="password"
-					placeholder="password"
+
+				<InputPassword
+					error={formErrors.password}
 					value={form.password}
 					onChange={passwordHandler}
 				/>
+
 				<Link to={ERoutes.restoreAccount} align="right" dimension="extraSmall">
 					Forgot your password?
 				</Link>
