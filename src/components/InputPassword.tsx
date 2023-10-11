@@ -2,17 +2,14 @@ import { Input, TextError } from 'kuui-react'
 import { IInputPassword as IKuuiInputPassword } from 'kuui-react/dist/ui/Input/Input'
 import { forwardRef } from 'react'
 
-export type TInputPassword = Omit<
-	IKuuiInputPassword,
-	'fill' | 'variant' | 'placeholder'
->
+export type TInputPassword = Omit<IKuuiInputPassword, 'fill' | 'variant'>
 
 export interface IInputPassword extends TInputPassword {
 	error?: string
 }
 
 export const InputPassword = forwardRef<HTMLInputElement, IInputPassword>(
-	({ error, ...props }, ref) => {
+	({ error, placeholder, ...props }, ref) => {
 		return (
 			<div className="w-full h-min">
 				{error && (
@@ -24,7 +21,7 @@ export const InputPassword = forwardRef<HTMLInputElement, IInputPassword>(
 					ref={ref}
 					fill="all"
 					variant="password"
-					placeholder="password"
+					placeholder={placeholder || 'password'}
 					{...props}
 				/>
 			</div>

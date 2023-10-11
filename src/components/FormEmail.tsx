@@ -72,7 +72,7 @@ export const FormEmail: FC<IFormEmail> = () => {
 	}, [input.current])
 
 	useEffect(() => {
-		if (email.length && !error.length) {
+		if (email && !error) {
 			setDisableSubmit(false)
 		} else {
 			setDisableSubmit(true)
