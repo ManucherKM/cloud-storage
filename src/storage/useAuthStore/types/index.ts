@@ -66,10 +66,13 @@ export interface ILogoutResponse {
 	success: boolean
 }
 
+export type Token = string | null
+
 /** Interface to the authorization store. */
 export interface IAuthStore {
-	token: null | string
+	token: Token
 	login: (loginDto: ILoginTarget) => Promise<boolean>
+	setToken: (token: Token) => void
 	registration: (registrationDto: IRegistrationTarget) => Promise<boolean>
 	registrationWithGoogle: (code: string) => Promise<boolean>
 	loginWithGoogle: (code: string) => Promise<boolean>

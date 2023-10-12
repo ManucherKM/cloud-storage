@@ -1,4 +1,5 @@
-import { useStore } from '@/storage'
+import { ERoutes } from '@/configuration/routes'
+import { useRestoreAccount, useStore } from '@/storage'
 import { validateEmail } from '@/utils'
 import { Button, Form, Paragraph } from 'kuui-react'
 import {
@@ -11,6 +12,7 @@ import {
 	useRef,
 	useState,
 } from 'react'
+import { useNavigate } from 'react-router'
 import { AlertError, InputEmail } from '.'
 
 export type TFormEmail = HTMLAttributes<HTMLDivElement>
@@ -18,12 +20,15 @@ export type TFormEmail = HTMLAttributes<HTMLDivElement>
 export interface IFormEmail extends TFormEmail {}
 
 export const FormEmail: FC<IFormEmail> = () => {
-	const [email, setEmail] = useState<string>('')
+	const email = useRestoreAccount(store => store.email)
+	const setEmail = useRestoreAccount(store => store.setEmail)
+	const createOtp = useRestoreAccount(store => store.createOtp)
 	const [error, setError] = useState<string>('')
 	const [disableSubmit, setDisableSubmit] = useState<boolean>(true)
 	const [serverError, setServerError] = useState<string>('')
 	const setLoading = useStore(store => store.setLoading)
 	const input = useRef<HTMLInputElement>(null)
+	const navigate = useNavigate()
 
 	async function sendToApi() {
 		if (error) {
@@ -33,10 +38,16 @@ export const FormEmail: FC<IFormEmail> = () => {
 		input.current?.blur()
 
 		setLoading(true)
-		console.log(email)
 
-		// API
+		const isSuccess = await createOtp()
 
+		if (!isSuccess) {
+			setServerError('The user could not be found.')
+			setLoading(false)
+			return
+		}
+
+		navigate(ERoutes.restoreAccountOTP)
 		setLoading(false)
 	}
 

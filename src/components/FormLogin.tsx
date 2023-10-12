@@ -319,7 +319,11 @@ export const FormLogin: FC<IFormLogin> = ({ className, ...props }) => {
 					onChange={passwordHandler}
 				/>
 
-				<Link to={ERoutes.restoreAccount} align="right" dimension="extraSmall">
+				<Link
+					to={ERoutes.restoreAccountEmail}
+					align="right"
+					dimension="extraSmall"
+				>
 					Forgot your password?
 				</Link>
 

@@ -2,7 +2,9 @@ import {
 	Home,
 	Login,
 	Registration,
-	RestoreAccount,
+	RestoreAccountEmail,
+	RestoreAccountOTP,
+	RestoreAccountPassword,
 	Setting,
 	Storage,
 	Trash,
@@ -21,7 +23,9 @@ export enum ERoutes {
 	home = '/',
 	login = '/auth/login',
 	registration = '/auth/registration',
-	restoreAccount = '/auth/restore',
+	restoreAccountEmail = '/auth/restore/email',
+	restoreAccountOTP = '/auth/restore/otp',
+	restoreAccountPassword = '/auth/restore/password',
 	storage = '/storage',
 	trash = '/trash',
 	setting = '/setting',
@@ -43,8 +47,13 @@ export const publicRoutes: IRoute[] = [
 		component: Registration,
 	},
 	{
-		path: ERoutes.restoreAccount,
-		component: RestoreAccount,
+		path: ERoutes.restoreAccountEmail,
+		component: RestoreAccountEmail,
+	},
+
+	{
+		path: ERoutes.restoreAccountOTP,
+		component: RestoreAccountOTP,
 	},
 	{
 		path: ERoutes.download + '/:id',
@@ -65,5 +74,9 @@ export const privateRoutes: IRoute[] = [
 	{
 		path: ERoutes.setting,
 		component: Setting,
+	},
+	{
+		path: ERoutes.restoreAccountPassword,
+		component: RestoreAccountPassword,
 	},
 ]

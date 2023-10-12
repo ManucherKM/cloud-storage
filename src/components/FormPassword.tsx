@@ -1,5 +1,6 @@
-import { useStore } from '@/storage'
-import { isObjectValuesEmpty, validatePassword } from '@/utils'
+import { ERoutes } from '@/configuration/routes'
+import { useRestoreAccount, useStore } from '@/storage'
+import { validatePassword } from '@/utils'
 import { Button, Form, Paragraph } from 'kuui-react'
 import {
 	ChangeEvent,
@@ -10,7 +11,8 @@ import {
 	useRef,
 	useState,
 } from 'react'
-import { InputPassword } from '.'
+import { useNavigate } from 'react-router'
+import { AlertError, InputPassword } from '.'
 
 export interface IFormPassword {}
 
@@ -35,6 +37,8 @@ const defaultPasswords: IPasswords = {
 }
 
 export const FormPassword: FC<IFormPassword> = () => {
+	const changePassword = useRestoreAccount(store => store.changePassword)
+	const [serverError, setServerError] = useState<string>('')
 	const [passwords, setPasswords] = useState<IPasswords>(defaultPasswords)
 	const [isValidPasswords, setIsValidPasswords] = useState<boolean>(false)
 	const [passwordsErrors, setPasswordsErrors] = useState<IPasswordsErrors>(
@@ -43,6 +47,7 @@ export const FormPassword: FC<IFormPassword> = () => {
 	const inputPassword = useRef<HTMLInputElement>(null)
 	const inputConfirmPassword = useRef<HTMLInputElement>(null)
 	const setLoading = useStore(store => store.setLoading)
+	const navigate = useNavigate()
 
 	async function sendToApi() {
 		if (!isValidPasswords) {
@@ -50,10 +55,16 @@ export const FormPassword: FC<IFormPassword> = () => {
 		}
 
 		setLoading(true)
-		console.log(passwords)
 
-		// API
+		const isSuccess = await changePassword(passwords.password)
 
+		if (!isSuccess) {
+			setServerError('Failed to change password.')
+			setLoading(false)
+			return
+		}
+
+		navigate(ERoutes.login)
 		setLoading(false)
 	}
 
@@ -119,6 +130,10 @@ export const FormPassword: FC<IFormPassword> = () => {
 		}))
 	}
 
+	function serverErrorTimeHandler() {
+		setServerError('')
+	}
+
 	useEffect(() => {
 		const isPasswordValid = validatePassword(passwords.password)
 		const isConfirmPasswordValid = validatePassword(passwords.confirmPassword)
@@ -149,6 +164,7 @@ export const FormPassword: FC<IFormPassword> = () => {
 	}, [])
 	return (
 		<div className="max-w-xs w-full px-2">
+			<AlertError error={serverError} onTimeUp={serverErrorTimeHandler} />
 			<Paragraph className="mb-4" align="center">
 				Enter a new password.
 			</Paragraph>

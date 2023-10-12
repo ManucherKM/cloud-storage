@@ -151,6 +151,9 @@ export const useAuthStore = create(
 					return false
 				}
 			},
+			setToken(token) {
+				set({ token })
+			},
 			reset() {
 				set(defaultAuthStore)
 			},
