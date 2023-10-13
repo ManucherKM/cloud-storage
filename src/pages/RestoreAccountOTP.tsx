@@ -1,10 +1,16 @@
-import { FormOTP, LayoutRestoreAccount } from '@/components'
+import {
+	FormOTP,
+	LayoutRestoreAccount,
+	SlidingFromLeftToRight,
+} from '@/components'
 import { FC } from 'react'
 
 export const RestoreAccountOTP: FC = () => {
 	return (
 		<LayoutRestoreAccount>
-			<FormOTP />
+			<SlidingFromLeftToRight>
+				<FormOTP />
+			</SlidingFromLeftToRight>
 		</LayoutRestoreAccount>
 	)
 }

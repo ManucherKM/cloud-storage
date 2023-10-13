@@ -1,10 +1,16 @@
-import { FormEmail, LayoutRestoreAccount } from '@/components'
+import {
+	FormEmail,
+	LayoutRestoreAccount,
+	SlidingFromLeftToRight,
+} from '@/components'
 import { FC } from 'react'
 
 export const RestoreAccountEmail: FC = () => {
 	return (
 		<LayoutRestoreAccount>
-			<FormEmail />
+			<SlidingFromLeftToRight>
+				<FormEmail />
+			</SlidingFromLeftToRight>
 		</LayoutRestoreAccount>
 	)
 }
