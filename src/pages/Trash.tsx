@@ -94,7 +94,7 @@ export const Trash: FC = () => {
 	return (
 		<>
 			<AlertError error={error} onTimeUp={errorTimeHandler} />
-			<Dashboard title="Storage">
+			<Dashboard title="Trash">
 				<DashboardNavBar
 					search={search}
 					onSearch={searchHandler}

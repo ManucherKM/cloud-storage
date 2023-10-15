@@ -1,7 +1,7 @@
 import * as icons from '@/assets/icons'
 import { ERoutes } from '@/configuration/routes'
+import { useWindowHrefContain } from '@/hooks'
 import { useAuthStore, useStore } from '@/storage'
-import { isWindowHrefContain } from '@/utils'
 import { ListItem, Title } from 'kuui-react'
 import { IListItem } from 'kuui-react/dist/components/ListItem/ListItem'
 import { FC } from 'react'
@@ -13,30 +13,6 @@ export interface IMenu {
 }
 
 export interface INavigationButtons extends IListItem {}
-
-export const navigationButtons: INavigationButtons[] = [
-	{
-		isActive: isWindowHrefContain(ERoutes.storage),
-		to: ERoutes.storage,
-		align: 'left',
-		title: 'Storage',
-		icon: <icons.Storage />,
-	},
-	{
-		isActive: isWindowHrefContain(ERoutes.trash),
-		to: ERoutes.trash,
-		align: 'left',
-		title: 'Trash',
-		icon: <icons.Trash />,
-	},
-	{
-		isActive: isWindowHrefContain(ERoutes.setting),
-		to: ERoutes.setting,
-		align: 'left',
-		title: 'Setting',
-		icon: <icons.Gear />,
-	},
-]
 
 export const Menu: FC<IMenu> = ({ title }) => {
 	const logout = useAuthStore(store => store.logout)
@@ -56,21 +32,36 @@ export const Menu: FC<IMenu> = ({ title }) => {
 		setLoading(false)
 	}
 
+	const navigationButtons: INavigationButtons[] = [
+		{
+			isActive: useWindowHrefContain(ERoutes.storage),
+			to: ERoutes.storage,
+			align: 'left',
+			title: 'Storage',
+			icon: <icons.Storage />,
+		},
+		{
+			isActive: useWindowHrefContain(ERoutes.trash),
+			to: ERoutes.trash,
+			align: 'left',
+			title: 'Trash',
+			icon: <icons.Trash />,
+		},
+		{
+			isActive: useWindowHrefContain(ERoutes.setting),
+			to: ERoutes.setting,
+			align: 'left',
+			title: 'Setting',
+			icon: <icons.Gear />,
+		},
+	]
+
 	return (
 		<>
 			<Title className="px-4 py-2">{title}</Title>
 			<List
 				arr={navigationButtons}
-				callback={(button, idx) => (
-					<ListItem
-						key={idx}
-						to={button.to}
-						align={button.align}
-						title={button.title}
-						onClick={button.onClick}
-						icon={button.icon}
-					/>
-				)}
+				callback={(button, idx) => <ListItem key={idx} {...button} />}
 			/>
 			<ListItem
 				to="#"
