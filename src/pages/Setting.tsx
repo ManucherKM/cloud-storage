@@ -104,7 +104,6 @@ export const Setting: FC = () => {
 
 	useEffect(() => {
 		const isValid = !!form.themeId && !!form.round
-		console.log(form)
 
 		setIsValid(isValid)
 	}, [form])
