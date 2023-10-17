@@ -24,6 +24,7 @@ export const Setting: FC = () => {
 	const themes = useConfigStore(store => store.themes)
 	const getThemes = useConfigStore(store => store.getThemes)
 	const createConfig = useConfigStore(store => store.createConfig)
+	const [isValid, setIsValid] = useState<boolean>(false)
 	const updateConfig = useConfigStore(store => store.updateConfig)
 	const config = useConfigStore(store => store.config)
 	const setLoading = useStore(store => store.setLoading)
@@ -89,7 +90,9 @@ export const Setting: FC = () => {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
+				setLoading(true)
 				await getThemes()
+				setLoading(false)
 			} catch (e) {
 				console.error(e)
 				setError('Failed to get list of topics.')
@@ -98,6 +101,13 @@ export const Setting: FC = () => {
 
 		fetchData()
 	}, [])
+
+	useEffect(() => {
+		const isValid = !!form.themeId && !!form.round
+		console.log(form)
+
+		setIsValid(isValid)
+	}, [form])
 	return (
 		<>
 			<AlertMessage message={message} onTimeUp={messageTimeHandler} />
@@ -112,7 +122,7 @@ export const Setting: FC = () => {
 							<ChangeRound onChangeRound={roundChangeHandler} />
 						</LayoutSettingParameter>
 						<div>
-							<Button variant="active" type="submit">
+							<Button variant="active" type="submit" disabled={!isValid}>
 								Save changes
 							</Button>
 						</div>
