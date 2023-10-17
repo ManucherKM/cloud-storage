@@ -32,6 +32,7 @@ export interface IConfigStore {
 	updateConfig: (round: string, themeId: string) => Promise<boolean>
 	createConfig: (round: string, themeId: string) => Promise<boolean>
 	getConfig: () => Promise<boolean>
+	reset: () => void
 }
 
 export enum EConfigStoreApiRoutes {

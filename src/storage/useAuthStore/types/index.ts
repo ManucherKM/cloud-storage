@@ -66,6 +66,10 @@ export interface ILogoutResponse {
 	success: boolean
 }
 
+export interface IGetNewAccessTokenResponse {
+	accessToken: string
+}
+
 export type Token = string | null
 
 /** Interface to the authorization store. */
@@ -78,6 +82,7 @@ export interface IAuthStore {
 	loginWithGoogle: (code: string) => Promise<boolean>
 	registrationWithVk: (code: string, redirectUri: string) => Promise<boolean>
 	loginWithVK: (code: string, redirectUri: string) => Promise<boolean>
+	getNewAccessToken: () => Promise<boolean>
 	logout: () => Promise<boolean>
 	reset: () => void
 }
@@ -91,4 +96,5 @@ export enum EAuthStoreApiRoutes {
 	registrationWithVK = '/api/auth/registration/vk',
 	loginWithVK = '/api/auth/login/vk',
 	logout = 'api/auth/logout',
+	getNewAccessToken = 'api/jwt/token',
 }

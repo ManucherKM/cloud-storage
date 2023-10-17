@@ -1,6 +1,5 @@
 import axios from '@/configuration/axios'
-import { downloadFileFromBuffer, getAuthorization } from '@/utils'
-import { AxiosRequestConfig } from 'axios'
+import { downloadFileFromBuffer } from '@/utils'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { useAuthStore } from '..'
@@ -30,11 +29,6 @@ export const useFileStore = create(
 
 					const { data, status } = await axios.get<IFile[]>(
 						EFileStoreApiRoutes.getFilesByUserId,
-						{
-							headers: {
-								Authorization: getAuthorization(token),
-							},
-						},
 					)
 
 					if (status !== 200) {
@@ -67,11 +61,6 @@ export const useFileStore = create(
 						const promise = axios.post<IFile>(
 							EFileStoreApiRoutes.sendFiles,
 							formData,
-							{
-								headers: {
-									Authorization: getAuthorization(token),
-								},
-							},
 						)
 
 						promises.push(promise)
@@ -104,11 +93,7 @@ export const useFileStore = create(
 					for (const id of files) {
 						const url = EFileStoreApiRoutes.addFileToTrash + '/' + id
 
-						const promise = axios.get<IFile>(url, {
-							headers: {
-								Authorization: getAuthorization(token),
-							},
-						})
+						const promise = axios.get<IFile>(url)
 
 						promises.push(promise)
 					}
@@ -153,11 +138,7 @@ export const useFileStore = create(
 					for (const id of files) {
 						const url = EFileStoreApiRoutes.restoreFileFromTrash + '/' + id
 
-						const promise = axios.get<IFile>(url, {
-							headers: {
-								Authorization: getAuthorization(token),
-							},
-						})
+						const promise = axios.get<IFile>(url)
 
 						promises.push(promise)
 					}
@@ -202,11 +183,7 @@ export const useFileStore = create(
 					for (const id of files) {
 						const url = EFileStoreApiRoutes.removeFile + '/' + id
 
-						const promise = axios.delete<IFile>(url, {
-							headers: {
-								Authorization: getAuthorization(token),
-							},
-						})
+						const promise = axios.delete<IFile>(url)
 
 						promises.push(promise)
 					}
@@ -245,12 +222,6 @@ export const useFileStore = create(
 						return false
 					}
 
-					const config: AxiosRequestConfig = {
-						headers: {
-							Authorization: getAuthorization(token),
-						},
-					}
-
 					const payload: { fileIds: string[] } = {
 						fileIds: files,
 					}
@@ -258,7 +229,6 @@ export const useFileStore = create(
 					const { data } = await axios.post<ICreateArchiveResponse>(
 						EFileStoreApiRoutes.createArchive,
 						payload,
-						config,
 					)
 
 					if (!data.id) {
@@ -283,9 +253,6 @@ export const useFileStore = create(
 
 					const { data } = await axios.get<Buffer>(url, {
 						responseType: 'arraybuffer',
-						headers: {
-							Authorization: getAuthorization(token),
-						},
 					})
 
 					if (!data) {

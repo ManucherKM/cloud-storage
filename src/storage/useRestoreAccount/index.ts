@@ -1,5 +1,4 @@
 import axios from '@/configuration/axios'
-import { getAuthorization } from '@/utils'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { useAuthStore } from '..'
@@ -89,11 +88,6 @@ export const useRestoreAccount = create(
 						ERestoreAccountApiRoutes.changePassword,
 						{
 							password,
-						},
-						{
-							headers: {
-								Authorization: getAuthorization(token),
-							},
 						},
 					)
 

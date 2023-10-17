@@ -1,10 +1,15 @@
 import axios from '@/configuration/axios'
+import { env } from '@/configuration/env'
+import { history } from '@/configuration/history'
+import { ERoutes } from '@/configuration/routes'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { useFileStore, useStore } from '..'
+import { useConfigStore } from '../useConfigStore/useConfigStore'
 import {
 	EAuthStoreApiRoutes,
 	IAuthStore,
+	IGetNewAccessTokenResponse,
 	ILoginResponse,
 	ILoginWithGoogleResponse,
 	ILoginWithVKResponse,
@@ -13,6 +18,8 @@ import {
 	IRegistrationWithGoogleResponse,
 	IRegistrationWithVKResponse,
 } from './types'
+
+const CLIENT_URL = env.get('CLIENT_URL').required().asString()
 
 const defaultAuthStore = {
 	token: null,
@@ -141,6 +148,8 @@ export const useAuthStore = create(
 						return false
 					}
 
+					useAuthStore.getState().reset()
+					useConfigStore.getState().reset()
 					useFileStore.getState().reset()
 					useStore.getState().reset()
 					get().reset()
@@ -148,6 +157,27 @@ export const useAuthStore = create(
 					return true
 				} catch (e) {
 					console.error(e)
+					return false
+				}
+			},
+			async getNewAccessToken() {
+				try {
+					const { data } = await axios.post<IGetNewAccessTokenResponse>(
+						EAuthStoreApiRoutes.getNewAccessToken,
+					)
+
+					if (!data.accessToken) {
+						return false
+					}
+
+					set({ token: data.accessToken })
+
+					return true
+				} catch (e) {
+					console.error(e)
+					get().logout()
+
+					history.push(CLIENT_URL + ERoutes.login)
 					return false
 				}
 			},

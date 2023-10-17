@@ -1,5 +1,4 @@
 import axios from '@/configuration/axios'
-import { getAuthorization } from '@/utils'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { useAuthStore } from '..'
@@ -19,7 +18,7 @@ const defaultConfigStore = {
 
 export const useConfigStore = create(
 	persist<IConfigStore>(
-		set => ({
+		(set, get) => ({
 			...defaultConfigStore,
 			async getThemes() {
 				try {
@@ -31,11 +30,6 @@ export const useConfigStore = create(
 
 					const { data } = await axios.get<IGetThemesResponse>(
 						EConfigStoreApiRoutes.getThemes,
-						{
-							headers: {
-								Authorization: getAuthorization(token),
-							},
-						},
 					)
 
 					if (!data.themes.length) {
@@ -71,16 +65,13 @@ export const useConfigStore = create(
 					const { data } = await axios.post<ICreateConfigResponse>(
 						EConfigStoreApiRoutes.createConfig,
 						payload,
-						{
-							headers: {
-								Authorization: getAuthorization(token),
-							},
-						},
 					)
 
 					if (!data.success) {
 						return false
 					}
+
+					await get().getConfig()
 
 					return true
 				} catch (e) {
@@ -109,16 +100,13 @@ export const useConfigStore = create(
 					const { data } = await axios.patch<IUpdateConfigResponse>(
 						EConfigStoreApiRoutes.updateConfig,
 						payload,
-						{
-							headers: {
-								Authorization: getAuthorization(token),
-							},
-						},
 					)
 
 					if (!data.success) {
 						return false
 					}
+
+					await get().getConfig()
 
 					return true
 				} catch (e) {
@@ -136,11 +124,6 @@ export const useConfigStore = create(
 
 					const { data } = await axios.get<IConfig>(
 						EConfigStoreApiRoutes.getConfig,
-						{
-							headers: {
-								Authorization: getAuthorization(token),
-							},
-						},
 					)
 
 					if (!data) {

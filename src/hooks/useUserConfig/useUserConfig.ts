@@ -18,8 +18,12 @@ export async function useUserConfig() {
 		if (!config) {
 			return
 		}
+		if (config.round) {
+			changeRound(config.round + 'px')
+		}
 
-		changeRound(config.round + 'px')
-		changeTheme(config.theme)
+		if (Object.values(config.theme).length) {
+			changeTheme(config.theme)
+		}
 	}, [config])
 }
