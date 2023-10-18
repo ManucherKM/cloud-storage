@@ -1,4 +1,5 @@
 import {
+	AccountConfirm,
 	Home,
 	Login,
 	Registration,
@@ -30,6 +31,7 @@ export enum ERoutes {
 	trash = '/trash',
 	setting = '/setting',
 	download = '/download',
+	accountConfirm = '/accountConfirm',
 }
 
 /** Public Routes */
@@ -58,6 +60,10 @@ export const publicRoutes: IRoute[] = [
 	{
 		path: ERoutes.download + '/:id',
 		component: Download,
+	},
+	{
+		path: ERoutes.accountConfirm,
+		component: AccountConfirm,
 	},
 ]
 
