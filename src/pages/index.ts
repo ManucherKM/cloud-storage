@@ -1,4 +1,5 @@
 export { AccountConfirm } from './AccountConfirm'
+export { Download } from './Download'
 export { Home } from './Home'
 export { Login } from './Login'
 export { Registration } from './Registration'

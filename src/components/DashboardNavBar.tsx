@@ -66,7 +66,7 @@ export const DashboardNavBar: FC<IDashboardNavBar> = ({
 				)}
 				{remove && (
 					<LayoutNavigateButton onClick={removeHandler}>
-						<Remove />
+						<Remove width="16" height="16" />
 						Remove
 					</LayoutNavigateButton>
 				)}

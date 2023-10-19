@@ -1,5 +1,6 @@
 import {
 	AccountConfirm,
+	Download,
 	Home,
 	Login,
 	Registration,
@@ -10,7 +11,6 @@ import {
 	Storage,
 	Trash,
 } from '@/pages'
-import { Download } from '@/pages/Download'
 import { FC } from 'react'
 
 /** Application Routing Interface. */

@@ -1,11 +1,9 @@
-import { AnimatePresence, motion } from 'framer-motion'
-import { ReactNode } from 'react'
+import { AnimatePresence, HTMLMotionProps, motion } from 'framer-motion'
+import { FC } from 'react'
 
-export interface ISlidingFromLeftToRight {
-	children: ReactNode
-}
+export interface ISlidingFromLeftToRight extends HTMLMotionProps<'div'> {}
 
-export function SlidingFromLeftToRight({ children }: ISlidingFromLeftToRight) {
+export const SlidingFromLeftToRight: FC<ISlidingFromLeftToRight> = props => {
 	return (
 		<AnimatePresence>
 			<motion.div
@@ -13,9 +11,8 @@ export function SlidingFromLeftToRight({ children }: ISlidingFromLeftToRight) {
 				animate={{ opacity: 1, x: '0' }}
 				exit={{ opacity: 0, x: '-100px' }}
 				transition={{ duration: '0.2' }}
-			>
-				{children}
-			</motion.div>
+				{...props}
+			/>
 		</AnimatePresence>
 	)
 }

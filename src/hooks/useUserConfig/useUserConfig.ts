@@ -1,4 +1,4 @@
-import { useAuthStore } from '@/storage'
+import { useAuthStore, useStore } from '@/storage'
 import { useConfigStore } from '@/storage/useConfigStore/useConfigStore'
 import { changeRound, changeTheme } from 'kuui-react'
 import { useEffect } from 'react'
@@ -7,10 +7,12 @@ export async function useUserConfig() {
 	const config = useConfigStore(store => store.config)
 	const getConfig = useConfigStore(store => store.getConfig)
 	const isAuth: boolean = !!useAuthStore(store => store.token)
+	const setLoading = useStore(store => store.setLoading)
 
 	useEffect(() => {
 		if (isAuth) {
-			getConfig()
+			setLoading(true)
+			getConfig().finally(() => setLoading(false))
 		}
 	}, [isAuth])
 

@@ -1,3 +1,4 @@
+export { CheckMark } from './CheckMark'
 export { Gear } from './Gear'
 export { Logout } from './Logout'
 export { Remove } from './Remove'
