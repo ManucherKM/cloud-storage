@@ -1,7 +1,7 @@
-import { ITheme } from 'kuui-react'
+import { IColorTheme } from 'kuui-react'
 
 export interface IGetThemesResponse {
-	themes: ITheme[]
+	themes: IColorTheme[]
 }
 
 export interface IUpdateConfigResponse {
@@ -26,7 +26,7 @@ export interface IConfig {
 }
 
 export interface IConfigStore {
-	themes: ITheme[]
+	themes: IColorTheme[]
 	config: IConfig | null
 	getThemes: () => Promise<boolean>
 	updateConfig: (round: string, themeId: string) => Promise<boolean>

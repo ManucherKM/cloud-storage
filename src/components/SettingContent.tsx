@@ -5,7 +5,7 @@ import {
 	LayoutSettingParameter,
 } from '@/components'
 import { useConfigStore, useStore } from '@/storage'
-import { Button, ChangeRound, ColorThemes, Form, ITheme } from 'kuui-react'
+import { Button, ChangeRound, ColorThemes, Form, IColorTheme } from 'kuui-react'
 import { FC, FormEvent, useEffect, useState } from 'react'
 
 export interface ISettingDefaultForm {
@@ -77,7 +77,7 @@ export const SettingContent: FC = () => {
 		await sendToApi()
 	}
 
-	function themeChangeHandler(theme: ITheme) {
+	function themeChangeHandler(theme: IColorTheme) {
 		setForm(prev => ({ ...prev, themeId: theme.id }))
 	}
 
