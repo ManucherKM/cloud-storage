@@ -109,24 +109,23 @@ export const TrashContent: FC = () => {
 					restore={true}
 					onRestore={restoreFilesHandler}
 				/>
-
-				<div
-					ref={blockForSelection}
-					className="w-full h-[90%] mb-14 overflow-auto p-5"
-				>
-					{showFiles.length ? (
-						<div className="grid grid-cols-8 auto-rows-min gap-4 tb_lg:grid-cols-6 tb_sm:grid-cols-4 ph_lg:grid-cols-2">
-							<FileList
-								files={showFiles}
-								container={blockForSelection.current}
-								selectedFiles={idOfTheSelectedFiles}
-								setSelectedFiles={setIdOfTheSelectedFiles}
-							/>
-						</div>
-					) : (
+				{showFiles.length ? (
+					<div
+						ref={blockForSelection}
+						className="w-full h-[90%] mb-14 overflow-auto p-5 grid grid-cols-8 auto-rows-min gap-4 tb_lg:grid-cols-6 tb_sm:grid-cols-4 ph_lg:grid-cols-2"
+					>
+						<FileList
+							files={showFiles}
+							container={blockForSelection.current}
+							selectedFiles={idOfTheSelectedFiles}
+							setSelectedFiles={setIdOfTheSelectedFiles}
+						/>
+					</div>
+				) : (
+					<div className="w-full h-[90%] mb-14 overflow-auto p-5">
 						<TrashEmpty className="h-full" />
-					)}
-				</div>
+					</div>
+				)}
 			</Dashboard>
 		</>
 	)
