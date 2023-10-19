@@ -1,5 +1,4 @@
-import { Button } from 'kuui-react'
-import { IButton } from 'kuui-react/dist/ui/Button/Button'
+import { Button, IButton } from 'kuui-react'
 import { FC } from 'react'
 
 export type TLayoutNavigateButton = Omit<IButton, 'variant' | 'className'>

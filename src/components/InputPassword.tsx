@@ -1,5 +1,8 @@
-import { Input, TextError } from 'kuui-react'
-import { IInputPassword as IKuuiInputPassword } from 'kuui-react/dist/ui/Input/Input'
+import {
+	IInputPassword as IKuuiInputPassword,
+	Input,
+	TextError,
+} from 'kuui-react'
 import { forwardRef } from 'react'
 
 export type TInputPassword = Omit<IKuuiInputPassword, 'fill' | 'variant'>

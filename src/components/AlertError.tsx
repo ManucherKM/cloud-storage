@@ -1,5 +1,4 @@
-import { Alert } from 'kuui-react'
-import { IAlert } from 'kuui-react/dist/components/Alert/Alert'
+import { Alert, IAlert } from 'kuui-react'
 import { FC } from 'react'
 
 export type TAlertError = Omit<IAlert, 'text' | 'variant' | 'time'>

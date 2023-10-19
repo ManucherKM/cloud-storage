@@ -4,10 +4,8 @@ import {
 	Dashboard,
 	LayoutSettingParameter,
 } from '@/components'
-import { useStore } from '@/storage'
-import { useConfigStore } from '@/storage/useConfigStore/useConfigStore'
-import { Button, ChangeRound, ColorThemes, Form } from 'kuui-react'
-import { ITheme } from 'kuui-react/dist/components/ColorThemes/ColorThemes'
+import { useConfigStore, useStore } from '@/storage'
+import { Button, ChangeRound, ColorThemes, Form, ITheme } from 'kuui-react'
 import { FC, FormEvent, useEffect, useState } from 'react'
 
 export interface ISettingDefaultForm {

@@ -1,5 +1,4 @@
-import { useAuthStore, useStore } from '@/storage'
-import { useConfigStore } from '@/storage/useConfigStore/useConfigStore'
+import { useAuthStore, useConfigStore, useStore } from '@/storage'
 import { changeRound, changeTheme } from 'kuui-react'
 import { useEffect } from 'react'
 

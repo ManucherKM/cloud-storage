@@ -1,5 +1,4 @@
-import { Input, TextError } from 'kuui-react'
-import { IInputText } from 'kuui-react/dist/ui/Input/Input'
+import { IInputText, Input, TextError } from 'kuui-react'
 import { forwardRef } from 'react'
 
 export type TInputEmail = Omit<IInputText, 'fill' | 'variant' | 'placeholder'>

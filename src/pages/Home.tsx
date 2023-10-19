@@ -1,5 +1,10 @@
+import { HomeContent, SlidingFromLeftToRight } from '@/components'
 import { FC } from 'react'
 
 export const Home: FC = () => {
-	return <div>Home</div>
+	return (
+		<SlidingFromLeftToRight className="h-full">
+			<HomeContent />
+		</SlidingFromLeftToRight>
+	)
 }

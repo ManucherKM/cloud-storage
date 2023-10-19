@@ -1,5 +1,10 @@
-import { AlertError, Dashboard, DashboardNavBar, FileList } from '@/components'
-import { TrashEmpty } from '@/components/TrashEmpty'
+import {
+	AlertError,
+	Dashboard,
+	DashboardNavBar,
+	FileList,
+	TrashEmpty,
+} from '@/components'
 import { useFileStore, useStore } from '@/storage'
 import { IFile } from '@/storage/useFileStore/types'
 import { getSearchedFiles, getTrashFiles } from '@/utils'

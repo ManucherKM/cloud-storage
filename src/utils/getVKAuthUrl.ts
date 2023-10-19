@@ -1,4 +1,4 @@
-import { IRedirectVKAuthTarget } from '../types'
+import { IRedirectVKAuthTarget } from '@/hooks'
 
 /** Interface for the incoming parameters of the `getVKAuthUrl` function. */
 export interface IGetVKAuthUrl extends IRedirectVKAuthTarget {}

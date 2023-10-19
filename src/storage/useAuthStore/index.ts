@@ -5,7 +5,7 @@ import { ERoutes } from '@/configuration/routes'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { useFileStore, useStore } from '..'
-import { useConfigStore } from '../useConfigStore/useConfigStore'
+import { useConfigStore } from '../useConfigStore'
 import {
 	EAuthStoreApiRoutes,
 	IAuthStore,

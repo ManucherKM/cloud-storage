@@ -1,4 +1,4 @@
-import { ITheme } from 'kuui-react/dist/components/ColorThemes/ColorThemes'
+import { ITheme } from 'kuui-react'
 
 export interface IGetThemesResponse {
 	themes: ITheme[]
