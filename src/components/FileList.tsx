@@ -5,8 +5,6 @@ import { Dispatch, FC, SetStateAction } from 'react'
 import Selecto, { OnSelect } from 'react-selecto'
 import { List } from './List'
 
-const images = ['.jpg', '.jpeg', '.png']
-
 export interface IFileList {
 	files: IFile[]
 	container: HTMLElement | null
