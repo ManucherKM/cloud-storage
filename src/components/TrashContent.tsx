@@ -110,12 +110,12 @@ export const TrashContent: FC = () => {
 					onRestore={restoreFilesHandler}
 				/>
 
-				<div className="w-full h-[90%] mb-14 overflow-auto p-5">
+				<div
+					ref={blockForSelection}
+					className="w-full h-[90%] mb-14 overflow-auto p-5"
+				>
 					{showFiles.length ? (
-						<div
-							ref={blockForSelection}
-							className="grid grid-cols-8 auto-rows-min gap-4 tb_lg:grid-cols-6 tb_sm:grid-cols-4 ph_lg:grid-cols-2"
-						>
+						<div className="grid grid-cols-8 auto-rows-min gap-4 tb_lg:grid-cols-6 tb_sm:grid-cols-4 ph_lg:grid-cols-2">
 							<FileList
 								files={showFiles}
 								container={blockForSelection.current}
