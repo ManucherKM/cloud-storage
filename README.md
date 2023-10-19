@@ -11,6 +11,7 @@
 ![SCSS](https://img.shields.io/badge/-SCSS-000?style=for-the-badge&logo=sass&logoColor=CD6799)
 ![Tailwind](https://img.shields.io/badge/-Tailwind-000?style=for-the-badge&logo=tailwindcss&logoColor=38bdf8)
 ![PostCSS](https://img.shields.io/badge/-PostCSS-000?style=for-the-badge&logo=PostCSS&logoColor=d6380a)
+![Axios](https://img.shields.io/badge/-axios-000?style=for-the-badge&logo=axios&logoColor=5728dd)
 ![KUUI](https://img.shields.io/badge/-KUUI-000?style=for-the-badge)
 ![Vite](https://img.shields.io/badge/-Vite-000?style=for-the-badge&logo=Vite&logoColor=9d53f6)
 ![Vercel](https://img.shields.io/badge/-Vercel-000?style=for-the-badge&logo=Vercel&logoColor=fff)
