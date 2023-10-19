@@ -103,7 +103,7 @@ export const SettingContent: FC = () => {
 	}, [])
 
 	useEffect(() => {
-		const isValid = !!form.themeId && !!form.round
+		const isValid = !!form.themeId || !!form.round
 
 		setIsValid(isValid)
 	}, [form])
