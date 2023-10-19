@@ -19,4 +19,10 @@
 
 ## Preview
 
-![Registration]()
+![Registration](https://github.com/ManucherKM/cloud-storage/blob/react/preview/registration.png?raw=true)
+![Login](https://github.com/ManucherKM/cloud-storage/blob/react/preview/login.png?raw=true)
+![Receive](https://github.com/ManucherKM/cloud-storage/blob/react/preview/receive.png?raw=true)
+![Storage](https://github.com/ManucherKM/cloud-storage/blob/react/preview/storage.png?raw=true)
+![Storage](https://github.com/ManucherKM/cloud-storage/blob/react/preview/storage.png?raw=true)
+![Trash](https://github.com/ManucherKM/cloud-storage/blob/react/preview/trash.png?raw=true)
+![Setting](https://github.com/ManucherKM/cloud-storage/blob/react/preview/setting.png?raw=true)
