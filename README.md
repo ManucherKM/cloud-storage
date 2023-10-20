@@ -9,6 +9,7 @@
 [Backend](https://github.com/ManucherKM/cloud-storage-backend)
 
 ## Languages and Tools
+
 ![TypeScript](https://img.shields.io/badge/-TypeScript-000?style=for-the-badge&logo=TypeScript&logoColor=3178C6)
 ![React](https://img.shields.io/badge/-React-000?style=for-the-badge&logo=React&logoColor=5ed3f3)
 ![Zustand](https://img.shields.io/badge/-Zustand-000?style=for-the-badge)
@@ -24,4 +25,4 @@
 
 ## Preview
 
-![Preview](https://youtu.be/Bi72e0W1x48)
+[![Preview]()](https://youtu.be/Bi72e0W1x48)
