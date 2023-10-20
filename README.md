@@ -24,4 +24,4 @@
 
 ## Preview
 
-![Registration](https://github.com/ManucherKM/cloud-storage/blob/react/preview/registration.png?raw=true)
+![Preview](https://github.com/ManucherKM/cloud-storage/blob/react/preview/preview.gif?raw=true)
