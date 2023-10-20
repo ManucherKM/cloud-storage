@@ -1,3 +1,5 @@
+![Banner](https://github.com/ManucherKM/cloud-storage/blob/react/preview/Banner.png?raw=true)
+
 # 💿 Cloud storage | Beta testing.
 
 [Demo](https://cloud-storage-indol.vercel.app)
