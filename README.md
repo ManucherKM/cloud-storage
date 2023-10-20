@@ -25,4 +25,4 @@
 
 ## Preview
 
-[![Preview]()](https://youtu.be/Bi72e0W1x48)
+[![Preview](https://github.com/ManucherKM/cloud-storage/blob/react/preview/cover.png?raw=true)](https://youtu.be/Bi72e0W1x48)
