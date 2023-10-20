@@ -24,4 +24,4 @@
 
 ## Preview
 
-![Preview](https://github.com/ManucherKM/cloud-storage/blob/react/preview/preview.gif?raw=true)
+![Preview](https://youtu.be/Bi72e0W1x48)
