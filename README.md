@@ -1,4 +1,4 @@
-![Banner](https://github.com/ManucherKM/cloud-storage/blob/react/preview/banner.png?raw=true)
+![Banner](https://github.com/ManucherKM/cloud-storage/blob/react/preview/Banner.png?raw=true)
 
 # 💿 Cloud storage | Beta testing.
 
