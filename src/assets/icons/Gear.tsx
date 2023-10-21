@@ -1,5 +1,11 @@
-import { FC } from 'react'
+// Types
+import type { FC } from 'react'
 
+/**
+ * Gear SVG icon.
+ *
+ * @example <Gear />
+ */
 export const Gear: FC = () => {
 	return (
 		<svg width="20" height="20" viewBox="0 0 50 50">

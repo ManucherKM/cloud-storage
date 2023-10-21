@@ -1,5 +1,11 @@
-import { FC } from 'react'
+// Types
+import type { FC } from 'react'
 
+/**
+ * Exit SVG icon.
+ *
+ * @example <Logout />
+ */
 export const Logout: FC = () => {
 	return (
 		<svg width="20px" height="20px" viewBox="0 0 24 24">

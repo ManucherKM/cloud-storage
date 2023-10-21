@@ -1,3 +1,7 @@
+// Types
+import type { FC } from 'react'
+
+// Components
 import {
 	AccountConfirm,
 	Download,
@@ -11,7 +15,6 @@ import {
 	Storage,
 	Trash,
 } from '@/pages'
-import { FC } from 'react'
 
 /** Application Routing Interface. */
 export interface IRoute {

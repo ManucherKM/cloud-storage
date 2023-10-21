@@ -1,5 +1,11 @@
-import { FC } from 'react'
+// Types
+import type { FC } from 'react'
 
+/**
+ * SVG check mark icon.
+ *
+ * @example <CheckMark />
+ */
 export const CheckMark: FC = () => {
 	return (
 		<svg width="60" height="60" viewBox="0 0 48 48">

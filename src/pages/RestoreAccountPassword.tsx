@@ -1,10 +1,18 @@
+// Types
+import type { FC } from 'react'
+
+// Components
 import {
 	FormPassword,
 	LayoutRestoreAccount,
 	SlidingFromLeftToRight,
 } from '@/components'
-import { FC } from 'react'
 
+/**
+ * Account recovery password page.
+ *
+ * @example <RestoreAccountPassword />
+ */
 export const RestoreAccountPassword: FC = () => {
 	return (
 		<LayoutRestoreAccount>

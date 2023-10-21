@@ -1,6 +1,14 @@
-import { HomeContent, SlidingFromLeftToRight } from '@/components'
-import { FC } from 'react'
+// Types
+import type { FC } from 'react'
 
+// Components
+import { HomeContent, SlidingFromLeftToRight } from '@/components'
+
+/**
+ * Home page.
+ *
+ * @example <Home />
+ */
 export const Home: FC = () => {
 	return (
 		<SlidingFromLeftToRight className="h-full">

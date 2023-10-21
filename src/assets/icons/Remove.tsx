@@ -1,9 +1,22 @@
-import { FC, SVGAttributes } from 'react'
+// Types
+import type { FC, SVGAttributes } from 'react'
 
+/**
+ * Valid types for the Remove component.
+ */
 export type TRemove = Omit<SVGAttributes<SVGSVGElement>, 'viewBox'>
 
+/**
+ * Remove component interface.
+ */
 export interface IRemove extends TRemove {}
 
+/**
+ *SVG icon of trash can for deletion.
+ * @param props Propses
+ *
+ * @example <Remove />
+ */
 export const Remove: FC<IRemove> = props => {
 	return (
 		<svg viewBox="0,0,256,256" {...props}>

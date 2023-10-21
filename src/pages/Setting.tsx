@@ -1,6 +1,13 @@
-import { SettingContent, SlidingFromLeftToRight } from '@/components'
-import { FC } from 'react'
+// Types
+import type { FC } from 'react'
 
+// Components
+import { SettingContent, SlidingFromLeftToRight } from '@/components'
+
+/**
+ * Setting page.
+ * @example <Setting />
+ */
 export const Setting: FC = () => {
 	return (
 		<SlidingFromLeftToRight className="h-full">

@@ -1,6 +1,14 @@
-import { DownloadContent, SlidingFromLeftToRight } from '@/components'
-import { FC } from 'react'
+// Types
+import type { FC } from 'react'
 
+// Components
+import { DownloadContent, SlidingFromLeftToRight } from '@/components'
+
+/**
+ * Page for downloading files shared by the user.
+ *
+ * @example <Download />
+ */
 export const Download: FC = () => {
 	return (
 		<div className="w-full h-full flex justify-center items-center">

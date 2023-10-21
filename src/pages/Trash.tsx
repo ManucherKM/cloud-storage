@@ -1,6 +1,14 @@
-import { SlidingFromLeftToRight, TrashContent } from '@/components'
-import { FC } from 'react'
+// Types
+import type { FC } from 'react'
 
+// Components
+import { SlidingFromLeftToRight, TrashContent } from '@/components'
+
+/**
+ * Trash page.
+ *
+ * @example <Trash />
+ */
 export const Trash: FC = () => {
 	return (
 		<SlidingFromLeftToRight className="h-full">

@@ -1,10 +1,18 @@
+// Types
+import type { FC } from 'react'
+
+// Components
 import {
 	FormEmail,
 	LayoutRestoreAccount,
 	SlidingFromLeftToRight,
 } from '@/components'
-import { FC } from 'react'
 
+/**
+ * Account recovery email page.
+ *
+ * @example <RestoreAccountEmail />
+ */
 export const RestoreAccountEmail: FC = () => {
 	return (
 		<LayoutRestoreAccount>

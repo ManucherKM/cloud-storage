@@ -1,5 +1,11 @@
-import { FC } from 'react'
+// Types
+import type { FC } from 'react'
 
+/**
+ * SVG arrow icon for share action.
+ *
+ * @example <Share />
+ */
 export const Share: FC = () => {
 	return (
 		<svg width="16" height="16" viewBox="0,0,256,256">

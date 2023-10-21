@@ -1,5 +1,11 @@
-import { FC } from 'react'
+// Types
+import type { FC } from 'react'
 
+/**
+ *
+ * SVG storage icon.
+ * @example <Storage />
+ */
 export const Storage: FC = () => {
 	return (
 		<svg width="20px" height="20px" viewBox="0 0 35 35">

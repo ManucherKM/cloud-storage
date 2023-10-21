@@ -1,5 +1,11 @@
-import { FC } from 'react'
+// Types
+import type { FC } from 'react'
 
+/**
+ * SVG trash can icon.
+ *
+ * @example <Trash />
+ */
 export const Trash: FC = () => {
 	return (
 		<svg width="20" height="20" viewBox="0 0 24 24">

@@ -1,5 +1,11 @@
-import { FC } from 'react'
+// Types
+import type { FC } from 'react'
 
+/**
+ * SVG recovery icon.
+ *
+ * @example <Restore />
+ */
 export const Restore: FC = () => {
 	return (
 		<svg width="16" height="16" viewBox="0,0,256,256">

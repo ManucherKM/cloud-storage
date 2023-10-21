@@ -1,5 +1,11 @@
-import { FC } from 'react'
+// Types
+import type { FC } from 'react'
 
+/**
+ * SVG logo icon.
+ *
+ * @example <Logo />
+ */
 export const Logo: FC = () => {
 	return (
 		<svg width="50" height="50" viewBox="0 0 120 120" fill="none">
