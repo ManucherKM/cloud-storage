@@ -11,7 +11,8 @@ import {
 /**
  * Account recovery password page.
  *
- * @example <RestoreAccountPassword />
+ * @example
+ * 	;<RestoreAccountPassword />
  */
 export const RestoreAccountPassword: FC = () => {
 	return (

@@ -6,7 +6,9 @@ import { SettingContent, SlidingFromLeftToRight } from '@/components'
 
 /**
  * Setting page.
- * @example <Setting />
+ *
+ * @example
+ * 	;<Setting />
  */
 export const Setting: FC = () => {
 	return (

@@ -6,7 +6,9 @@ import { FormRegistration, SlidingFromLeftToRight } from '@/components'
 
 /**
  * Registration page.
- * @example <Registration />
+ *
+ * @example
+ * 	;<Registration />
  */
 export const Registration: FC = () => {
 	return (

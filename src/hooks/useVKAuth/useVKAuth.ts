@@ -27,26 +27,21 @@ const defaultErrors: IUseVKAuthError = {
 	errorDescription: '',
 }
 
-/** Using this hook, you can get a code for authorization in the application via VK, after successful authorization in VK. */
+/**
+ * Using this hook, you can get a code for authorization in the application via
+ * VK, after successful authorization in VK.
+ */
 export function useVKAuth() {
-	/**
-	 * State for the authorization code.
-	 */
+	/** State for the authorization code. */
 	const [code, setIsCode] = useState<string>('')
 
-	/**
-	 * State for errors.
-	 */
+	/** State for errors. */
 	const [error, setError] = useState<IUseVKAuthError>(defaultErrors)
 
-	/**
-	 * Current URL parameters.
-	 */
+	/** Current URL parameters. */
 	const params = new URLSearchParams(window.location.search)
 
-	/**
-	 * A function that will be executed every time the user’s URL changes.
-	 */
+	/** A function that will be executed every time the user’s URL changes. */
 	const hrefHandler = () => {
 		// Current authorization code.
 		const currentCode = params.get('code')

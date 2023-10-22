@@ -7,7 +7,8 @@ import { SlidingFromLeftToRight, StorageContent } from '@/components'
 /**
  * Storage page.
  *
- * @example <Storage />
+ * @example
+ * 	;<Storage />
  */
 export const Storage: FC = () => {
 	return (

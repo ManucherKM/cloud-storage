@@ -2,9 +2,10 @@
 import type { FC } from 'react'
 
 /**
- *
  * SVG storage icon.
- * @example <Storage />
+ *
+ * @example
+ * 	;<Storage />
  */
 export const Storage: FC = () => {
 	return (

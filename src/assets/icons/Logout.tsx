@@ -4,7 +4,8 @@ import type { FC } from 'react'
 /**
  * Exit SVG icon.
  *
- * @example <Logout />
+ * @example
+ * 	;<Logout />
  */
 export const Logout: FC = () => {
 	return (

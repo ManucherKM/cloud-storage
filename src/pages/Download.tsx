@@ -7,7 +7,8 @@ import { DownloadContent, SlidingFromLeftToRight } from '@/components'
 /**
  * Page for downloading files shared by the user.
  *
- * @example <Download />
+ * @example
+ * 	;<Download />
  */
 export const Download: FC = () => {
 	return (

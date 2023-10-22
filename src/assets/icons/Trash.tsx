@@ -4,7 +4,8 @@ import type { FC } from 'react'
 /**
  * SVG trash can icon.
  *
- * @example <Trash />
+ * @example
+ * 	;<Trash />
  */
 export const Trash: FC = () => {
 	return (

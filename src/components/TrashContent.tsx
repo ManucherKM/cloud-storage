@@ -1,8 +1,8 @@
 import {
 	AlertError,
-	Dashboard,
 	DashboardNavBar,
 	FileList,
+	LayoutDashboard,
 	TrashEmpty,
 } from '@/components'
 import { useFileStore, useStore } from '@/storage'
@@ -100,7 +100,7 @@ export const TrashContent: FC = () => {
 	return (
 		<>
 			<AlertError error={error} onTimeUp={errorTimeHandler} />
-			<Dashboard title="Trash">
+			<LayoutDashboard title="Trash">
 				<DashboardNavBar
 					search={search}
 					onSearch={searchHandler}
@@ -126,7 +126,7 @@ export const TrashContent: FC = () => {
 						<TrashEmpty className="h-full" />
 					</div>
 				)}
-			</Dashboard>
+			</LayoutDashboard>
 		</>
 	)
 }

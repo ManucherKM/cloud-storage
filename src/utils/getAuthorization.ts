@@ -1,6 +1,6 @@
 /**
- *
- * Using this function, you will receive a valid "Authorization" field using an access token for this.
+ * Using this function, you will receive a valid "Authorization" field using an
+ * access token for this.
  *
  * @param token Authorization token.
  */

@@ -4,7 +4,8 @@ import type { FC } from 'react'
 /**
  * SVG arrow icon for share action.
  *
- * @example <Share />
+ * @example
+ * 	;<Share />
  */
 export const Share: FC = () => {
 	return (

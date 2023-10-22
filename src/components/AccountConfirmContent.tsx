@@ -1,7 +1,18 @@
-import { CheckMark } from '@/assets/icons'
-import { Paragraph } from 'kuui-react'
-import { FC } from 'react'
+// Types
+import type { FC } from 'react'
 
+// Icons
+import { CheckMark } from '@/assets/icons'
+
+// Components
+import { Paragraph } from 'kuui-react'
+
+/**
+ * Component with the content of the page when the user confirms his account.
+ *
+ * @example
+ * 	;<AccountConfirmContent />
+ */
 export const AccountConfirmContent: FC = () => {
 	return (
 		<div className="max-w-sm p-5 flex flex-col items-center gap-3">

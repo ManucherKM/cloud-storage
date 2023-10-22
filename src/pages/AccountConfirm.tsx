@@ -7,7 +7,8 @@ import { AccountConfirmContent, SlidingFromLeftToRight } from '@/components'
 /**
  * Page for a verified user account.
  *
- * @example <AccountConfirm />
+ * @example
+ * 	;<AccountConfirm />
  */
 export const AccountConfirm: FC = () => {
 	return (

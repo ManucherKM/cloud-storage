@@ -1,5 +1,6 @@
 /**
  * Using this function, you can install the file within the browser.
+ *
  * @param buffer A file in the "Buffer" format that needs to be installed.
  */
 export function downloadFileFromBuffer(buffer: Buffer) {

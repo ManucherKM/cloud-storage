@@ -1,8 +1,19 @@
+// Types
+import type { FC } from 'react'
+
+// Icons
 import { Logo } from '@/assets/icons'
 import { ERoutes } from '@/configuration/routes'
-import { Button, Link } from 'kuui-react'
-import { FC } from 'react'
 
+// Components
+import { Button, Link } from 'kuui-react'
+
+/**
+ * Navigation Menu.
+ *
+ * @example
+ * 	;<NavBar />
+ */
 export const NavBar: FC = () => {
 	return (
 		<nav className="bg-[--kuui-black-500] py-2">

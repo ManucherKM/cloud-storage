@@ -4,7 +4,8 @@ import type { FC } from 'react'
 /**
  * SVG recovery icon.
  *
- * @example <Restore />
+ * @example
+ * 	;<Restore />
  */
 export const Restore: FC = () => {
 	return (

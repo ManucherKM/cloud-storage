@@ -1,9 +1,9 @@
 import {
 	AlertError,
 	AlertMessage,
-	Dashboard,
 	DashboardNavBar,
 	FileList,
+	LayoutDashboard,
 } from '@/components'
 import { env } from '@/configuration/env'
 import { ERoutes } from '@/configuration/routes'
@@ -35,7 +35,7 @@ export const StorageContent: FC = () => {
 	const createArchive = useFileStore(store => store.createArchive)
 	const setLoading = useStore(store => store.setLoading)
 	const isTransferFilesOnWindow = useWindowFilesTransfer()
-	const blockForSelection = useRef(null)
+	const blockForSelection = useRef<HTMLDivElement | null>(null)
 
 	async function changeFilesHandler(e: ChangeEvent<HTMLInputElement>) {
 		setLoading(true)
@@ -184,7 +184,7 @@ export const StorageContent: FC = () => {
 		<>
 			<AlertError error={error} onTimeUp={errorTimeHandler} />
 			<AlertMessage message={message} onTimeUp={messageTimeHandler} />
-			<Dashboard title="Storage">
+			<LayoutDashboard title="Storage">
 				{isTransferFiles ? (
 					<FileAdd
 						variant="dragAndDrop"
@@ -221,7 +221,7 @@ export const StorageContent: FC = () => {
 						</div>
 					</>
 				)}
-			</Dashboard>
+			</LayoutDashboard>
 		</>
 	)
 }

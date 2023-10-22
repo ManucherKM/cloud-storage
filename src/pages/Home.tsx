@@ -7,7 +7,8 @@ import { HomeContent, SlidingFromLeftToRight } from '@/components'
 /**
  * Home page.
  *
- * @example <Home />
+ * @example
+ * 	;<Home />
  */
 export const Home: FC = () => {
 	return (

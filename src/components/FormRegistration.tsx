@@ -95,7 +95,10 @@ export const FormRegistration = forwardRef<HTMLDivElement, IFormRegistration>(
 			state => state.registrationWithGoogle,
 		)
 
-		/** With this feature, you can send your user details for registration with VK. */
+		/**
+		 * With this feature, you can send your user details for registration with
+		 * VK.
+		 */
 		const registrationWithVk = useAuthStore(store => store.registrationWithVk)
 
 		const inputEmail = useRef<HTMLInputElement>(null)

@@ -4,7 +4,8 @@ import type { FC } from 'react'
 /**
  * Gear SVG icon.
  *
- * @example <Gear />
+ * @example
+ * 	;<Gear />
  */
 export const Gear: FC = () => {
 	return (

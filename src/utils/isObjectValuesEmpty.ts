@@ -1,5 +1,6 @@
 /**
  * With this function you can check if there are empty values in the object.
+ *
  * @param obj The object to be checked.
  */
 export function isObjectValuesEmpty(obj: Object) {

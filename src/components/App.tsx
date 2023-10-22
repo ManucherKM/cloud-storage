@@ -1,14 +1,28 @@
+// Types
+import type { FC } from 'react'
+
+// Components
 import { AppRouter } from '@/components'
-import { useStore } from '@/storage'
 import { Loader } from 'kuui-react'
-import { FC } from 'react'
 
-import '@/assets/styles/index.scss'
+// Utils
 import { useUserConfig } from '@/hooks'
+import { useStore } from '@/storage'
 
-/** The main component of the application. */
+// Styles
+import '@/assets/styles/index.scss'
+
+/**
+ * The main component of the application.
+ *
+ * @example
+ * 	;<App />
+ */
 export const App: FC = () => {
+	/** Loading state. */
 	const isLoading = useStore(store => store.isLoading)
+
+	// Hook for using custom configuration.
 	useUserConfig()
 	return (
 		<>

@@ -4,7 +4,8 @@ import type { FC } from 'react'
 /**
  * SVG check mark icon.
  *
- * @example <CheckMark />
+ * @example
+ * 	;<CheckMark />
  */
 export const CheckMark: FC = () => {
 	return (

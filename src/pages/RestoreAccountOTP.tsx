@@ -11,7 +11,8 @@ import {
 /**
  * Account recovery OTP page.
  *
- * @example <RestoreAccountOTP />
+ * @example
+ * 	;<RestoreAccountOTP />
  */
 export const RestoreAccountOTP: FC = () => {
 	return (

@@ -4,9 +4,7 @@ import type { IRedirectVKAuthTarget } from '@/hooks'
 /** Interface for the incoming parameters of the `getVKAuthUrl` function. */
 export interface IGetVKAuthUrl extends IRedirectVKAuthTarget {}
 
-/**
- * Parameter interface for authorization in VK.
- */
+/** Parameter interface for authorization in VK. */
 export interface IVKAuthParams extends URLSearchParams {
 	client_id: string
 	redirect_uri: string

@@ -1,29 +1,55 @@
-import { BrowserHistory } from 'history'
-import { FC, useLayoutEffect, useState } from 'react'
+// Types
+import type { BrowserHistory } from 'history'
+import type { FC } from 'react'
+
+// Utils
+import { useLayoutEffect, useState } from 'react'
+
+// Components
 import { Router, RouterProps } from 'react-router-dom'
 
+/** Valid types for `CustomRouter`. */
 export type TCustomRouter = Omit<
 	RouterProps,
 	'location' | 'navigationType' | 'navigator'
 >
 
+/** `CustomRouter` component interface. */
 export interface ICustomRouter extends TCustomRouter {
+	/** History of the router. */
 	history: BrowserHistory
 }
 
+/**
+ * Custom component for routing.
+ *
+ * @example
+ * 	;<CustomRouter>
+ * 		<Routes>...other code</Routes>
+ * 	</CustomRouter>
+ *
+ * @param props Propses
+ */
 export const CustomRouter: FC<ICustomRouter> = ({ history, ...props }) => {
-	const [state, setState] = useState({
+	/** State for the current route. */
+	const [route, setRoute] = useState({
 		action: history.action,
 		location: history.location,
 	})
 
-	useLayoutEffect(() => history.listen(setState), [history])
+	/** A handler function that will be processed every time the `history` changes. */
+	const historyHandler = () => {
+		history.listen(setRoute)
+	}
+
+	// Each time the "history" is named, we call the callback.
+	useLayoutEffect(historyHandler, [history])
 
 	return (
 		<Router
 			{...props}
-			location={state.location}
-			navigationType={state.action}
+			location={route.location}
+			navigationType={route.action}
 			navigator={history}
 		/>
 	)

@@ -7,7 +7,8 @@ import { SlidingFromLeftToRight, TrashContent } from '@/components'
 /**
  * Trash page.
  *
- * @example <Trash />
+ * @example
+ * 	;<Trash />
  */
 export const Trash: FC = () => {
 	return (

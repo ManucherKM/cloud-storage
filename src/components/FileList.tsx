@@ -1,43 +1,82 @@
-import { IFile } from '@/storage/useFileStore/types'
+// Types
+import type { IFile } from '@/storage/useFileStore/types'
+import type { Dispatch, FC, SetStateAction } from 'react'
+import type { OnSelect } from 'react-selecto'
+
+// Utils
 import { getExtension, getImageUrl } from '@/utils'
+
+// Components
 import { FileItem } from 'kuui-react'
-import { Dispatch, FC, SetStateAction } from 'react'
-import Selecto, { OnSelect } from 'react-selecto'
+import Selecto from 'react-selecto'
 import { List } from './List'
 
 export interface IFileList {
+	/** An array of files that need to be rendered. */
 	files: IFile[]
+
+	/** Container inside which files will be selected and sampled. */
 	container: HTMLElement | null
-	/**
-	 * Array file id
-	 */
+
+	/** An array of selected file identifiers. */
 	selectedFiles: string[]
+
+	/** Function to change the IDs of the selected files. */
 	setSelectedFiles: Dispatch<SetStateAction<string[]>>
 }
 
+/**
+ * A component for rendering a list of files.
+ *
+ * @example
+ * 	const [showFiles, setShowFiles] = useState([])
+ * 	const blockForSelection = useRef(null)
+ * 	const [selectedFiles, setSelectedFiles] = useState([])
+ *
+ * 	return (
+ * 		<FileList
+ * 			files={showFiles}
+ * 			container={blockForSelection.current}
+ * 			selectedFiles={selectedFiles}
+ * 			setSelectedFiles={setIdOfTheSelectedFiles}
+ * 		/>
+ * 	)
+ *
+ * @param props Propses
+ */
 export const FileList: FC<IFileList> = ({
 	files,
 	container,
 	selectedFiles,
 	setSelectedFiles,
 }) => {
+	/**
+	 * Function that will be executed when an element of the file is selected.
+	 *
+	 * @param e Select event
+	 */
 	function selectHandler(e: OnSelect) {
+		// Iterate over the elements of the files that have been selected.
 		e.added.forEach(el => {
+			// Get the id of this file.
 			const fileId = el.dataset.id
-			if (!fileId) {
-				return
-			}
 
+			// If id is not found. Terminate the function.
+			if (!fileId) return
+
+			// We change selected files
 			setSelectedFiles(prev => [...prev, fileId])
 		})
 
+		// Iterate through the files that were deleted.
 		e.removed.forEach(el => {
+			// Get the id of this file.
 			const fileId = el.dataset.id
 
-			if (!fileId) {
-				return
-			}
+			// If id is not found. Terminate the function.
+			if (!fileId) return
 
+			// We change selected files
 			setSelectedFiles(prev => prev.filter(id => id !== fileId))
 		})
 	}

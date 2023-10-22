@@ -1,11 +1,22 @@
-import { privateRoutes, publicRoutes } from '@/configuration/routes'
-import { useAuthStore } from '@/storage'
+// Types
+import type { FC } from 'react'
+
+// Components
 import { NotFound } from 'kuui-react'
-import { FC } from 'react'
 import { Route, Routes } from 'react-router'
 
-/** The component responsible for drawing routes. */
+// Utils
+import { privateRoutes, publicRoutes } from '@/configuration/routes'
+import { useAuthStore } from '@/storage'
+
+/**
+ * The component responsible for render routes.
+ *
+ * @example
+ * 	;<AppRouter />
+ */
 export const AppRouter: FC = () => {
+	/** The state responsible for user authorization. */
 	const isAuth: boolean = !!useAuthStore(store => store.token)
 
 	return (

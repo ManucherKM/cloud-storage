@@ -5,8 +5,10 @@ import type { FC } from 'react'
 import { FormLogin, SlidingFromLeftToRight } from '@/components'
 
 /**
- *Login page.
- * @example <Login />
+ * Login page.
+ *
+ * @example
+ * 	;<Login />
  */
 export const Login: FC = () => {
 	return (

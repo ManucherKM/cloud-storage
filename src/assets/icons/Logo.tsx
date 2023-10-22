@@ -4,7 +4,8 @@ import type { FC } from 'react'
 /**
  * SVG logo icon.
  *
- * @example <Logo />
+ * @example
+ * 	;<Logo />
  */
 export const Logo: FC = () => {
 	return (

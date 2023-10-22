@@ -11,7 +11,8 @@ import {
 /**
  * Account recovery email page.
  *
- * @example <RestoreAccountEmail />
+ * @example
+ * 	;<RestoreAccountEmail />
  */
 export const RestoreAccountEmail: FC = () => {
 	return (

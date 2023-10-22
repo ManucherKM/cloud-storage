@@ -1,7 +1,16 @@
-import { Link } from 'kuui-react'
-import { FC } from 'react'
-import { NavBar } from '.'
+// Types
+import type { FC } from 'react'
 
+// Components
+import { Link } from 'kuui-react'
+import { NavBar } from './NavBar'
+
+/**
+ * Home Page Content.
+ *
+ * @example
+ * 	;<HomeContent />
+ */
 export const HomeContent: FC = () => {
 	return (
 		<>
