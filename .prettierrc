@@ -12,5 +12,5 @@
 	"proseWrap": "always",
 	"endOfLine": "lf",
 	"embeddedLanguageFormatting": "off",
-	"organizeImportsSkipDestructiveCodeActions": false
+	"organizeImportsSkipDestructiveCodeActions": true
 }

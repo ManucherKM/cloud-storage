@@ -1,11 +1,28 @@
+// Types
+import type {
+	ChangeEvent,
+	FormEvent,
+	HTMLAttributes,
+	KeyboardEvent,
+} from 'react'
+
+// Utils
 import { env } from '@/configuration/env'
 import { ERoutes } from '@/configuration/routes'
-import { redirectToVkAuthPage, useVKAuth } from '@/hooks'
+import {
+	redirectToVkAuthPage,
+	useEffectSkipFirstRender,
+	useVKAuth,
+} from '@/hooks'
 import { useAuthStore, useStore } from '@/storage'
 import { validateEmail, validatePassword } from '@/utils'
-import HCaptcha from '@hcaptcha/react-hcaptcha'
 import { useGoogleLogin } from '@react-oauth/google'
 import clsx from 'clsx'
+import { forwardRef, useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+
+// Components
+import HCaptcha from '@hcaptcha/react-hcaptcha'
 import {
 	Button,
 	Form,
@@ -15,24 +32,31 @@ import {
 	Title,
 	VKAuth,
 } from 'kuui-react'
-import type {
-	ChangeEvent,
-	FormEvent,
-	HTMLAttributes,
-	KeyboardEvent,
-} from 'react'
-import { forwardRef, useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { AlertError, InputEmail, InputPassword } from '.'
+import { AlertError } from './AlertError'
+import { InputEmail } from './InputEmail'
+import { InputPassword } from './InputPassword'
 
+/** Site key for correct work with hCaptcha. */
 const HCAPTCHA_SITEKEY = env.get('HCAPTCHA_SITEKEY').required().asString()
+
+/** VK client ID for correct work with the API. */
 const VK_CLIENT_ID = env.get('VK_CLIENT_ID').required().asString()
+
+/** The URL where the web application is hosted. */
 const CLIENT_URL = env.get('CLIENT_URL').required().asString()
+
+/** The URI that was used during registration. */
+const vkRedirectUri = CLIENT_URL + ERoutes.login
 
 /** Interface for the authorization form. */
 export interface ILoginForm {
+	/** Email value */
 	email: string
+
+	/** Password value */
 	password: string
+
+	/** Token value */
 	token: string
 }
 
@@ -45,7 +69,10 @@ const defaultForm: ILoginForm = {
 
 /** Form interface with authorization errors. */
 export interface ILoginFormErrors {
+	/** Email error value */
 	email: string
+
+	/** Password error value */
 	password: string
 }
 
@@ -55,8 +82,15 @@ const defaultFormErrors: ILoginFormErrors = {
 	password: '',
 }
 
+/** `FormLogin` component interface. */
 export interface IFormLogin extends HTMLAttributes<HTMLDivElement> {}
 
+/**
+ * User Authorization Form.
+ *
+ * @example
+ * 	;<FormLogin />
+ */
 export const FormLogin = forwardRef<HTMLDivElement, IFormLogin>(
 	({ className, ...props }, ref) => {
 		/** The state for the user's form. */
@@ -66,10 +100,20 @@ export const FormLogin = forwardRef<HTMLDivElement, IFormLogin>(
 		const [formErrors, setFormErrors] =
 			useState<ILoginFormErrors>(defaultFormErrors)
 
+		/** State for errors that need to be shown to the user. */
 		const [serverError, setServerError] = useState<string>('')
 
-		/** The state to lock the submit button. */
-		const [disableSubmit, setDisableSubmit] = useState<boolean>(true)
+		/** Form validity state. */
+		const [isValid, setIsValid] = useState<boolean>(false)
+
+		/** State for email validity. */
+		const [isEmailValid, setIsEmailValid] = useState<boolean>(false)
+
+		/** State for password validity. */
+		const [isPasswordValid, setIsPasswordValid] = useState<boolean>(false)
+
+		/** State for token validity. */
+		const [isTokenValid, setIsTokenValid] = useState<boolean>(false)
 
 		/** The state for rendering the `Loader` component. */
 		const setLoading = useStore(store => store.setLoading)
@@ -95,18 +139,19 @@ export const FormLogin = forwardRef<HTMLDivElement, IFormLogin>(
 		 */
 		const loginWithVK = useAuthStore(store => store.loginWithVK)
 
-		const inputEmail = useRef<HTMLInputElement>(null)
-		const inputPassword = useRef<HTMLInputElement>(null)
+		/** A reference to `inputEmail` in the DOM. */
+		const inputEmail = useRef<HTMLInputElement | null>(null)
 
-		/** The URI that was used during registration. */
-		const vkRedirectUri = CLIENT_URL + ERoutes.login
+		/** A reference to `inputPassword` in the DOM. */
+		const inputPassword = useRef<HTMLInputElement | null>(null)
 
 		/** Link to the HCaptcha component in the DOM. */
-		const hCaptchaRef = useRef<HCaptcha>(null)
+		const hCaptchaRef = useRef<HCaptcha | null>(null)
 
+		/** Function to send a request to the API. */
 		async function sendToApi() {
-			// Check to see if the form submit button is disabled.
-			if (disableSubmit) {
+			// Check the validity of the form.
+			if (!isValid) {
 				// Stop further execution of the function.
 				return
 			}
@@ -119,9 +164,7 @@ export const FormLogin = forwardRef<HTMLDivElement, IFormLogin>(
 
 			// If authorization failed.
 			if (!isLogin) {
-				// Clearing the form.
-				setForm(defaultForm)
-
+				// Show the user an error message.
 				setServerError('Incorrect login or password.')
 
 				// Reset the captcha.
@@ -144,17 +187,35 @@ export const FormLogin = forwardRef<HTMLDivElement, IFormLogin>(
 			setLoading(false)
 		}
 
+		/**
+		 * Handler function to focus on `inputPassword` when the "Enter" key is
+		 * pressed in `inputEmail`.
+		 *
+		 * @param e Keyboard event
+		 */
 		function emailKeyDownHandler(e: KeyboardEvent<HTMLInputElement>) {
+			// If the key pressed is "Enter".
 			if (e.code === 'Enter') {
+				// Focus on inputPassword.
 				inputPassword.current?.focus()
 			}
 		}
 
+		/**
+		 * Handler function for keystrokes when the focus is on inputPassword.
+		 *
+		 * @param e Keyboard event
+		 */
 		async function passwordKeyDownHandler(e: KeyboardEvent<HTMLInputElement>) {
+			// If the key pressed is "Enter".
+
 			if (e.code === 'Enter') {
+				// If the hCaptcha token exists.
 				if (form.token) {
+					// send a request to the API.
 					await sendToApi()
 				} else {
+					// Otherwise, take the focus away from inputPassword.
 					inputPassword.current?.blur()
 				}
 			}
@@ -165,53 +226,20 @@ export const FormLogin = forwardRef<HTMLDivElement, IFormLogin>(
 			// We prevent the default browser behavior so that the form is not submitted.
 			e.preventDefault()
 
+			// send a request to the API.
 			await sendToApi()
 		}
 
 		/** Handler function to retrieve the user's email. */
 		function emailHandler(e: ChangeEvent<HTMLInputElement>) {
-			// We receive the email entered by the user.
-			const email = e.target.value
-
-			// The result of validating the user's email.
-			const isValid = validateEmail(email)
-
-			// If the result is valid.
-			if (isValid) {
-				// Clearing the email field in an object with form errors.
-				setFormErrors(prev => ({ ...prev, email: '' }))
-			} else {
-				// Add an error message to the email field in the form errors object.
-				setFormErrors(prev => ({ ...prev, email: 'Enter a valid email' }))
-			}
-
 			// We add the email specified by the user to the form object.
-			setForm(prev => ({ ...prev, email }))
+			setForm(prev => ({ ...prev, email: e.target.value }))
 		}
 
 		/** Handler function to retrieve the user's password. */
 		function passwordHandler(e: ChangeEvent<HTMLInputElement>) {
-			// We receive the password entered by the user.
-			const password = e.target.value
-
-			// The result of validating the user's password.
-			const isValid = validatePassword(password)
-
-			// If the result is valid.
-			if (isValid) {
-				// Clearing the password field in an object with form errors.
-				setFormErrors(prev => ({ ...prev, password: '' }))
-			} else {
-				// Add an error message to the password field in the form errors object.
-				setFormErrors(prev => ({
-					...prev,
-					password:
-						'The password must be no less than 8 characters and no more than 32 characters, contain at least one special character, one uppercase letter and one lowercase letter. ',
-				}))
-			}
-
 			// We add the password specified by the user to the form object.
-			setForm(prev => ({ ...prev, password }))
+			setForm(prev => ({ ...prev, password: e.target.value }))
 		}
 
 		/** A handler function to retrieve solved captcha data. */
@@ -284,7 +312,8 @@ export const FormLogin = forwardRef<HTMLDivElement, IFormLogin>(
 			})
 		}
 
-		useEffect(() => {
+		/** Function handler for authorization via VK. */
+		const vkUserCodeHandler = () => {
 			// If the code for registration via VK does not exist.
 			if (!VKUserCode) {
 				// Stop further execution of the function.
@@ -318,27 +347,95 @@ export const FormLogin = forwardRef<HTMLDivElement, IFormLogin>(
 			}
 
 			fetchDataToApi()
-		}, [VKUserCode])
+		}
 
+		// Every time the VKUserCode changes, call the vkUserCodeHandler function.
+		useEffect(vkUserCodeHandler, [VKUserCode])
+
+		/** Handler function that clears the `serverError` value. */
 		function serverErrorTimeHandler() {
+			// Clearing the "serverError" state.
 			setServerError('')
 		}
 
-		useEffect(() => {
-			const isPasswordValid = validatePassword(form.password)
-			const isEmailValid = validateEmail(form.email)
-			const isTokenExist = form.token
+		/** Function handler for email validation. */
+		const emailValidHandler = () => {
+			// The result of validating the user's email.
+			const isValid = validateEmail(form.email)
 
-			const isValid = isPasswordValid && isEmailValid && isTokenExist
+			// If the result is valid.
+			if (isValid) {
+				// Clearing the email field in an object with form errors.
+				setFormErrors(prev => ({ ...prev, email: '' }))
+			} else {
+				// Add an error message to the email field in the form errors object.
+				setFormErrors(prev => ({ ...prev, email: 'Enter a valid email' }))
+			}
 
-			// Change the disableSubmit state.
-			setDisableSubmit(!isValid)
-		}, [form])
+			// Changing the validity state.
+			setIsEmailValid(isValid)
+		}
 
-		useEffect(() => {
+		// Call the emailValidHandler function every time email changes.
+		useEffectSkipFirstRender(emailValidHandler, [form.email])
+
+		/** Function handler for password validation. */
+		const passwordValidHandler = () => {
+			// The result of validating the user's password.
+			const isValid = validatePassword(form.password)
+
+			// If the result is valid.
+			if (isValid) {
+				// Clearing the password field in an object with form errors.
+				setFormErrors(prev => ({ ...prev, password: '' }))
+			} else {
+				// Add an error message to the password field in the form errors object.
+				setFormErrors(prev => ({
+					...prev,
+					password:
+						'The password must be no less than 8 characters and no more than 32 characters, contain at least one special character, one uppercase letter and one lowercase letter. ',
+				}))
+			}
+
+			// Changing the validity state.
+			setIsPasswordValid(isValid)
+		}
+
+		// Call the passwordValidHandler function every time password changes.
+		useEffectSkipFirstRender(passwordValidHandler, [form.password])
+
+		/** Function handler for hCaptcha token validation. */
+		const hCaptchaTokenValidHandler = () => {
+			// The result of validating the token.
+			const isValid = !!form.token
+
+			// Changing the validity state.
+			setIsTokenValid(isValid)
+		}
+
+		// Call the hCaptchaTokenValidHandler function every time hCaptcha token changes.
+		useEffectSkipFirstRender(hCaptchaTokenValidHandler, [form.token])
+
+		/** Function handler for form validation. */
+		const validHandler = () => {
+			/** Form Validation. */
+			const isValid = isEmailValid && isPasswordValid && isTokenValid
+
+			// Change the isValid state.
+			setIsValid(isValid)
+		}
+
+		useEffect(validHandler, [isEmailValid, isPasswordValid, isTokenValid])
+
+		/** Function handler for the first render. */
+		const firstRenderHandler = () => {
 			inputEmail.current?.focus()
-		}, [])
+		}
 
+		// At the first render, we call firstRenderHandler.
+		useEffect(firstRenderHandler, [])
+
+		/** Root block styles */
 		const styles = clsx(['max-w-xs w-full px-2', className])
 
 		return (
@@ -382,7 +479,7 @@ export const FormLogin = forwardRef<HTMLDivElement, IFormLogin>(
 						onExpire={hCaptchaExpireHandler}
 					/>
 
-					<Button disabled={disableSubmit} variant="active" type="submit">
+					<Button disabled={!isValid} variant="active" type="submit">
 						Submit
 					</Button>
 
