@@ -16,6 +16,7 @@ const root = ReactDOM.createRoot(document.getElementById('root')!)
 /** Google client ID for correct interaction with the api. */
 const GOOGLE_CLIENT_ID = env.get('GOOGLE_CLIENT_ID').required().asString()
 
+// 1
 root.render(
 	<React.StrictMode>
 		<GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
