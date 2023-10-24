@@ -1,9 +1,9 @@
 import { env } from '@/configuration/env'
 import { ERoutes } from '@/configuration/routes'
-import { redirectToVkAuthPage,useLoader,useVKAuth } from '@/hooks'
-import { useAuthStore,useNotificationsStore } from '@/storage'
-import { IVKAuth as IKuuiVKAuth,VKAuth as KuuiVKAuth } from 'kuui-react'
-import { FC,useEffect,useRef } from 'react'
+import { redirectToVkAuthPage, useLoader, useVKAuth } from '@/hooks'
+import { useAuthStore, useNotificationsStore } from '@/storage'
+import { IVKAuth as IKuuiVKAuth, VKAuth as KuuiVKAuth } from 'kuui-react'
+import { FC, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router'
 
 export enum EVKAuthVariant {
@@ -91,9 +91,8 @@ export const VKAuth: FC<IVKAuth> = ({ logics, ...props }) => {
 				logics === EVKAuthVariant.login ? ERoutes.login : ERoutes.storage,
 			)
 			console.log(
-				logics === EVKAuthVariant.login ? ERoutes.login : ERoutes.storage,
+				logics === EVKAuthVariant.login ? ERoutes.storage : ERoutes.login,
 			)
-			
 		}
 
 		fetchDataToApi()
