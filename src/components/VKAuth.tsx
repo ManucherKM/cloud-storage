@@ -93,6 +93,14 @@ export const VKAuth: FC<IVKAuth> = ({ logics, ...props }) => {
 		}
 
 		fetchDataToApi()
-	}, [VKUserCode, loginWithVK, navigate])
+	}, [
+		VKUserCode,
+		loginWithVK,
+		navigate,
+		loader,
+		logics,
+		newError,
+		registrationWithVK,
+	])
 	return <KuuiVKAuth onClick={vkAuthHandler} {...props} />
 }

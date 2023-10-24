@@ -11,9 +11,9 @@ export function useLoader() {
 	// Function for changing Loader's state.
 	const setLoading = useStore(store => store.setLoading)
 
-	return async function <T>(
-		fetch: (...args: any[]) => Promise<T>,
-		...args: any[]
+	return async function <T, A extends unknown[]>(
+		fetch: (...args: A) => Promise<T>,
+		...args: A
 	) {
 		try {
 			// Show the user Loader.

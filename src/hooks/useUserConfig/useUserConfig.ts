@@ -31,7 +31,7 @@ export async function useUserConfig() {
 
 		// Call the function to get the user config.
 		fetchConfig()
-	}, [isAuth, getConfig])
+	}, [isAuth, getConfig, loader])
 
 	// Each time the "config" value changes, we call the specified callback.
 	useEffect(() => {

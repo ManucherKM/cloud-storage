@@ -21,8 +21,10 @@ export const TrashContent: FC = () => {
 	const getFiles = useFileStore(store => store.getFiles)
 	const restoreFileFromTrash = useFileStore(store => store.restoreFileFromTrash)
 	const removeFiles = useFileStore(store => store.removeFiles)
+
 	// A function for showing Loader to the user when requesting an API.
 	const loader = useLoader()
+
 	const blockForSelection = useRef(null)
 
 	function searchHandler(e: ChangeEvent<HTMLInputElement> | undefined) {
@@ -82,7 +84,7 @@ export const TrashContent: FC = () => {
 		}
 
 		fetchFiles()
-	}, [getFiles])
+	}, [getFiles, loader, newError])
 	return (
 		<>
 			<LayoutDashboard title="Trash">
