@@ -128,12 +128,12 @@ export const DashboardNavBar: FC<IDashboardNavBar> = ({
 
 	/** Required styles for the root block. */
 	const styles = clsx([
-		'w-full flex justify-between px-5 py-3 border-solid border-0 border-b border-black-250',
+		'w-full flex justify-between px-5 py-3 border-solid border-0 border-b border-black-250 ph_lg:flex-col ph_lg:gap-3',
 		className,
 	])
 	return (
 		<div className={styles} {...props}>
-			<div className="flex justify-start items-center gap-2">
+			<div className="flex justify-start items-center gap-2 ph_lg:justify-between ph_lg:order-1">
 				{share && <NavigateButtonShare onClick={shareHandler} />}
 				{remove && <NavigateButtonRemove onClick={removeHandler} />}
 				{restore && <NavigateButtonRestore onClick={restoreHandler} />}

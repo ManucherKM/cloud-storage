@@ -1,21 +1,12 @@
+import { GoogleAuth } from '@/components'
 import { env } from '@/configuration/env'
 import { ERoutes } from '@/configuration/routes'
-import { redirectToVkAuthPage, useLoader, useVKAuth } from '@/hooks'
+import { useLoader } from '@/hooks'
 import { useAuthStore, useNotificationsStore } from '@/storage'
 import { validateEmail, validatePassword } from '@/utils'
 import HCaptcha from '@hcaptcha/react-hcaptcha'
-import { useGoogleLogin } from '@react-oauth/google'
 import clsx from 'clsx'
-import {
-	Button,
-	ConfirmEmail,
-	Form,
-	GoogleAuth,
-	Link,
-	Paragraph,
-	Title,
-	VKAuth,
-} from 'kuui-react'
+import { Button, ConfirmEmail, Form, Link, Paragraph, Title } from 'kuui-react'
 import type {
 	ChangeEvent,
 	FormEvent,
@@ -24,11 +15,9 @@ import type {
 } from 'react'
 import { forwardRef, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
-import { InputEmail, InputPassword } from '.'
+import { InputEmail, InputPassword, VKAuth } from '.'
 
 const HCAPTCHA_SITEKEY = env.get('HCAPTCHA_SITEKEY').required().asString()
-const VK_CLIENT_ID = env.get('VK_CLIENT_ID').required().asString()
-const CLIENT_URL = env.get('CLIENT_URL').required().asString()
 
 /** Interface for the enrollment form. */
 export interface IRegistrationForm {
@@ -76,9 +65,6 @@ export const FormRegistration = forwardRef<HTMLDivElement, IFormRegistration>(
 		/** The state to lock the submit button. */
 		const [disableSubmit, setDisableSubmit] = useState<boolean>(true)
 
-		/** State with authorization juice for VK. */
-		const [VKUserCode] = useVKAuth()
-
 		/** With this feature, you can redirect the user to another route. */
 		const navigate = useNavigate()
 
@@ -88,28 +74,8 @@ export const FormRegistration = forwardRef<HTMLDivElement, IFormRegistration>(
 		// A function for showing Loader to the user when requesting an API.
 		const loader = useLoader()
 
-		/**
-		 * With this feature, you can send your user details for registration with
-		 * Google.
-		 */
-		const registrationWithGoogle = useAuthStore(
-			state => state.registrationWithGoogle,
-		)
-
-		/**
-		 * With this feature, you can send your user details for registration with
-		 * VK.
-		 */
-		const registrationWithVk = useAuthStore(store => store.registrationWithVk)
-
 		const inputEmail = useRef<HTMLInputElement>(null)
 		const inputPassword = useRef<HTMLInputElement>(null)
-
-		/**
-		 * URi to which the user will be redirected after authorization on the VK
-		 * page.
-		 */
-		const vkRedirectUri = CLIENT_URL + ERoutes.registration
 
 		/** Link to the HCaptcha component in the DOM. */
 		const hCaptchaRef = useRef<HCaptcha>(null)
@@ -222,86 +188,6 @@ export const FormRegistration = forwardRef<HTMLDivElement, IFormRegistration>(
 			setForm(prev => ({ ...prev, token: '' }))
 		}
 
-		/**
-		 * Handler function to send user data to the API on successful authorization
-		 * via Google.
-		 */
-		async function googleRegistrationOnSuccess(code: string) {
-			// We get the result of sending data to the API.
-			const isSuccess = await loader(registrationWithGoogle, code)
-
-			// If the result is unsuccessful.
-			if (!isSuccess) {
-				newError('Failed to register.')
-
-				// Stop further execution of the function.
-				return
-			}
-
-			// We redirect the user to the authorization page.
-			navigate(ERoutes.login)
-		}
-
-		/** Function to bring up a popup window for registration via Google. */
-		const googleRegistrationPopup = useGoogleLogin({
-			flow: 'auth-code',
-			onError: console.error,
-			onSuccess: async ({ code }) => await googleRegistrationOnSuccess(code),
-		})
-
-		/**
-		 * Function handler that will be called when you click on the registration
-		 * button through Google.
-		 */
-		function googleAuthHandler() {
-			// Call a pop-up window to register using Google.
-			googleRegistrationPopup()
-		}
-
-		/**
-		 * Function handler that will be called when you click on the registration
-		 * button through VK.
-		 */
-		async function vkAuthHandler() {
-			// We redirect the user to the page for registration via VK.
-			redirectToVkAuthPage({
-				clientId: VK_CLIENT_ID,
-				redirectUri: vkRedirectUri,
-				display: 'page',
-			})
-		}
-
-		useEffect(() => {
-			// If the code for registration via VK does not exist.
-			if (!VKUserCode) {
-				// Stop further execution of the function.
-				return
-			}
-
-			/** Function for sending data of a user who registers via VK to API. */
-			const fetchDataToApi = async () => {
-				// We get the result of sending data to the API.
-				const isSuccess = await loader(
-					registrationWithVk,
-					VKUserCode,
-					vkRedirectUri,
-				)
-
-				// If the result is unsuccessful.
-				if (!isSuccess) {
-					newError('Failed to register.')
-
-					// Stop further execution of the function.
-					return
-				}
-
-				// We redirect the user to the authorization page.
-				navigate(ERoutes.login)
-			}
-
-			fetchDataToApi()
-		}, [VKUserCode, navigate, registrationWithVk, vkRedirectUri])
-
 		useEffect(() => {
 			const isPasswordValid = validatePassword(form.password)
 			const isEmailValid = validateEmail(form.email)
@@ -362,8 +248,8 @@ export const FormRegistration = forwardRef<HTMLDivElement, IFormRegistration>(
 
 					<div className="w-full h-[1px] bg-black-500" />
 
-					<GoogleAuth variant="large" fill="all" onClick={googleAuthHandler} />
-					<VKAuth variant="large" fill="all" onClick={vkAuthHandler} />
+					<GoogleAuth logics="registration" variant="large" fill="all" />
+					<VKAuth logics="registration" variant="large" fill="all" />
 
 					<Paragraph variant="passive" align="center">
 						Already have an account?{' '}

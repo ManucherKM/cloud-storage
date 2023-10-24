@@ -28,7 +28,7 @@ export const AlertMessage: FC<IAlertMessage> = ({ message, ...props }) => {
 	return (
 		<>
 			{message.length !== 0 && (
-				<Alert text={message} variant="message" time={6} {...props} />
+				<Alert text={message} variant="message" time={4} {...props} />
 			)}
 		</>
 	)

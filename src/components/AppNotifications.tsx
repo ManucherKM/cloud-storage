@@ -19,19 +19,27 @@ export const AppNotifications: FC = () => {
 	return (
 		<List
 			arr={notifications}
-			callback={n => (
-				<>
-					{n.variant === ENotificationVariant.message && (
+			callback={n => {
+				if (n.variant === ENotificationVariant.message) {
+					return (
 						<AlertMessage
+							key={n.text}
 							message={n.text}
 							onTimeUp={() => notificationTimeUp(n)}
 						/>
-					)}
-					{n.variant === ENotificationVariant.error && (
-						<AlertError error={n.text} onTimeUp={() => notificationTimeUp(n)} />
-					)}
-				</>
-			)}
+					)
+				}
+
+				if (n.variant === ENotificationVariant.error) {
+					return (
+						<AlertError
+							key={n.text}
+							error={n.text}
+							onTimeUp={() => notificationTimeUp(n)}
+						/>
+					)
+				}
+			}}
 		/>
 	)
 }

@@ -7,46 +7,24 @@ import type {
 } from 'react'
 
 // Utils
+import { GoogleAuth, VKAuth } from '@/components'
 import { env } from '@/configuration/env'
 import { ERoutes } from '@/configuration/routes'
-import {
-	redirectToVkAuthPage,
-	useEffectSkipFirstRender,
-	useLoader,
-	useVKAuth,
-} from '@/hooks'
+import { useEffectSkipFirstRender, useLoader } from '@/hooks'
 import { useAuthStore, useNotificationsStore } from '@/storage'
 import { validateEmail, validatePassword } from '@/utils'
-import { useGoogleLogin } from '@react-oauth/google'
 import clsx from 'clsx'
 import { forwardRef, useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 
 // Components
 import HCaptcha from '@hcaptcha/react-hcaptcha'
-import {
-	Button,
-	Form,
-	GoogleAuth,
-	Link,
-	Paragraph,
-	Title,
-	VKAuth,
-} from 'kuui-react'
+import { Button, Form, Link, Paragraph, Title } from 'kuui-react'
+import { useNavigate } from 'react-router'
 import { InputEmail } from './InputEmail'
 import { InputPassword } from './InputPassword'
 
 /** Site key for correct work with hCaptcha. */
 const HCAPTCHA_SITEKEY = env.get('HCAPTCHA_SITEKEY').required().asString()
-
-/** VK client ID for correct work with the API. */
-const VK_CLIENT_ID = env.get('VK_CLIENT_ID').required().asString()
-
-/** The URL where the web application is hosted. */
-const CLIENT_URL = env.get('CLIENT_URL').required().asString()
-
-/** The URI that was used during registration. */
-const vkRedirectUri = CLIENT_URL + ERoutes.login
 
 /** Interface for the authorization form. */
 export interface ILoginForm {
@@ -118,26 +96,11 @@ export const FormLogin = forwardRef<HTMLDivElement, IFormLogin>(
 		// A function for showing Loader to the user when requesting an API.
 		const loader = useLoader()
 
-		/** State with authorization juice for VK. */
-		const [VKUserCode] = useVKAuth()
-
 		/** With this feature, you can redirect the user to another route. */
 		const navigate = useNavigate()
 
 		/** You can use this function to send user data for authorization. */
 		const login = useAuthStore(store => store.login)
-
-		/**
-		 * With this feature, you can send your user details for authorization with
-		 * Google.
-		 */
-		const loginWithGoogle = useAuthStore(store => store.loginWithGoogle)
-
-		/**
-		 * With this feature, you can send your user details for authorization with
-		 * VK.
-		 */
-		const loginWithVK = useAuthStore(store => store.loginWithVK)
 
 		/** A reference to `inputEmail` in the DOM. */
 		const inputEmail = useRef<HTMLInputElement | null>(null)
@@ -243,81 +206,6 @@ export const FormLogin = forwardRef<HTMLDivElement, IFormLogin>(
 			// Delete the old token in the form object.
 			setForm(prev => ({ ...prev, token: '' }))
 		}
-
-		/**
-		 * Handler function to send user data to the API on successful authorization
-		 * via Google.
-		 */
-		async function googleLoginOnSuccess(code: string) {
-			const isSuccess = await loader(loginWithGoogle, code)
-
-			// If the result is unsuccessful.
-			if (!isSuccess) {
-				newError('Failed to login.')
-
-				// Stop further execution of the function.
-				return
-			}
-
-			// We redirect the user to the storage page.
-			navigate(ERoutes.storage)
-		}
-
-		/** Function to bring up a popup window for authorization via Google. */
-		const googleLoginPopup = useGoogleLogin({
-			flow: 'auth-code',
-			onError: console.error,
-			onSuccess: async ({ code }) => await googleLoginOnSuccess(code),
-		})
-
-		/**
-		 * Function handler that will be called when you click on the authorization
-		 * button through Google.
-		 */
-		async function googleAuthHandler() {
-			// Call a pop-up window to authorization using Google.
-			googleLoginPopup()
-		}
-
-		/**
-		 * Function handler that will be called when you click on the authorization
-		 * button through VK.
-		 */
-		function vkAuthHandler() {
-			// We redirect the user to the page for authorization via VK.
-			redirectToVkAuthPage({
-				clientId: VK_CLIENT_ID,
-				redirectUri: vkRedirectUri,
-				display: 'page',
-			})
-		}
-
-		// Every time the VKUserCode changes, the callback is called.
-		useEffect(() => {
-			// If the code for registration via VK does not exist.
-			if (!VKUserCode) {
-				// Stop further execution of the function.
-				return
-			}
-
-			/** Function for sending data of a user who authorization via VK to API. */
-			const fetchDataToApi = async () => {
-				const isSuccess = await loader(loginWithVK, VKUserCode, vkRedirectUri)
-
-				// If the result is unsuccessful.
-				if (!isSuccess) {
-					newError('Failed to login.')
-
-					// Stop further execution of the function.
-					return
-				}
-
-				// We redirect the user to the storage page.
-				navigate(ERoutes.storage)
-			}
-
-			fetchDataToApi()
-		}, [VKUserCode, loginWithVK, navigate])
 
 		/** Function handler for email validation. */
 		const emailValidHandler = () => {
@@ -439,8 +327,8 @@ export const FormLogin = forwardRef<HTMLDivElement, IFormLogin>(
 
 					<div className="w-full h-[1px] bg-black-500" />
 
-					<GoogleAuth variant="large" fill="all" onClick={googleAuthHandler} />
-					<VKAuth variant="large" fill="all" onClick={vkAuthHandler} />
+					<GoogleAuth logics="login" variant="large" fill="all" />
+					<VKAuth logics="login" variant="large" fill="all" />
 
 					<Paragraph variant="passive" align="center">
 						New user?{' '}

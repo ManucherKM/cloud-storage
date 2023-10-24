@@ -28,7 +28,7 @@ export const AlertError: FC<IAlertError> = ({ error, ...props }) => {
 	return (
 		<>
 			{error.length !== 0 && (
-				<Alert text={error} variant="error" time={6} {...props} />
+				<Alert text={error} variant="error" time={4} {...props} />
 			)}
 		</>
 	)

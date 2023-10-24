@@ -21,14 +21,14 @@ export interface ILayoutDashboard extends IMenu {
  */
 export const LayoutDashboard: FC<ILayoutDashboard> = ({ title, children }) => {
 	return (
-		<div className="w-full h-full p-5">
-			<div className="w-full h-full bg-black-500 rounded-xl flex overflow-hidden">
+		<div className="w-full h-full p-5 ">
+			<div className="w-full h-full bg-black-500 rounded-xl flex overflow-hidden ph_lg:overflow-x-auto">
 				<Menu
 					title={title}
 					className="border-solid border-0 border-r border-black-250"
 				/>
 
-				<div className="w-full h-full">{children}</div>
+				<div className="w-full h-full ">{children}</div>
 			</div>
 		</div>
 	)
