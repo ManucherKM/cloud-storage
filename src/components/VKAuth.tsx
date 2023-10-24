@@ -88,9 +88,6 @@ export const VKAuth: FC<IVKAuth> = ({ logics, ...props }) => {
 
 			// We redirect the user to the storage page.
 			navigate(
-				logics === EVKAuthVariant.login ? ERoutes.login : ERoutes.storage,
-			)
-			console.log(
 				logics === EVKAuthVariant.login ? ERoutes.storage : ERoutes.login,
 			)
 		}
