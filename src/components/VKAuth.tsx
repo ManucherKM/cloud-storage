@@ -87,7 +87,9 @@ export const VKAuth: FC<IVKAuth> = ({ logics, ...props }) => {
 			}
 
 			// We redirect the user to the storage page.
-			navigate(ERoutes.login)
+			navigate(
+				logics === EVKAuthVariant.login ? ERoutes.login : ERoutes.storage,
+			)
 		}
 
 		fetchDataToApi()
