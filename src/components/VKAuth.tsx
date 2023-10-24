@@ -33,8 +33,9 @@ export const VKAuth: FC<IVKAuth> = ({ logics, ...props }) => {
 			: vkRedirectUriRegistration,
 	)
 
-	// With this feature, you can send your user details for authorization with VK.
 	const loginWithVK = useAuthStore(store => store.loginWithVK)
+
+	const registrationWithVK = useAuthStore(store => store.registrationWithVk)
 
 	// Function to create a new error to show it to the user.
 	const newError = useNotificationsStore(store => store.newError)
@@ -72,14 +73,14 @@ export const VKAuth: FC<IVKAuth> = ({ logics, ...props }) => {
 		/** Function for sending data of a user who authorization via VK to API. */
 		const fetchDataToApi = async () => {
 			const isSuccess = await loader(
-				loginWithVK,
+				logics === EVKAuthVariant.login ? loginWithVK : registrationWithVK,
 				VKUserCode,
 				vkRedirectUri.current,
 			)
 
 			// If the result is unsuccessful.
 			if (!isSuccess) {
-				newError('Failed to login.')
+				newError('Failed to authorization by VK.')
 
 				// Stop further execution of the function.
 				return
