@@ -150,7 +150,8 @@ export const StorageContent: FC = () => {
 		}
 
 		fetchFiles()
-	}, [getFiles, loader, newError])
+	}, [getFiles, newError])
+
 	return (
 		<>
 			<LayoutDashboard title="Storage">

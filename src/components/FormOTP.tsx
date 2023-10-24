@@ -14,8 +14,10 @@ export const FormOTP: FC<IFormOTP> = ({ className, ...props }) => {
 	const email = useRestoreAccount(store => store.email)
 	const verificationOtp = useRestoreAccount(store => store.verificationOtp)
 	const [otp, setOtp] = useState<string>('')
+
 	// Function to create a new error to show it to the user.
 	const newError = useNotificationsStore(store => store.newError)
+
 	// A function for showing Loader to the user when requesting an API.
 	const loader = useLoader()
 	const navigate = useNavigate()

@@ -37,6 +37,5 @@ export interface IConfigStore {
 
 export enum EConfigStoreApiRoutes {
 	getThemes = '/api/theme/all',
-
 	configManagement = '/api/config',
 }
