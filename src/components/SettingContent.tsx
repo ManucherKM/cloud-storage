@@ -157,66 +157,49 @@ export const SettingContent: FC = () => {
 		setForm(prev => ({ ...prev, round: round }))
 	}
 
-	/**
-	 * Handler function to check validation of rounding of elements specified by
-	 * the user.
-	 */
-	const roundValidHandler = () => {
+	// Each time the rounding of elements specified by the user is changed, we call the callback.
+	useEffect(() => {
 		// The meaning of validity.
 		const isValid = !!form.round.length
 
 		// Changing the validity state.
 		setIsRoundValid(isValid)
-	}
+	}, [form.round])
 
-	// Each time the rounding of elements specified by the user is changed, we call the roundValidHandler function.
-	useEffect(roundValidHandler, [form.round])
-
-	/**
-	 * Handler function to check the validity of the color theme ID selected by
-	 * the user.
-	 */
-	const themeIdValidHandler = () => {
+	// Every time the ID of the theme selected by the user changes, we call the callback.
+	useEffect(() => {
 		// The meaning of validity.
 		const isValid = !!form.themeId.length
 
 		// Changing the validity state.
 		setIsThemeIdValid(isValid)
-	}
+	}, [form.themeId])
 
-	// Every time the ID of the theme selected by the user changes, we call the themeIdValidHandler function.
-	useEffect(themeIdValidHandler, [form.themeId])
-
-	/** Handler function to check the validity of the form. */
-	const checkValidFormHandler = () => {
+	// Every time we change the form validity we call the callback.
+	useEffect(() => {
 		// The meaning of validity.
 		const isValid = isRoundValid || isThemeIdValid
 
 		// Changing the validity state.
 		setIsValid(isValid)
-	}
+	}, [isRoundValid, isThemeIdValid])
 
-	// Every time we change the form validity we call the checkValidFormHandler function.
-	useEffect(checkValidFormHandler, [isRoundValid, isThemeIdValid])
-
-	/** Handler function to retrieve data for correct operation. */
-	const onceRanderHandler = () => {
-		const fetchData = async () => {
+	// Call callback on the first render.
+	useEffect(() => {
+		const fetchThemes = async () => {
 			try {
 				setLoading(true)
 				await getThemes()
-				setLoading(false)
 			} catch (e) {
 				console.error(e)
 				setError('Failed to get list of color themes.')
+			} finally {
+				setLoading(false)
 			}
 		}
 
-		fetchData()
-	}
-
-	// Call onceRanderHandler on the first render.
-	useEffect(onceRanderHandler, [])
+		fetchThemes()
+	}, [getThemes, setLoading])
 	return (
 		<>
 			<AlertMessage message={message} onTimeUp={messageTimeHandler} />

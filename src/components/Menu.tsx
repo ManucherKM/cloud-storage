@@ -4,7 +4,7 @@ import type { FC, HTMLAttributes } from 'react'
 
 // Utils
 import { ERoutes } from '@/configuration/routes'
-import { useWindowHrefContain } from '@/hooks'
+import { useRouteContain } from '@/hooks'
 import { useAuthStore, useStore } from '@/storage'
 import { useNavigate } from 'react-router'
 
@@ -73,21 +73,21 @@ export const Menu: FC<IMenu> = ({ title, className, ...props }) => {
 	/** Array of navigation buttons. */
 	const navigationButtons: INavigationButtons[] = [
 		{
-			isActive: useWindowHrefContain(ERoutes.storage),
+			isActive: useRouteContain(ERoutes.storage),
 			to: ERoutes.storage,
 			align: 'left',
 			title: 'Storage',
 			icon: <Storage />,
 		},
 		{
-			isActive: useWindowHrefContain(ERoutes.trash),
+			isActive: useRouteContain(ERoutes.trash),
 			to: ERoutes.trash,
 			align: 'left',
 			title: 'Trash',
 			icon: <Trash />,
 		},
 		{
-			isActive: useWindowHrefContain(ERoutes.setting),
+			isActive: useRouteContain(ERoutes.setting),
 			to: ERoutes.setting,
 			align: 'left',
 			title: 'Setting',

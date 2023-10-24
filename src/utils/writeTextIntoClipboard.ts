@@ -5,6 +5,7 @@
  */
 export async function writeTextIntoClipboard(text: string) {
 	try {
+		// We write the text to the user's buffer.
 		await navigator.clipboard.writeText(text)
 		return true
 	} catch (e) {

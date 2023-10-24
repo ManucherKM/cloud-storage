@@ -76,7 +76,7 @@ export const FormRegistration = forwardRef<HTMLDivElement, IFormRegistration>(
 		const [disableSubmit, setDisableSubmit] = useState<boolean>(true)
 
 		/** State with authorization juice for VK. */
-		const [VKUserCode, _] = useVKAuth()
+		const [VKUserCode] = useVKAuth()
 
 		/** With this feature, you can redirect the user to another route. */
 		const navigate = useNavigate()
@@ -327,7 +327,7 @@ export const FormRegistration = forwardRef<HTMLDivElement, IFormRegistration>(
 			}
 
 			fetchDataToApi()
-		}, [VKUserCode])
+		}, [VKUserCode, navigate, registrationWithVk, vkRedirectUri, setLoading])
 
 		useEffect(() => {
 			const isPasswordValid = validatePassword(form.password)

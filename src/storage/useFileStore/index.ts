@@ -59,7 +59,7 @@ export const useFileStore = create(
 						formData.append('file', file)
 
 						const promise = axios.post<IFile>(
-							EFileStoreApiRoutes.sendFiles,
+							EFileStoreApiRoutes.fileManagement,
 							formData,
 						)
 
@@ -103,9 +103,9 @@ export const useFileStore = create(
 					set(store => {
 						const prevFiles = store.files
 
-						let currentFiles: IFile[] = []
+						const currentFiles: IFile[] = []
 
-						for (let file of prevFiles) {
+						for (const file of prevFiles) {
 							if (files.includes(file.id)) {
 								file.inTheTrash = true
 								currentFiles.push(file)
@@ -148,9 +148,9 @@ export const useFileStore = create(
 					set(store => {
 						const prevFiles = store.files
 
-						let currentFiles: IFile[] = []
+						const currentFiles: IFile[] = []
 
-						for (let file of prevFiles) {
+						for (const file of prevFiles) {
 							if (files.includes(file.id)) {
 								file.inTheTrash = false
 								currentFiles.push(file)
@@ -170,7 +170,7 @@ export const useFileStore = create(
 					return false
 				}
 			},
-			async removeFile(files) {
+			async removeFiles(files) {
 				try {
 					const token = useAuthStore.getState().token
 
@@ -181,7 +181,7 @@ export const useFileStore = create(
 					const promises = []
 
 					for (const id of files) {
-						const url = EFileStoreApiRoutes.removeFile + '/' + id
+						const url = EFileStoreApiRoutes.fileManagement + '/' + id
 
 						const promise = axios.delete<IFile>(url)
 
@@ -193,9 +193,9 @@ export const useFileStore = create(
 					set(store => {
 						const prevFiles = store.files
 
-						let currentFiles: IFile[] = []
+						const currentFiles: IFile[] = []
 
-						for (let file of prevFiles) {
+						for (const file of prevFiles) {
 							if (files.includes(file.id)) {
 								continue
 							}

@@ -8,6 +8,7 @@
 		"build": "tsc && vite build",
 		"preview": "vite preview",
 		"format": "npx prettier --write src/",
+		"lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
 		"push": "npm run format && git add . && git commit -m '.' && git push origin react"
 	},
 	"dependencies": {
@@ -29,9 +30,15 @@
 		"@types/node": "^20.8.6",
 		"@types/react": "^18.2.15",
 		"@types/react-dom": "^18.2.7",
+		"@typescript-eslint/eslint-plugin": "^6.9.0",
+		"@typescript-eslint/parser": "^6.9.0",
 		"@vitejs/plugin-react": "^4.0.3",
 		"autoprefixer": "^10.4.15",
 		"env-var": "^7.4.1",
+		"eslint": "^8.52.0",
+		"eslint-plugin-prettier": "^5.0.1",
+		"eslint-plugin-react-hooks": "^4.6.0",
+		"eslint-plugin-react-refresh": "^0.4.3",
 		"postcss": "^8.4.29",
 		"prettier": "^3.0.3",
 		"prettier-plugin-jsdoc": "^1.0.2",

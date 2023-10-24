@@ -16,15 +16,17 @@ export function useEffectSkipFirstRender(
 	effect: EffectCallback,
 	deps?: DependencyList,
 ) {
-	/** The value of the first rendering. */
+	// The value of the first rendering.
 	const isFirstRender = useSkipFirstRender()
 
-	/** Handler function that skips the first render and calls `effect`. */
-	const firstRenderHandler = () => {
+	// Call the callback and specify the `dependencies`.
+	useEffect(() => {
+		// If this is the first render, we prevent further execution of the function.
 		if (isFirstRender) return
-		effect()
-	}
 
-	// Call the `firstRenderHandler` function and specify the `dependencies`.
-	useEffect(firstRenderHandler, deps)
+		// Call the effect specified by the user.
+		effect()
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, deps)
 }

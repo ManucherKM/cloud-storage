@@ -6,14 +6,10 @@ import { useEffect, useState } from 'react'
  * area.
  */
 export const useWindowFilesTransfer = () => {
-	/** File transfer state. */
+	//  File transfer state.
 	const [isTransfer, setIsTransfer] = useState<boolean>(false)
 
-	/**
-	 * Function handler for the dragover event.
-	 *
-	 * @param e Drag over event
-	 */
+	// Function handler for the dragover event.
 	function dragOverHandler(e: DragEvent) {
 		// Preventing default browser behavior.
 		e.preventDefault()
@@ -22,17 +18,13 @@ export const useWindowFilesTransfer = () => {
 		setIsTransfer(true)
 	}
 
-	/** Function handler for the dragleave event. */
+	// Function handler for the dragleave event.
 	function dragLeaveHandler() {
 		// We change the state of "isTransfer".
 		setIsTransfer(false)
 	}
 
-	/**
-	 * Function handler for the drop event.
-	 *
-	 * @param e Drop event
-	 */
+	// Function handler for the drop event.
 	function dropHandler(e: DragEvent) {
 		// Preventing default browser behavior.
 		e.preventDefault()
@@ -41,8 +33,8 @@ export const useWindowFilesTransfer = () => {
 		setIsTransfer(false)
 	}
 
-	/** A handler function that will be launched once during the first render. */
-	const onceRenderHandler = () => {
+	// Call the callback on the first render.
+	useEffect(() => {
 		// Add a drop event to the window.
 		window.addEventListener('drop', dropHandler)
 
@@ -58,10 +50,8 @@ export const useWindowFilesTransfer = () => {
 			window.removeEventListener('dragleave', dragLeaveHandler)
 			window.removeEventListener('dragover', dragOverHandler)
 		}
-	}
+	}, [])
 
-	// Call the callback on the first render.
-	useEffect(onceRenderHandler, [])
-
+	// Returning the isTransfer state.
 	return isTransfer
 }

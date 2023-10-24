@@ -63,7 +63,7 @@ export const useConfigStore = create(
 					}
 
 					const { data } = await axios.post<ICreateConfigResponse>(
-						EConfigStoreApiRoutes.createConfig,
+						EConfigStoreApiRoutes.configManagement,
 						payload,
 					)
 
@@ -98,7 +98,7 @@ export const useConfigStore = create(
 					}
 
 					const { data } = await axios.patch<IUpdateConfigResponse>(
-						EConfigStoreApiRoutes.updateConfig,
+						EConfigStoreApiRoutes.configManagement,
 						payload,
 					)
 
@@ -123,7 +123,7 @@ export const useConfigStore = create(
 					}
 
 					const { data } = await axios.get<IConfig>(
-						EConfigStoreApiRoutes.getConfig,
+						EConfigStoreApiRoutes.configManagement,
 					)
 
 					if (!data) {

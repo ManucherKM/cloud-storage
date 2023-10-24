@@ -119,7 +119,7 @@ export const FormLogin = forwardRef<HTMLDivElement, IFormLogin>(
 		const setLoading = useStore(store => store.setLoading)
 
 		/** State with authorization juice for VK. */
-		const [VKUserCode, _] = useVKAuth()
+		const [VKUserCode] = useVKAuth()
 
 		/** With this feature, you can redirect the user to another route. */
 		const navigate = useNavigate()
@@ -312,8 +312,8 @@ export const FormLogin = forwardRef<HTMLDivElement, IFormLogin>(
 			})
 		}
 
-		/** Function handler for authorization via VK. */
-		const vkUserCodeHandler = () => {
+		// Every time the VKUserCode changes, the callback is called.
+		useEffect(() => {
 			// If the code for registration via VK does not exist.
 			if (!VKUserCode) {
 				// Stop further execution of the function.
@@ -347,10 +347,7 @@ export const FormLogin = forwardRef<HTMLDivElement, IFormLogin>(
 			}
 
 			fetchDataToApi()
-		}
-
-		// Every time the VKUserCode changes, call the vkUserCodeHandler function.
-		useEffect(vkUserCodeHandler, [VKUserCode])
+		}, [VKUserCode, loginWithVK, navigate, setLoading])
 
 		/** Handler function that clears the `serverError` value. */
 		function serverErrorTimeHandler() {
@@ -416,24 +413,19 @@ export const FormLogin = forwardRef<HTMLDivElement, IFormLogin>(
 		// Call the hCaptchaTokenValidHandler function every time hCaptcha token changes.
 		useEffectSkipFirstRender(hCaptchaTokenValidHandler, [form.token])
 
-		/** Function handler for form validation. */
-		const validHandler = () => {
+		// When changing the form validation values, we change the overall form validation value.
+		useEffect(() => {
 			/** Form Validation. */
 			const isValid = isEmailValid && isPasswordValid && isTokenValid
 
 			// Change the isValid state.
 			setIsValid(isValid)
-		}
+		}, [isEmailValid, isPasswordValid, isTokenValid])
 
-		useEffect(validHandler, [isEmailValid, isPasswordValid, isTokenValid])
-
-		/** Function handler for the first render. */
-		const firstRenderHandler = () => {
+		// When rendering, we focus on input.
+		useEffect(() => {
 			inputEmail.current?.focus()
-		}
-
-		// At the first render, we call firstRenderHandler.
-		useEffect(firstRenderHandler, [])
+		}, [])
 
 		/** Root block styles */
 		const styles = clsx(['max-w-xs w-full px-2', className])

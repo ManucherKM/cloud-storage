@@ -55,6 +55,9 @@ export const FormOTP: FC<IFormOTP> = ({ className, ...props }) => {
 			navigate(ERoutes.restoreAccountEmail)
 			return
 		}
+
+		// Since we only need to check the email for emptiness on the first render, we disable eslint for this warning.
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
 	const styles = clsx([

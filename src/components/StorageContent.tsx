@@ -153,7 +153,7 @@ export const StorageContent: FC = () => {
 	useEffect(() => {
 		const searchedFiles = getSearchedFiles(search, validFiles)
 		setShowFiles(searchedFiles)
-	}, [search])
+	}, [search, validFiles])
 
 	useEffect(() => {
 		setShowFiles(validFiles)
@@ -179,7 +179,7 @@ export const StorageContent: FC = () => {
 		}
 
 		fetchFiles()
-	}, [])
+	}, [getFiles, setLoading])
 	return (
 		<>
 			<AlertError error={error} onTimeUp={errorTimeHandler} />

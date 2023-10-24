@@ -32,17 +32,17 @@ const defaultErrors: IUseVKAuthError = {
  * VK, after successful authorization in VK.
  */
 export function useVKAuth() {
-	/** State for the authorization code. */
+	// State for the authorization code.
 	const [code, setIsCode] = useState<string>('')
 
-	/** State for errors. */
+	// State for errors.
 	const [error, setError] = useState<IUseVKAuthError>(defaultErrors)
 
-	/** Current URL parameters. */
-	const params = new URLSearchParams(window.location.search)
+	// Call the callback when rendering.
+	useEffect(() => {
+		// Current URL parameters.
+		const params = new URLSearchParams(window.location.search)
 
-	/** A function that will be executed every time the user’s URL changes. */
-	const hrefHandler = () => {
 		// Current authorization code.
 		const currentCode = params.get('code')
 
@@ -56,7 +56,7 @@ export function useVKAuth() {
 			return
 		}
 
-		// Current error.
+		//  Current error.
 		const currentError = params.get('error')
 
 		// Variable for checking the error.
@@ -67,16 +67,16 @@ export function useVKAuth() {
 			// Description of the error returned by the VK API.
 			const errorDescription = params.get('error_description')
 
+			// Change the error state.
 			setError({
 				error: currentError,
 				errorDescription,
 			})
+
+			// Preventing further execution of the function.
 			return
 		}
-	}
-
-	// Every time the user's URL changes.
-	useEffect(hrefHandler, [window.location.href])
+	}, [])
 
 	// We return the cortee from the code and the error object.
 	return [code, error] as [string, IUseVKAuthError]

@@ -1,7 +1,7 @@
 // Utils
 import { env } from '../configuration/env'
 
-/** URL required to interact with the API. */
+// Get the URL to interact with the API.
 const API_URL = env.get('API_URL').required().asString()
 
 /**

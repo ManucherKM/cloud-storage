@@ -19,7 +19,7 @@ export const TrashContent: FC = () => {
 	const files = useFileStore(store => store.files)
 	const getFiles = useFileStore(store => store.getFiles)
 	const restoreFileFromTrash = useFileStore(store => store.restoreFileFromTrash)
-	const removeFile = useFileStore(store => store.removeFile)
+	const removeFiles = useFileStore(store => store.removeFiles)
 	const setLoading = useStore(store => store.setLoading)
 	const blockForSelection = useRef(null)
 
@@ -41,7 +41,7 @@ export const TrashContent: FC = () => {
 		}
 		setLoading(true)
 
-		const isSuccess = await removeFile(idOfTheSelectedFiles)
+		const isSuccess = await removeFiles(idOfTheSelectedFiles)
 
 		if (!isSuccess) {
 			setError('Failed to move files to Recycle Bin.')
@@ -70,7 +70,7 @@ export const TrashContent: FC = () => {
 	useEffect(() => {
 		const searchedFiles = getSearchedFiles(search, validFiles)
 		setShowFiles(searchedFiles)
-	}, [search])
+	}, [search, validFiles])
 
 	useEffect(() => {
 		setShowFiles(validFiles)
@@ -96,7 +96,7 @@ export const TrashContent: FC = () => {
 		}
 
 		fetchFiles()
-	}, [])
+	}, [getFiles, setLoading])
 	return (
 		<>
 			<AlertError error={error} onTimeUp={errorTimeHandler} />

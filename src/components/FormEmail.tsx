@@ -143,16 +143,13 @@ export const FormEmail: FC<IFormEmail> = () => {
 		setServerError('')
 	}
 
-	/** Function to focus on `input`. */
-	const inputFocusHandler = () => {
-		input.current?.focus()
-	}
-
 	// When rendering a component, we focus on input.
-	useEffect(inputFocusHandler, [input.current])
+	useEffect(() => {
+		input.current?.focus()
+	}, [])
 
-	/** Handler function to change the validity. */
-	const emailValidHandler = () => {
+	// Every time the email changes, the callback is called.
+	useEffectSkipFirstRender(() => {
 		// Let's skip the first render.
 		if (isFirstRender) return
 
@@ -173,10 +170,7 @@ export const FormEmail: FC<IFormEmail> = () => {
 
 		// Changing the validity state.
 		setIsValid(isValid)
-	}
-
-	// Whenever "email" is changed, call "emailValidHandler".
-	useEffectSkipFirstRender(emailValidHandler, [email])
+	}, [email])
 
 	return (
 		<>

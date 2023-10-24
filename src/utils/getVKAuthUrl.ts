@@ -14,7 +14,6 @@ export interface IVKAuthParams extends URLSearchParams {
 /** With this function you can get VK URL for authorization by Code flow method. */
 export function getVKAuthUrl(target: IGetVKAuthUrl) {
 	// Parameters object for the request.
-
 	const params = new URLSearchParams({
 		client_id: target.clientId,
 		display: target.display,
@@ -22,7 +21,6 @@ export function getVKAuthUrl(target: IGetVKAuthUrl) {
 	} as IVKAuthParams)
 
 	// Parameters for the request.
-
 	const formatedParams = params.toString()
 
 	return `https://oauth.vk.com/authorize?${formatedParams}`
