@@ -130,12 +130,6 @@ export const FormEmail: FC<IFormEmail> = () => {
 		}
 	}
 
-	/** Handler function that clears the `serverError` value. */
-	function serverErrorTimeHandler() {
-		// Clearing the "serverError" state.
-		newError('')
-	}
-
 	// When rendering a component, we focus on input.
 	useEffect(() => {
 		input.current?.focus()
