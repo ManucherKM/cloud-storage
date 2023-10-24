@@ -170,7 +170,7 @@ export const SettingContent: FC = () => {
 		}
 
 		fetchThemes()
-	}, [getThemes, newError])
+	}, [getThemes, newError, loader])
 	return (
 		<>
 			<LayoutDashboard title="Setting">

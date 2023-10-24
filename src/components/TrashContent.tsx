@@ -84,7 +84,7 @@ export const TrashContent: FC = () => {
 		}
 
 		fetchFiles()
-	}, [getFiles, newError])
+	}, [getFiles, newError, loader])
 	return (
 		<>
 			<LayoutDashboard title="Trash">

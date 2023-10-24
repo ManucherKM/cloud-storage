@@ -150,7 +150,7 @@ export const StorageContent: FC = () => {
 		}
 
 		fetchFiles()
-	}, [getFiles, newError])
+	}, [getFiles, newError, loader])
 
 	return (
 		<>

@@ -5,11 +5,7 @@ import { useAuthStore, useNotificationsStore } from '@/storage'
 import { IVKAuth as IKuuiVKAuth, VKAuth as KuuiVKAuth } from 'kuui-react'
 import { FC, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router'
-
-export enum EVKAuthVariant {
-	login = 'login',
-	registration = 'registration',
-}
+import { EVKAuthVariant } from './types'
 
 export type TVKAuth = Omit<IKuuiVKAuth, 'onClick'>
 

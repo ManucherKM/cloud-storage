@@ -8,11 +8,7 @@ import {
 } from 'kuui-react'
 import { FC } from 'react'
 import { useNavigate } from 'react-router'
-
-export enum EGoogleAuthVariant {
-	login = 'login',
-	registration = 'registration',
-}
+import { EGoogleAuthVariant } from './types'
 
 export type TGoogleAuth = Omit<IKuuiGoogleAuth, 'onClick'>
 

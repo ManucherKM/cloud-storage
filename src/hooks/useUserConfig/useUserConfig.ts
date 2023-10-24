@@ -1,9 +1,8 @@
 // Utils
-import { useAuthStore,useConfigStore } from '@/storage'
-import { changeRound,changeTheme } from 'kuui-react'
+import { useAuthStore, useConfigStore } from '@/storage'
+import { changeRound, changeTheme } from 'kuui-react'
 import { useEffect } from 'react'
 import { useLoader } from '..'
-
 
 /** Using this hook, you can give the application a custom configuration. */
 export async function useUserConfig() {
@@ -32,7 +31,7 @@ export async function useUserConfig() {
 
 		// Call the function to get the user config.
 		fetchConfig()
-	}, [isAuth,  getConfig])
+	}, [isAuth, getConfig, loader])
 
 	// Each time the "config" value changes, we call the specified callback.
 	useEffect(() => {
