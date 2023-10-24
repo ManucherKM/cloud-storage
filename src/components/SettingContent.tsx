@@ -3,13 +3,12 @@ import type { IColorTheme } from 'kuui-react'
 import type { FC, FormEvent } from 'react'
 
 // Utils
-import { useConfigStore, useStore } from '@/storage'
+import { useConfigStore, useNotificationsStore } from '@/storage'
 import { useEffect, useState } from 'react'
 
 // Components
+import { useLoader } from '@/hooks'
 import { Button, ChangeRound, ColorThemes, Form } from 'kuui-react'
-import { AlertError } from './AlertError'
-import { AlertMessage } from './AlertMessage'
 import { LayoutDashboard } from './LayoutDashboard'
 import { LayoutSettingParameter } from './LayoutSettingParameter'
 
@@ -59,8 +58,8 @@ export const SettingContent: FC = () => {
 	/** Current user configuration. */
 	const config = useConfigStore(store => store.config)
 
-	/** Function for changing the state of the Loader. */
-	const setLoading = useStore(store => store.setLoading)
+	// A function for showing Loader to the user when requesting an API.
+	const loader = useLoader()
 
 	/** The state for a form with customizations. */
 	const [form, setForm] = useState<ISettingDefaultForm>({
@@ -68,29 +67,11 @@ export const SettingContent: FC = () => {
 		themeId: config?.theme.id || defaultForm.themeId,
 	})
 
-	/** State for errors that need to be shown to the user. */
-	const [error, setError] = useState<string>('')
+	// Function to create a new error to show it to the user.
+	const newError = useNotificationsStore(store => store.newError)
 
-	/** State for messages that need to be shown to the user. */
-	const [message, setMessage] = useState<string>('')
-
-	/**
-	 * Handler function that will be executed when the time of error displaying
-	 * expires.
-	 */
-	function errorTimeHandler() {
-		// Clearing the state with the error.
-		setError('')
-	}
-
-	/**
-	 * Handler function that will be executed when the time of message displaying
-	 * expires.
-	 */
-	function messageTimeHandler() {
-		// Clearing the state with the message.
-		setMessage('')
-	}
+	// Function to create a new message to show it to the user.
+	const newMessage = useNotificationsStore(store => store.newMessage)
 
 	/** Function to send a request to the API. */
 	async function sendToApi() {
@@ -98,13 +79,10 @@ export const SettingContent: FC = () => {
 			return
 		}
 
-		setLoading(true)
-
-		const isConfigCreated = await createConfig(form.round, form.themeId)
+		const isConfigCreated = await loader(createConfig, form.round, form.themeId)
 
 		if (isConfigCreated) {
-			setLoading(false)
-			setMessage('The data was successfully saved.')
+			newMessage('The data was successfully saved.')
 			setForm(defaultForm)
 			return
 		}
@@ -112,15 +90,12 @@ export const SettingContent: FC = () => {
 		const isConfigUpdated = await updateConfig(form.round, form.themeId)
 
 		if (isConfigUpdated) {
-			setLoading(false)
-			setMessage('The data was successfully saved.')
+			newMessage('The data was successfully saved.')
 			setForm(defaultForm)
 			return
 		}
 
-		setError('Failed to save data.')
-
-		setLoading(false)
+		newError('Failed to save data.')
 	}
 
 	/**
@@ -187,23 +162,17 @@ export const SettingContent: FC = () => {
 	// Call callback on the first render.
 	useEffect(() => {
 		const fetchThemes = async () => {
-			try {
-				setLoading(true)
-				await getThemes()
-			} catch (e) {
-				console.error(e)
-				setError('Failed to get list of color themes.')
-			} finally {
-				setLoading(false)
+			const isSuccess = await loader(getThemes)
+
+			if (!isSuccess) {
+				newError('Failed to get list of color themes.')
 			}
 		}
 
 		fetchThemes()
-	}, [getThemes, setLoading])
+	}, [getThemes])
 	return (
 		<>
-			<AlertMessage message={message} onTimeUp={messageTimeHandler} />
-			<AlertError error={error} onTimeUp={errorTimeHandler} />
 			<LayoutDashboard title="Setting">
 				<div className="p-5">
 					<Form className="flex flex-col gap-4" onSubmit={submitHandler}>
@@ -211,7 +180,10 @@ export const SettingContent: FC = () => {
 							<ColorThemes themes={themes} onChangeTheme={themeChangeHandler} />
 						</LayoutSettingParameter>
 						<LayoutSettingParameter settingName="Round">
-							<ChangeRound onChangeRound={roundChangeHandler} />
+							<ChangeRound
+								defaultValue={form.round}
+								onChangeRound={roundChangeHandler}
+							/>
 						</LayoutSettingParameter>
 						<div>
 							<Button variant="active" type="submit" disabled={!isValid}>

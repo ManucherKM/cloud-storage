@@ -4,8 +4,8 @@ import type { FC, HTMLAttributes } from 'react'
 
 // Utils
 import { ERoutes } from '@/configuration/routes'
-import { useRouteContain } from '@/hooks'
-import { useAuthStore, useStore } from '@/storage'
+import { useLoader, useRouteContain } from '@/hooks'
+import { useAuthStore } from '@/storage'
 import { useNavigate } from 'react-router'
 
 // Icons
@@ -37,37 +37,28 @@ export const Menu: FC<IMenu> = ({ title, className, ...props }) => {
 	/** Function to log the user out of the account. */
 	const logout = useAuthStore(store => store.logout)
 
-	/** Function for changing the state of the Loader. */
-	const setLoading = useStore(store => store.setLoading)
+	// A function for showing Loader to the user when requesting an API.
+	const loader = useLoader()
 
 	/** Function to redirect the user. */
 	const navigate = useNavigate()
 
 	/** Handler function that will be called when clicking on the exit button. */
 	async function logoutHandler() {
-		// Showing the Loader to the user.
-		setLoading(true)
-
 		/**
 		 * Enter the result of the `logout` function execution into the `isSuccess`
 		 * variable.
 		 */
-		const isSuccess = await logout()
+		const isSuccess = await loader(logout)
 
 		// If you are unable to log out of the account.
 		if (!isSuccess) {
-			// If you are unable to log out of the account.
-			setLoading(false)
-
 			// Terminate the function.
 			return
 		}
 
 		// Redirect the user to the home page.
 		navigate(ERoutes.home)
-
-		// Remove Loader.с
-		setLoading(false)
 	}
 
 	/** Array of navigation buttons. */

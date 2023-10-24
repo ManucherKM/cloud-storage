@@ -9,15 +9,18 @@ import type {
 
 // Utils
 import { ERoutes } from '@/configuration/routes'
-import { useRestoreAccount, useStore } from '@/storage'
+import { useNotificationsStore, useRestoreAccount } from '@/storage'
 import { validateEmail } from '@/utils'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 
 // Components
-import { useEffectSkipFirstRender, useSkipFirstRender } from '@/hooks'
+import {
+	useEffectSkipFirstRender,
+	useLoader,
+	useSkipFirstRender,
+} from '@/hooks'
 import { Button, Form, Paragraph } from 'kuui-react'
-import { AlertError } from './AlertError'
 import { InputEmail } from './InputEmail'
 
 /** Valid types for `FormEmail`. */
@@ -43,7 +46,7 @@ export const FormEmail: FC<IFormEmail> = () => {
 	const [email, setEmail] = useState<string>(storeEmail || '')
 
 	/** State for email validity. */
-	const [isValid, setIsValid] = useState<boolean>(false)
+	const [isValid, setIsValid] = useState<boolean>(!!storeEmail)
 
 	/** Function to query the API to create a one-time password. */
 	const createOtp = useRestoreAccount(store => store.createOtp)
@@ -51,11 +54,8 @@ export const FormEmail: FC<IFormEmail> = () => {
 	/** State for errors */
 	const [error, setError] = useState<string>('')
 
-	/** State for errors that need to be shown to the user. */
-	const [serverError, setServerError] = useState<string>('')
-
-	/** Function for changing the state of the Loader. */
-	const setLoading = useStore(store => store.setLoading)
+	// Function to create a new error to show it to the user.
+	const newError = useNotificationsStore(store => store.newError)
 
 	/** Input for email used in the form. */
 	const input = useRef<HTMLInputElement | null>(null)
@@ -66,6 +66,9 @@ export const FormEmail: FC<IFormEmail> = () => {
 	/** Function to redirect the user. */
 	const navigate = useNavigate()
 
+	// A function for showing Loader to the user when requesting an API.
+	const loader = useLoader()
+
 	/** Function to send a request to the API. */
 	async function sendToApi() {
 		// If the email is not valid, terminate the function.
@@ -74,19 +77,12 @@ export const FormEmail: FC<IFormEmail> = () => {
 		// We remove the focus from the input so that the user doesn't type anything into the input while the request is being processed.
 		input.current?.blur()
 
-		// Showing the Loader to the user.
-		setLoading(true)
-
-		//  Put the result of the "createOtp" function into the "isSuccess" variable.
-		const isSuccess = await createOtp()
+		const isSuccess = await loader(createOtp)
 
 		// If the one-time password could not be created.
 		if (!isSuccess) {
 			// Showing the user the error.
-			setServerError('The user could not be found.')
-
-			// Remove Loader.
-			setLoading(false)
+			newError('The user could not be found.')
 
 			// Terminate the function.
 			return
@@ -94,9 +90,6 @@ export const FormEmail: FC<IFormEmail> = () => {
 
 		// Redirect the user to a page with a one-time password.
 		navigate(ERoutes.restoreAccountOTP)
-
-		// Remove Loader.
-		setLoading(false)
 	}
 
 	/**
@@ -140,7 +133,7 @@ export const FormEmail: FC<IFormEmail> = () => {
 	/** Handler function that clears the `serverError` value. */
 	function serverErrorTimeHandler() {
 		// Clearing the "serverError" state.
-		setServerError('')
+		newError('')
 	}
 
 	// When rendering a component, we focus on input.
@@ -174,7 +167,6 @@ export const FormEmail: FC<IFormEmail> = () => {
 
 	return (
 		<>
-			<AlertError error={serverError} onTimeUp={serverErrorTimeHandler} />
 			<div className="max-w-xs w-full px-2">
 				<Form onSubmit={submitHandler} className="w-full flex flex-col gap-3">
 					<Paragraph align="center">Enter your recovery email.</Paragraph>

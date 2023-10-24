@@ -12,9 +12,10 @@ import { ERoutes } from '@/configuration/routes'
 import {
 	redirectToVkAuthPage,
 	useEffectSkipFirstRender,
+	useLoader,
 	useVKAuth,
 } from '@/hooks'
-import { useAuthStore, useStore } from '@/storage'
+import { useAuthStore, useNotificationsStore } from '@/storage'
 import { validateEmail, validatePassword } from '@/utils'
 import { useGoogleLogin } from '@react-oauth/google'
 import clsx from 'clsx'
@@ -32,7 +33,6 @@ import {
 	Title,
 	VKAuth,
 } from 'kuui-react'
-import { AlertError } from './AlertError'
 import { InputEmail } from './InputEmail'
 import { InputPassword } from './InputPassword'
 
@@ -100,8 +100,8 @@ export const FormLogin = forwardRef<HTMLDivElement, IFormLogin>(
 		const [formErrors, setFormErrors] =
 			useState<ILoginFormErrors>(defaultFormErrors)
 
-		/** State for errors that need to be shown to the user. */
-		const [serverError, setServerError] = useState<string>('')
+		// Function to create a new error to show it to the user.
+		const newError = useNotificationsStore(store => store.newError)
 
 		/** Form validity state. */
 		const [isValid, setIsValid] = useState<boolean>(false)
@@ -115,8 +115,8 @@ export const FormLogin = forwardRef<HTMLDivElement, IFormLogin>(
 		/** State for token validity. */
 		const [isTokenValid, setIsTokenValid] = useState<boolean>(false)
 
-		/** The state for rendering the `Loader` component. */
-		const setLoading = useStore(store => store.setLoading)
+		// A function for showing Loader to the user when requesting an API.
+		const loader = useLoader()
 
 		/** State with authorization juice for VK. */
 		const [VKUserCode] = useVKAuth()
@@ -156,22 +156,15 @@ export const FormLogin = forwardRef<HTMLDivElement, IFormLogin>(
 				return
 			}
 
-			// Showing the user the Loader.
-			setLoading(true)
-
-			// We get the result of sending data to the API.
-			const isLogin = await login(form)
+			const isLogin = await loader(login, form)
 
 			// If authorization failed.
 			if (!isLogin) {
 				// Show the user an error message.
-				setServerError('Incorrect login or password.')
+				newError('Incorrect login or password.')
 
 				// Reset the captcha.
 				hCaptchaRef.current?.resetCaptcha()
-
-				// We remove the Loader.
-				setLoading(false)
 
 				// Stop further execution of the function.
 				return
@@ -182,9 +175,6 @@ export const FormLogin = forwardRef<HTMLDivElement, IFormLogin>(
 
 			// Clearing the form.
 			setForm(defaultForm)
-
-			// We remove the Loader.
-			setLoading(false)
 		}
 
 		/**
@@ -259,18 +249,11 @@ export const FormLogin = forwardRef<HTMLDivElement, IFormLogin>(
 		 * via Google.
 		 */
 		async function googleLoginOnSuccess(code: string) {
-			// Showing the user the Loader.
-			setLoading(true)
-
-			// We get the result of sending data to the API.
-			const isSuccess = await loginWithGoogle(code)
+			const isSuccess = await loader(loginWithGoogle, code)
 
 			// If the result is unsuccessful.
 			if (!isSuccess) {
-				setServerError('Failed to login.')
-
-				// We remove the Loader.
-				setLoading(false)
+				newError('Failed to login.')
 
 				// Stop further execution of the function.
 				return
@@ -278,9 +261,6 @@ export const FormLogin = forwardRef<HTMLDivElement, IFormLogin>(
 
 			// We redirect the user to the storage page.
 			navigate(ERoutes.storage)
-
-			// We remove the Loader.
-			setLoading(false)
 		}
 
 		/** Function to bring up a popup window for authorization via Google. */
@@ -322,18 +302,11 @@ export const FormLogin = forwardRef<HTMLDivElement, IFormLogin>(
 
 			/** Function for sending data of a user who authorization via VK to API. */
 			const fetchDataToApi = async () => {
-				// Showing the user the Loader.
-				setLoading(true)
-
-				// We get the result of sending data to the API.
-				const isSuccess = await loginWithVK(VKUserCode, vkRedirectUri)
+				const isSuccess = await loader(loginWithVK, VKUserCode, vkRedirectUri)
 
 				// If the result is unsuccessful.
 				if (!isSuccess) {
-					setServerError('Failed to login.')
-
-					// We remove the Loader.
-					setLoading(false)
+					newError('Failed to login.')
 
 					// Stop further execution of the function.
 					return
@@ -341,19 +314,10 @@ export const FormLogin = forwardRef<HTMLDivElement, IFormLogin>(
 
 				// We redirect the user to the storage page.
 				navigate(ERoutes.storage)
-
-				// We remove the Loader.
-				setLoading(false)
 			}
 
 			fetchDataToApi()
-		}, [VKUserCode, loginWithVK, navigate, setLoading])
-
-		/** Handler function that clears the `serverError` value. */
-		function serverErrorTimeHandler() {
-			// Clearing the "serverError" state.
-			setServerError('')
-		}
+		}, [VKUserCode, loginWithVK, navigate])
 
 		/** Function handler for email validation. */
 		const emailValidHandler = () => {
@@ -432,8 +396,6 @@ export const FormLogin = forwardRef<HTMLDivElement, IFormLogin>(
 
 		return (
 			<div ref={ref} className={styles} {...props}>
-				<AlertError error={serverError} onTimeUp={serverErrorTimeHandler} />
-
 				<Title className="mb-5" align="center">
 					Authorization
 				</Title>

@@ -1,7 +1,8 @@
 // Utils
-import { useAuthStore, useConfigStore, useStore } from '@/storage'
+import { useAuthStore, useConfigStore } from '@/storage'
 import { changeRound, changeTheme } from 'kuui-react'
 import { useEffect } from 'react'
+import { useLoader } from '..'
 
 /** Using this hook, you can give the application a custom configuration. */
 export async function useUserConfig() {
@@ -14,32 +15,23 @@ export async function useUserConfig() {
 	// The state responsible for user authorization.
 	const isAuth: boolean = !!useAuthStore(store => store.token)
 
-	// A function with which we can specify when to display Loader.
-	const setLoading = useStore(store => store.setLoading)
+	// A function for showing Loader to the user when requesting an API.
+	const loader = useLoader()
 
 	// Each time the "isAuth" value changes, we call the specified callback.
 	useEffect(() => {
 		// Function for getting user config.
 		const fetchConfig = async () => {
-			try {
-				// If the user is not authorized, stops executing the function.
-				if (!isAuth) return
+			// If the user is not authorized, stops executing the function.
+			if (!isAuth) return
 
-				// 	Show Loader.
-				setLoading(true)
-
-				// When executing the promise returned by the `getConfig` function, we remove Loader.
-				await getConfig()
-			} catch (e) {
-				console.error(e)
-			} finally {
-				setLoading(false)
-			}
+			// When executing the promise returned by the `getConfig` function, we remove Loader.
+			await loader(getConfig)
 		}
 
 		// Call the function to get the user config.
 		fetchConfig()
-	}, [isAuth, getConfig, setLoading])
+	}, [isAuth, getConfig])
 
 	// Each time the "config" value changes, we call the specified callback.
 	useEffect(() => {

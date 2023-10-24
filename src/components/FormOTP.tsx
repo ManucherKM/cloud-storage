@@ -1,10 +1,10 @@
 import { ERoutes } from '@/configuration/routes'
-import { useRestoreAccount, useStore } from '@/storage'
+import { useLoader } from '@/hooks'
+import { useNotificationsStore, useRestoreAccount } from '@/storage'
 import clsx from 'clsx'
 import { Input, Paragraph } from 'kuui-react'
 import { FC, HTMLAttributes, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
-import { AlertError } from '.'
 
 export type TFormOTP = HTMLAttributes<HTMLDivElement>
 
@@ -14,8 +14,10 @@ export const FormOTP: FC<IFormOTP> = ({ className, ...props }) => {
 	const email = useRestoreAccount(store => store.email)
 	const verificationOtp = useRestoreAccount(store => store.verificationOtp)
 	const [otp, setOtp] = useState<string>('')
-	const [serverError, setServerError] = useState<string>('')
-	const setLoading = useStore(store => store.setLoading)
+	// Function to create a new error to show it to the user.
+	const newError = useNotificationsStore(store => store.newError)
+	// A function for showing Loader to the user when requesting an API.
+	const loader = useLoader()
 	const navigate = useNavigate()
 
 	function otpChangeHandler(val: string) {
@@ -27,22 +29,15 @@ export const FormOTP: FC<IFormOTP> = ({ className, ...props }) => {
 			return
 		}
 
-		setLoading(true)
-
-		const isSuccess = await verificationOtp(+otp)
+		const isSuccess = await loader(verificationOtp, +otp)
 
 		if (!isSuccess) {
-			setServerError('Incorrect one-time code.')
-			setLoading(false)
+			newError('Incorrect one-time code.')
+
 			return
 		}
 
 		navigate(ERoutes.restoreAccountPassword)
-		setLoading(false)
-	}
-
-	function serverErrorTimeHandler() {
-		setServerError('')
 	}
 
 	async function pasteHandler() {
@@ -67,7 +62,6 @@ export const FormOTP: FC<IFormOTP> = ({ className, ...props }) => {
 
 	return (
 		<div className={styles} onPaste={pasteHandler} {...props}>
-			<AlertError error={serverError} onTimeUp={serverErrorTimeHandler} />
 			<Paragraph align="center">Enter the code sent to {email}.</Paragraph>
 			<Input
 				variant="OTP"

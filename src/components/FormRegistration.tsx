@@ -1,7 +1,7 @@
 import { env } from '@/configuration/env'
 import { ERoutes } from '@/configuration/routes'
-import { redirectToVkAuthPage, useVKAuth } from '@/hooks'
-import { useAuthStore, useStore } from '@/storage'
+import { redirectToVkAuthPage, useLoader, useVKAuth } from '@/hooks'
+import { useAuthStore, useNotificationsStore } from '@/storage'
 import { validateEmail, validatePassword } from '@/utils'
 import HCaptcha from '@hcaptcha/react-hcaptcha'
 import { useGoogleLogin } from '@react-oauth/google'
@@ -24,7 +24,7 @@ import type {
 } from 'react'
 import { forwardRef, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
-import { AlertError, InputEmail, InputPassword } from '.'
+import { InputEmail, InputPassword } from '.'
 
 const HCAPTCHA_SITEKEY = env.get('HCAPTCHA_SITEKEY').required().asString()
 const VK_CLIENT_ID = env.get('VK_CLIENT_ID').required().asString()
@@ -70,7 +70,8 @@ export const FormRegistration = forwardRef<HTMLDivElement, IFormRegistration>(
 		const [formErrors, setFormErrors] =
 			useState<IRegistrationFormErrors>(defaultFormErrors)
 
-		const [serverError, setServerError] = useState<string>('')
+		// Function to create a new error to show it to the user.
+		const newError = useNotificationsStore(store => store.newError)
 
 		/** The state to lock the submit button. */
 		const [disableSubmit, setDisableSubmit] = useState<boolean>(true)
@@ -84,8 +85,8 @@ export const FormRegistration = forwardRef<HTMLDivElement, IFormRegistration>(
 		/** You can use this function to send user data for registration. */
 		const registration = useAuthStore(store => store.registration)
 
-		/** The state for rendering the `Loader` component. */
-		const setLoading = useStore(store => store.setLoading)
+		// A function for showing Loader to the user when requesting an API.
+		const loader = useLoader()
 
 		/**
 		 * With this feature, you can send your user details for registration with
@@ -120,31 +121,21 @@ export const FormRegistration = forwardRef<HTMLDivElement, IFormRegistration>(
 				return
 			}
 
-			// Showing the user the Loader.
-			setLoading(true)
-
-			// We get the result of sending data to the API.
-			const isRegistered = await registration(form)
+			const isRegistered = await loader(registration, form)
 
 			// If registration failed.
 			if (!isRegistered) {
 				// Clearing the form.
 				setForm(defaultForm)
 
-				setServerError('Failed to register.')
+				newError('Failed to register.')
 
 				// Reset the captcha.
 				hCaptchaRef.current?.resetCaptcha()
 
-				// We remove the Loader.
-				setLoading(false)
-
 				// Stop further execution of the function.
 				return
 			}
-
-			// We remove the Loader.
-			setLoading(false)
 
 			// Change the state of confirmEmail.
 			setConfirmEmail(true)
@@ -236,18 +227,12 @@ export const FormRegistration = forwardRef<HTMLDivElement, IFormRegistration>(
 		 * via Google.
 		 */
 		async function googleRegistrationOnSuccess(code: string) {
-			// Showing the user the Loader.
-			setLoading(true)
-
 			// We get the result of sending data to the API.
-			const isSuccess = await registrationWithGoogle(code)
+			const isSuccess = await loader(registrationWithGoogle, code)
 
 			// If the result is unsuccessful.
 			if (!isSuccess) {
-				setServerError('Failed to register.')
-
-				// We remove the Loader.
-				setLoading(false)
+				newError('Failed to register.')
 
 				// Stop further execution of the function.
 				return
@@ -255,9 +240,6 @@ export const FormRegistration = forwardRef<HTMLDivElement, IFormRegistration>(
 
 			// We redirect the user to the authorization page.
 			navigate(ERoutes.login)
-
-			// We remove the Loader.
-			setLoading(false)
 		}
 
 		/** Function to bring up a popup window for registration via Google. */
@@ -289,10 +271,6 @@ export const FormRegistration = forwardRef<HTMLDivElement, IFormRegistration>(
 			})
 		}
 
-		function serverErrorTimeHandler() {
-			setServerError('')
-		}
-
 		useEffect(() => {
 			// If the code for registration via VK does not exist.
 			if (!VKUserCode) {
@@ -302,18 +280,16 @@ export const FormRegistration = forwardRef<HTMLDivElement, IFormRegistration>(
 
 			/** Function for sending data of a user who registers via VK to API. */
 			const fetchDataToApi = async () => {
-				// Showing the user the Loader.
-				setLoading(true)
-
 				// We get the result of sending data to the API.
-				const isSuccess = await registrationWithVk(VKUserCode, vkRedirectUri)
+				const isSuccess = await loader(
+					registrationWithVk,
+					VKUserCode,
+					vkRedirectUri,
+				)
 
 				// If the result is unsuccessful.
 				if (!isSuccess) {
-					setServerError('Failed to register.')
-
-					// We remove the Loader.
-					setLoading(false)
+					newError('Failed to register.')
 
 					// Stop further execution of the function.
 					return
@@ -321,13 +297,10 @@ export const FormRegistration = forwardRef<HTMLDivElement, IFormRegistration>(
 
 				// We redirect the user to the authorization page.
 				navigate(ERoutes.login)
-
-				// We remove the Loader.
-				setLoading(false)
 			}
 
 			fetchDataToApi()
-		}, [VKUserCode, navigate, registrationWithVk, vkRedirectUri, setLoading])
+		}, [VKUserCode, navigate, registrationWithVk, vkRedirectUri])
 
 		useEffect(() => {
 			const isPasswordValid = validatePassword(form.password)
@@ -356,7 +329,6 @@ export const FormRegistration = forwardRef<HTMLDivElement, IFormRegistration>(
 
 		return (
 			<div ref={ref} className={styles} {...props}>
-				<AlertError error={serverError} onTimeUp={serverErrorTimeHandler} />
 				<Title className="mb-5" align="center">
 					Registration
 				</Title>

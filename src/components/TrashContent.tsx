@@ -1,11 +1,11 @@
 import {
-	AlertError,
 	DashboardNavBar,
 	FileList,
 	LayoutDashboard,
 	TrashEmpty,
 } from '@/components'
-import { useFileStore, useStore } from '@/storage'
+import { useLoader } from '@/hooks'
+import { useFileStore, useNotificationsStore } from '@/storage'
 import { IFile } from '@/storage/useFileStore/types'
 import { getSearchedFiles, getTrashFiles } from '@/utils'
 import { ChangeEvent, FC, useEffect, useRef, useState } from 'react'
@@ -13,19 +13,17 @@ import { ChangeEvent, FC, useEffect, useRef, useState } from 'react'
 export const TrashContent: FC = () => {
 	const [search, setSearch] = useState<string>('')
 	const [idOfTheSelectedFiles, setIdOfTheSelectedFiles] = useState<string[]>([])
-	const [error, setError] = useState<string>('')
+	// Function to create a new error to show it to the user.
+	const newError = useNotificationsStore(store => store.newError)
 	const [validFiles, setValidFiles] = useState<IFile[]>([])
 	const [showFiles, setShowFiles] = useState<IFile[]>([])
 	const files = useFileStore(store => store.files)
 	const getFiles = useFileStore(store => store.getFiles)
 	const restoreFileFromTrash = useFileStore(store => store.restoreFileFromTrash)
 	const removeFiles = useFileStore(store => store.removeFiles)
-	const setLoading = useStore(store => store.setLoading)
+	// A function for showing Loader to the user when requesting an API.
+	const loader = useLoader()
 	const blockForSelection = useRef(null)
-
-	function errorTimeHandler() {
-		setError('')
-	}
 
 	function searchHandler(e: ChangeEvent<HTMLInputElement> | undefined) {
 		if (!e) {
@@ -39,32 +37,24 @@ export const TrashContent: FC = () => {
 		if (!idOfTheSelectedFiles.length) {
 			return
 		}
-		setLoading(true)
 
-		const isSuccess = await removeFiles(idOfTheSelectedFiles)
+		const isSuccess = await loader(removeFiles, idOfTheSelectedFiles)
 
 		if (!isSuccess) {
-			setError('Failed to move files to Recycle Bin.')
-			setLoading(false)
+			newError('Failed to move files to Recycle Bin.')
 		}
-
-		setLoading(false)
 	}
 
 	async function restoreFilesHandler() {
 		if (!idOfTheSelectedFiles.length) {
 			return
 		}
-		setLoading(true)
 
-		const isSuccess = await restoreFileFromTrash(idOfTheSelectedFiles)
+		const isSuccess = await loader(restoreFileFromTrash, idOfTheSelectedFiles)
 
 		if (!isSuccess) {
-			setError('Failed to move files to Recycle Bin.')
-			setLoading(false)
+			newError('Failed to move files to Recycle Bin.')
 		}
-
-		setLoading(false)
 	}
 
 	useEffect(() => {
@@ -83,23 +73,18 @@ export const TrashContent: FC = () => {
 
 	useEffect(() => {
 		const fetchFiles = async () => {
-			setLoading(true)
-			const isSuccess = await getFiles()
+			const isSuccess = await loader(getFiles)
 
 			if (!isSuccess) {
-				setError('Failed to receive files.')
-				setLoading(false)
+				newError('Failed to receive files.')
 				return
 			}
-
-			setLoading(false)
 		}
 
 		fetchFiles()
-	}, [getFiles, setLoading])
+	}, [getFiles])
 	return (
 		<>
-			<AlertError error={error} onTimeUp={errorTimeHandler} />
 			<LayoutDashboard title="Trash">
 				<DashboardNavBar
 					search={search}

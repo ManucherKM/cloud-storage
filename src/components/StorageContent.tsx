@@ -1,14 +1,8 @@
-import {
-	AlertError,
-	AlertMessage,
-	DashboardNavBar,
-	FileList,
-	LayoutDashboard,
-} from '@/components'
+import { DashboardNavBar, FileList, LayoutDashboard } from '@/components'
 import { env } from '@/configuration/env'
 import { ERoutes } from '@/configuration/routes'
-import { useWindowFilesTransfer } from '@/hooks'
-import { useFileStore, useStore } from '@/storage'
+import { useLoader, useWindowFilesTransfer } from '@/hooks'
+import { useFileStore, useNotificationsStore } from '@/storage'
 import { IFile } from '@/storage/useFileStore/types'
 import {
 	getSearchedFiles,
@@ -24,8 +18,10 @@ export const StorageContent: FC = () => {
 	const [search, setSearch] = useState<string>('')
 	const [isTransferFiles, setIsTransferFiles] = useState<boolean>(false)
 	const [idOfTheSelectedFiles, setIdOfTheSelectedFiles] = useState<string[]>([])
-	const [error, setError] = useState<string>('')
-	const [message, setMessage] = useState<string>('')
+	// Function to create a new error to show it to the user.
+	const newError = useNotificationsStore(store => store.newError)
+	// Function to create a new message to show it to the user.
+	const newMessage = useNotificationsStore(store => store.newMessage)
 	const [validFiles, setValidFiles] = useState<IFile[]>([])
 	const [showFiles, setShowFiles] = useState<IFile[]>([])
 	const files = useFileStore(store => store.files)
@@ -33,39 +29,27 @@ export const StorageContent: FC = () => {
 	const getFiles = useFileStore(store => store.getFiles)
 	const addFileToTrash = useFileStore(store => store.addFileToTrash)
 	const createArchive = useFileStore(store => store.createArchive)
-	const setLoading = useStore(store => store.setLoading)
+	// A function for showing Loader to the user when requesting an API.
+	const loader = useLoader()
 	const isTransferFilesOnWindow = useWindowFilesTransfer()
 	const blockForSelection = useRef<HTMLDivElement | null>(null)
 
 	async function changeFilesHandler(e: ChangeEvent<HTMLInputElement>) {
-		setLoading(true)
 		const selectedFiles = e.target.files
 
 		if (!selectedFiles) {
-			setLoading(false)
 			return
 		}
 
-		const isSuccess = await sendFiles(selectedFiles)
+		const isSuccess = await loader(sendFiles, selectedFiles)
 
 		if (!isSuccess) {
 			e.target.value = ''
-			setError('Failed to send file.')
-			setLoading(false)
+			newError('Failed to send file.')
 			return
 		}
 
 		e.target.value = ''
-		setError('')
-		setLoading(false)
-	}
-
-	function errorTimeHandler() {
-		setError('')
-	}
-
-	function messageTimeHandler() {
-		setMessage('')
 	}
 
 	function closeFillAddHandler() {
@@ -74,22 +58,18 @@ export const StorageContent: FC = () => {
 
 	async function changeFilesFileAddHandler(files: FileList | null) {
 		setIsTransferFiles(false)
-		setLoading(true)
 
 		if (!files) {
 			return
 		}
 
-		const isSuccess = await sendFiles(files)
+		const isSuccess = await loader(sendFiles, files)
 
 		if (!isSuccess) {
-			setError('Failed to send file.')
-			setLoading(false)
+			newError('Failed to send file.')
+
 			return
 		}
-
-		setError('')
-		setLoading(false)
 	}
 
 	function searchHandler(e: ChangeEvent<HTMLInputElement> | undefined) {
@@ -104,13 +84,12 @@ export const StorageContent: FC = () => {
 		if (!idOfTheSelectedFiles.length) {
 			return
 		}
-		setLoading(true)
 
-		const id = await createArchive(idOfTheSelectedFiles)
+		const id = await loader(createArchive, idOfTheSelectedFiles)
 
 		if (!id) {
-			setError('Failed to share files.')
-			setLoading(false)
+			newError('Failed to share files.')
+
 			return
 		}
 
@@ -119,29 +98,24 @@ export const StorageContent: FC = () => {
 		const isSuccess = await writeTextIntoClipboard(url)
 
 		if (!isSuccess) {
-			setError('Failed to move link to clipboard.')
-			setLoading(false)
+			newError('Failed to move link to clipboard.')
+
 			return
 		}
 
-		setMessage('Link copied to clipboard.')
-		setLoading(false)
+		newMessage('Link copied to clipboard.')
 	}
 
 	async function removeFilesHandler() {
 		if (!idOfTheSelectedFiles.length) {
 			return
 		}
-		setLoading(true)
 
-		const isSuccess = await addFileToTrash(idOfTheSelectedFiles)
+		const isSuccess = await loader(addFileToTrash, idOfTheSelectedFiles)
 
 		if (!isSuccess) {
-			setError('Failed to move files to Recycle Bin.')
-			setLoading(false)
+			newError('Failed to move files to Recycle Bin.')
 		}
-
-		setLoading(false)
 	}
 
 	useEffect(() => {
@@ -166,24 +140,19 @@ export const StorageContent: FC = () => {
 
 	useEffect(() => {
 		const fetchFiles = async () => {
-			setLoading(true)
-			const isSuccess = await getFiles()
+			const isSuccess = await loader(getFiles)
 
 			if (!isSuccess) {
-				setError('Failed to receive files.')
-				setLoading(false)
+				newError('Failed to receive files.')
+
 				return
 			}
-
-			setLoading(false)
 		}
 
 		fetchFiles()
-	}, [getFiles, setLoading])
+	}, [getFiles])
 	return (
 		<>
-			<AlertError error={error} onTimeUp={errorTimeHandler} />
-			<AlertMessage message={message} onTimeUp={messageTimeHandler} />
 			<LayoutDashboard title="Storage">
 				{isTransferFiles ? (
 					<FileAdd

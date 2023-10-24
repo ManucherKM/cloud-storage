@@ -11,6 +11,7 @@ import { useStore } from '@/storage'
 
 // Styles
 import '@/assets/styles/index.scss'
+import { AppNotifications } from './AppNotifications'
 
 /**
  * The main component of the application.
@@ -27,6 +28,7 @@ export const App: FC = () => {
 	return (
 		<>
 			{isLoading && <Loader />}
+			<AppNotifications />
 			<AppRouter />
 		</>
 	)
