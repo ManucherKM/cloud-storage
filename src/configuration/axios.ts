@@ -24,6 +24,7 @@ instance.interceptors.request.use(config => {
 		config.headers.Authorization = getAuthorization(token)
 	}
 
+	// We return the changed config.
 	return config
 })
 
@@ -33,11 +34,17 @@ instance.interceptors.response.use(
 	async error => {
 		// We record the original request in a variable.
 		const originalRequest = error.config
-		if (
-			error.response.status === 403 &&
-			error.config &&
-			!error.config.isRestry
-		) {
+
+		// Checking the validity of the status.
+		const isValidStatus = error.response.status === 403
+
+		// Checking for the existence of the config.
+		const isConfigExist = !!error.config
+
+		// Checking that the request is not repeated.
+		const isNotRepeat = !error.config.isRestry
+
+		if (isValidStatus && isConfigExist && isNotRepeat) {
 			// We add a flag to avoid getting into an endless loop.
 			originalRequest.isRestry = true
 			try {
@@ -47,9 +54,12 @@ instance.interceptors.response.use(
 				// We repeat the user's original request.
 				return instance.request(originalRequest)
 			} catch (e) {
+				// We show the error in the console.
 				console.error(e)
 			}
 		}
+
+		// We forward the error to a higher level.
 		throw error
 	},
 )

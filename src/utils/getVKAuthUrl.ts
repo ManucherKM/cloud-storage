@@ -6,8 +6,13 @@ export interface IGetVKAuthUrl extends IRedirectVKAuthTarget {}
 
 /** Parameter interface for authorization in VK. */
 export interface IVKAuthParams extends URLSearchParams {
+	/** VK client id for correct work with the VK API. */
 	client_id: string
+
+	/** VK redirect URI for correct work with the VK API. */
 	redirect_uri: string
+
+	/** The type of display that will be shown to the user for authorization. */
 	display: string
 }
 
@@ -23,5 +28,6 @@ export function getVKAuthUrl(target: IGetVKAuthUrl) {
 	// Parameters for the request.
 	const formatedParams = params.toString()
 
+	// We return the URL for authorization in VK.
 	return `https://oauth.vk.com/authorize?${formatedParams}`
 }

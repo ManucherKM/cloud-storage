@@ -18,22 +18,46 @@ import {
 
 /** Application Routing Interface. */
 export interface IRoute {
+	/** The path along which the component will be rendered. */
 	path: string
+
+	/** The component that will be rendered. */
 	component: FC
 }
 
 /** Enumeration of possible application routes. */
 export enum ERoutes {
+	/** `Home` page route. */
 	home = '/',
+
+	/** `Login` page route. */
 	login = '/auth/login',
+
+	/** `Registration` page route. */
 	registration = '/auth/registration',
+
+	/** `RestoreAccountEmail` page route. */
 	restoreAccountEmail = '/auth/restore/email',
+
+	/** `RestoreAccountOTP` page route. */
 	restoreAccountOTP = '/auth/restore/otp',
+
+	/** `RestoreAccountPassword` page route. */
 	restoreAccountPassword = '/auth/restore/password',
+
+	/** `Storage` page route. */
 	storage = '/storage',
+
+	/** `Trash` page route. */
 	trash = '/trash',
+
+	/** `Setting` page route. */
 	setting = '/setting',
+
+	/** `Download` page route. */
 	download = '/download',
+
+	/** `AccountConfirm` page route. */
 	accountConfirm = '/accountConfirm',
 }
 

@@ -12,6 +12,7 @@ export function useLoader() {
 	// Function for changing Loader's state.
 	const setLoading = useStore(store => store.setLoading)
 
+	// Return the cached function.
 	return useCallback(
 		async function <T, A extends unknown[]>(
 			fetch: (...args: A) => Promise<T>,
@@ -20,6 +21,8 @@ export function useLoader() {
 			try {
 				// Show the user Loader.
 				setLoading(true)
+
+				// Execute the passed function and return its value.
 				return await fetch(...args)
 			} catch (e) {
 				// If an error occurs, display it in the console.

@@ -17,5 +17,6 @@ export function useRouteContain(str: string) {
 		setRoute(history.location.pathname)
 	}, [])
 
+	// We return the result of whether the route contains such a line.
 	return route.includes(str)
 }

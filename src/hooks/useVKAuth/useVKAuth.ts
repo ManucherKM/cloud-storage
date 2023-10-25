@@ -4,20 +4,31 @@ import { useEffect, useState } from 'react'
 
 /** Display field interface for authorization via VK. */
 export enum EVKAuthDisplay {
+	/** Display option page. */
 	page = 'page',
+
+	/** Display option popup. */
 	popup = 'popup',
 }
 
 /** The error return interface of the `useVKAuth` hook. */
 export interface IUseVKAuthError {
+	/** Error text. */
 	error: string | null
+
+	/** Error description */
 	errorDescription: string | null
 }
 
 /** Interface for the incoming parameters of the `redirectToVkAuthPage` function. */
 export interface IRedirectVKAuthTarget {
+	/** VK client id for correct work with the VK API. */
 	clientId: string
+
+	/** VK redirect URI for correct work with the VK API. */
 	redirectUri: string
+
+	/** The type of display that will be shown to the user for authorization. */
 	display: `${EVKAuthDisplay}`
 }
 
@@ -53,6 +64,8 @@ export function useVKAuth() {
 		if (isCodeExist) {
 			// Add this value to the state.
 			setIsCode(currentCode)
+
+			// Stop further execution of the function.
 			return
 		}
 
