@@ -1,88 +1,107 @@
-import { GoogleAuth } from '@/components'
-import { env } from '@/configuration/env'
-import { ERoutes } from '@/configuration/routes'
-import { useLoader } from '@/hooks'
-import { useAuthStore, useNotificationsStore } from '@/storage'
-import { validateEmail, validatePassword } from '@/utils'
-import HCaptcha from '@hcaptcha/react-hcaptcha'
-import clsx from 'clsx'
-import { Button, ConfirmEmail, Form, Link, Paragraph, Title } from 'kuui-react'
+// Types
 import type {
 	ChangeEvent,
 	FormEvent,
 	HTMLAttributes,
 	KeyboardEvent,
 } from 'react'
+
+// Utils
+import { env } from '@/configuration/env'
+import { ERoutes } from '@/configuration/routes'
+import { useLoader } from '@/hooks'
+import { useAuthStore, useNotificationsStore } from '@/storage'
+import { validateEmail, validatePassword } from '@/utils'
+import clsx from 'clsx'
 import { forwardRef, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
-import { InputEmail, InputPassword, VKAuth } from '.'
 
+// Components
+import { GoogleAuth } from '@/components'
+import HCaptcha from '@hcaptcha/react-hcaptcha'
+import { Button, ConfirmEmail, Form, Link, Paragraph, Title } from 'kuui-react'
+import { InputEmail } from './InputEmail'
+import { InputPassword } from './InputPassword'
+import { VKAuth } from './VKAuth/VKAuth'
+
+// Site key for correct work with hCaptcha.
 const HCAPTCHA_SITEKEY = env.get('HCAPTCHA_SITEKEY').required().asString()
 
 /** Interface for the enrollment form. */
 export interface IRegistrationForm {
+	/** Email. */
 	email: string
+
+	/** Password. */
 	password: string
+
+	/** HCaptcha token. */
 	token: string
 }
 
-/** The default value for the enrollment form. */
+// The default value for the enrollment form.
 const defaultForm: IRegistrationForm = {
 	email: '',
 	password: '',
 	token: '',
 }
 
-/** Form interface with registration errors. */
-export interface IRegistrationFormErrors {
-	email: string
-	password: string
-}
-
-/** Default value for a form with registration errors. */
-const defaultFormErrors: IRegistrationFormErrors = {
-	email: '',
-	password: '',
-}
-
+/** `FormRegistration` component interface. */
 export interface IFormRegistration extends HTMLAttributes<HTMLDivElement> {}
 
+/**
+ * Component for user registration.
+ *
+ * @example
+ * 	;<FormRegistration />
+ *
+ * @param props Propses
+ */
 export const FormRegistration = forwardRef<HTMLDivElement, IFormRegistration>(
 	({ className, ...props }, ref) => {
-		/** The state for the user's form. */
+		// The state for the user's form.
 		const [form, setForm] = useState<IRegistrationForm>(defaultForm)
 
-		/** The state for rendering the `ConfirmEmail` component. */
+		// The state for rendering the "ConfirmEmail" component.
 		const [confirmEmail, setConfirmEmail] = useState<boolean>(false)
-
-		/** The state for a form with user errors. */
-		const [formErrors, setFormErrors] =
-			useState<IRegistrationFormErrors>(defaultFormErrors)
 
 		// Function to create a new error to show it to the user.
 		const newError = useNotificationsStore(store => store.newError)
 
-		/** The state to lock the submit button. */
-		const [disableSubmit, setDisableSubmit] = useState<boolean>(true)
+		// Form validity state.
+		const [isValid, setIsValid] = useState<boolean>(false)
 
-		/** With this feature, you can redirect the user to another route. */
+		// State for email validity.
+		const [isEmailValid, setIsEmailValid] = useState<boolean>(false)
+
+		// State for password validity.
+		const [isPasswordValid, setIsPasswordValid] = useState<boolean>(false)
+
+		// State for token validity.
+		const [isTokenValid, setIsTokenValid] = useState<boolean>(false)
+
+		// With this feature, you can redirect the user to another route.
 		const navigate = useNavigate()
 
-		/** You can use this function to send user data for registration. */
+		// You can use this function to send user data for registration.
 		const registration = useAuthStore(store => store.registration)
 
 		// A function for showing Loader to the user when requesting an API.
 		const loader = useLoader()
 
-		const inputEmail = useRef<HTMLInputElement>(null)
-		const inputPassword = useRef<HTMLInputElement>(null)
+		// A reference to "inputEmail" in the DOM.
+		const inputEmail = useRef<HTMLInputElement | null>(null)
 
-		/** Link to the HCaptcha component in the DOM. */
+		// A reference to "inputPassword" in the DOM.
+		const inputPassword = useRef<HTMLInputElement | null>(null)
+
+		// A reference to the HCaptcha component in the DOM.
 		const hCaptchaRef = useRef<HCaptcha>(null)
 
+		// Function to send a request to the API.
 		async function sendToApi() {
 			// Check to see if the form submit button is disabled.
-			if (disableSubmit) {
+			if (!isValid) {
 				// Stop further execution of the function.
 				return
 			}
@@ -107,110 +126,116 @@ export const FormRegistration = forwardRef<HTMLDivElement, IFormRegistration>(
 			setConfirmEmail(true)
 		}
 
+		// Handler function to focus on `inputPassword` when the "Enter" key is pressed in `inputEmail`.
 		function emailKeyDownHandler(e: KeyboardEvent<HTMLInputElement>) {
+			// If the key pressed is "Enter".
 			if (e.code === 'Enter') {
+				// Focus on inputPassword.
 				inputPassword.current?.focus()
 			}
 		}
 
+		// Handler function for pressing the Enter key when the focus is on inputPassword.
 		async function passwordKeyDownHandler(e: KeyboardEvent<HTMLInputElement>) {
+			// If the key pressed is "Enter".
 			if (e.code === 'Enter') {
+				// If the hCaptcha token exists.
 				if (form.token) {
+					// Send the request to API.
 					await sendToApi()
 				} else {
+					// Otherwise, take the focus away from inputPassword.
 					inputPassword.current?.blur()
 				}
 			}
 		}
 
-		/** A handler function for submitting a form. */
+		// A handler function for submitting a form.
 		async function submitHandler(e: FormEvent<HTMLFormElement>) {
 			// We prevent the default browser behavior so that the form is not submitted.
 			e.preventDefault()
+
+			// Send the request to API.
 			await sendToApi()
 		}
 
-		/** Handler function to retrieve the user's email. */
+		// Handler function to retrieve the user's email.
 		function emailHandler(e: ChangeEvent<HTMLInputElement>) {
-			// We receive the email entered by the user.
-			const email = e.target.value
-
-			// The result of validating the user's email.
-			const isValid = validateEmail(email)
-
-			// If the result is valid.
-			if (isValid) {
-				// Clearing the email field in an object with form errors.
-				setFormErrors(prev => ({ ...prev, email: '' }))
-			} else {
-				// Add an error message to the email field in the form errors object.
-				setFormErrors(prev => ({ ...prev, email: 'Enter a valid email' }))
-			}
-
 			// We add the email specified by the user to the form object.
-			setForm(prev => ({ ...prev, email }))
+			setForm(prev => ({ ...prev, email: e.target.value }))
 		}
 
-		/** Handler function to retrieve the user's password. */
+		// Handler function to retrieve the user's password.
 		function passwordHandler(e: ChangeEvent<HTMLInputElement>) {
-			// We receive the password entered by the user.
-			const password = e.target.value
-
-			// The result of validating the user's password.
-			const isValid = validatePassword(password)
-
-			// If the result is valid.
-			if (isValid) {
-				// Clearing the password field in an object with form errors.
-				setFormErrors(prev => ({ ...prev, password: '' }))
-			} else {
-				// Add an error message to the password field in the form errors object.
-				setFormErrors(prev => ({
-					...prev,
-					password:
-						'The password must be no less than 8 characters and no more than 32 characters, contain at least one special character, one uppercase letter and one lowercase letter. ',
-				}))
-			}
-
 			// We add the password specified by the user to the form object.
-			setForm(prev => ({ ...prev, password }))
+			setForm(prev => ({ ...prev, password: e.target.value }))
 		}
 
-		/** A handler function to retrieve solved captcha data. */
+		// A handler function to retrieve solved captcha data.
 		function hCaptchaVerifyHandler(token: string) {
 			// Add the resulting token to the form object.
 			setForm(prev => ({ ...prev, token }))
 		}
 
-		/** Handler function to delete a token when it expires. */
+		// Handler function to delete a token when it expires.
 		function hCaptchaExpireHandler() {
 			// Delete the old token in the form object.
 			setForm(prev => ({ ...prev, token: '' }))
 		}
 
+		// Each time the email changes, a callback is called.
 		useEffect(() => {
-			const isPasswordValid = validatePassword(form.password)
-			const isEmailValid = validateEmail(form.email)
-			const isTokenExist = form.token
+			// Validation result.
+			const isValid = validateEmail(form.email)
 
-			const isValid = isPasswordValid && isEmailValid && isTokenExist
+			// We change the state.
+			setIsEmailValid(isValid)
+		}, [form.email])
 
-			// Change the disableSubmit state.
-			setDisableSubmit(!isValid)
-		}, [form])
+		// Each time the password changes, a callback is called.
+		useEffect(() => {
+			// Validation result.
+			const isValid = validatePassword(form.password)
 
+			// We change the state.
+			setIsPasswordValid(isValid)
+		}, [form.password])
+
+		// Each time the hCaptcha token changes, a callback is called.
+		useEffect(() => {
+			// Validation result.
+			const isValid = !!form.token
+
+			// We change the state.
+			setIsTokenValid(isValid)
+		}, [form.token])
+
+		// We call the callback whenever the form's validity values change.
+		useEffect(() => {
+			// Validation result.
+			const isValid = isPasswordValid && isEmailValid && isTokenValid
+
+			// We change the state.
+			setIsValid(isValid)
+		}, [isEmailValid, isPasswordValid, isTokenValid])
+
+		// When rendering, we focus on input.
 		useEffect(() => {
 			inputEmail.current?.focus()
 		}, [])
 
 		// If the user needs to verify their account.
 		if (confirmEmail) {
+			// Delay for redirecting the user to the login page after he has read the displayed text.
 			setTimeout(() => {
+				// We redirect the user to the authorization page.
 				navigate(ERoutes.login)
-			}, 1000 * 10)
+			}, 1000 * 10) // 10 sec
+
 			return <ConfirmEmail email={form.email} />
 		}
 
+		// Styles for root block
 		const styles = clsx(['max-w-xs w-full px-2', className])
 
 		return (
@@ -221,14 +246,12 @@ export const FormRegistration = forwardRef<HTMLDivElement, IFormRegistration>(
 				<Form onSubmit={submitHandler} className="flex flex-col gap-3 w-full">
 					<InputEmail
 						ref={inputEmail}
-						error={formErrors.email}
 						value={form.email}
 						onChange={emailHandler}
 						onKeyDown={emailKeyDownHandler}
 					/>
 					<InputPassword
 						ref={inputPassword}
-						error={formErrors.password}
 						value={form.password}
 						onChange={passwordHandler}
 						onKeyDown={passwordKeyDownHandler}
@@ -242,7 +265,7 @@ export const FormRegistration = forwardRef<HTMLDivElement, IFormRegistration>(
 						onExpire={hCaptchaExpireHandler}
 					/>
 
-					<Button disabled={disableSubmit} variant="active" type="submit">
+					<Button disabled={!isValid} variant="active" type="submit">
 						Submit
 					</Button>
 

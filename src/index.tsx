@@ -10,13 +10,13 @@ import { GoogleOAuthProvider } from '@react-oauth/google'
 import { env } from './configuration/env'
 import { history } from './configuration/history'
 
-/** The element into which the web application will be rendered. */
+// The element into which the web application will be rendered.
 const root = ReactDOM.createRoot(document.getElementById('root')!)
 
-/** Google client ID for correct interaction with the api. */
+//  Google client ID for correct interaction with the api.
 const GOOGLE_CLIENT_ID = env.get('GOOGLE_CLIENT_ID').required().asString()
 
-// 1
+// Render application.
 root.render(
 	<React.StrictMode>
 		<GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>

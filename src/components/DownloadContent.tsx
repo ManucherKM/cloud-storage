@@ -16,26 +16,24 @@ import { useParams } from 'react-router'
  * 	;<DownloadContent />
  */
 export const DownloadContent: FC = () => {
-	/** The identifier of the archive to download. */
+	// The identifier of the archive to download.
 	const { id } = useParams()
 
 	// Function to create a new error to show it to the user.
 	const newError = useNotificationsStore(store => store.newError)
 
-	/** Function for downloading an archive from the API. */
+	// Function for downloading an archive from the API.
 	const downloadArchive = useFileStore(store => store.downloadArchive)
 
 	// A function for showing Loader to the user when requesting an API.
 	const loader = useLoader()
 
-	/**
-	 * Handler function that will be processed when clicking on the "download"
-	 * button.
-	 */
+	// Handler function that will be processed when clicking on the "download" button.
 	async function clickHandler() {
 		// If the identifier is not found, stop executing the function.
 		if (!id) return false
 
+		// We get the result of the request.
 		const isSuccess = await loader(downloadArchive, id)
 
 		// If the archive could not be downloaded.

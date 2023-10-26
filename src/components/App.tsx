@@ -2,7 +2,7 @@
 import type { FC } from 'react'
 
 // Components
-import { AppRouter } from '@/components'
+import { AppNotifications, AppRouter } from '@/components'
 import { Loader } from 'kuui-react'
 
 // Utils
@@ -11,7 +11,6 @@ import { useStore } from '@/storage'
 
 // Styles
 import '@/assets/styles/index.scss'
-import { AppNotifications } from './AppNotifications'
 
 /**
  * The main component of the application.
@@ -20,7 +19,7 @@ import { AppNotifications } from './AppNotifications'
  * 	;<App />
  */
 export const App: FC = () => {
-	/** Loading state. */
+	// Loading state.
 	const isLoading = useStore(store => store.isLoading)
 
 	// Hook for using custom configuration.

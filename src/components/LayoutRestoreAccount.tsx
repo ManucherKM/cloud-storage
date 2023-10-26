@@ -4,8 +4,11 @@ import type { FC, HTMLAttributes } from 'react'
 // Utils
 import clsx from 'clsx'
 
+/** Valid `LayoutRestoreAccount` types. */
+export type TLayoutRestoreAccount = HTMLAttributes<HTMLDivElement>
+
 /** `LayoutRestoreAccount` component interface. */
-export interface ILayoutRestoreAccount extends HTMLAttributes<HTMLDivElement> {}
+export interface ILayoutRestoreAccount extends TLayoutRestoreAccount {}
 
 /**
  * @example
@@ -18,7 +21,7 @@ export const LayoutRestoreAccount: FC<ILayoutRestoreAccount> = ({
 	className,
 	...props
 }) => {
-	/** Root block styles. */
+	// Root block styles.
 	const styles = clsx([
 		'w-full h-full flex justify-center items-center',
 		className,

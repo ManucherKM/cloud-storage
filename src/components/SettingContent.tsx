@@ -34,34 +34,34 @@ const defaultForm: ISettingDefaultForm = {
  * 	;<SettingContent />
  */
 export const SettingContent: FC = () => {
-	/** An array of possible color themes. */
+	// An array of possible color themes.
 	const themes = useConfigStore(store => store.themes)
 
-	/** A function to retrieve possible topics from the API. */
+	// A function to retrieve possible topics from the API.
 	const getThemes = useConfigStore(store => store.getThemes)
 
-	/** Function for creating a user's config on the server. */
+	// Function for creating a user's config on the server.
 	const createConfig = useConfigStore(store => store.createConfig)
 
-	/** State for themeId validity. */
+	// State for themeId validity.
 	const [isValid, setIsValid] = useState<boolean>(false)
 
-	/** State for themeId validity. */
+	// State for themeId validity.
 	const [isThemeIdValid, setIsThemeIdValid] = useState<boolean>(false)
 
-	/** State for round validity. */
+	// State for round validity.
 	const [isRoundValid, setIsRoundValid] = useState<boolean>(false)
 
-	/** Function to update the user's config on the API. */
+	// Function to update the user's config on the API.
 	const updateConfig = useConfigStore(store => store.updateConfig)
 
-	/** Current user configuration. */
+	// Current user configuration.
 	const config = useConfigStore(store => store.config)
 
 	// A function for showing Loader to the user when requesting an API.
 	const loader = useLoader()
 
-	/** The state for a form with customizations. */
+	// The state for a form with customizations.
 	const [form, setForm] = useState<ISettingDefaultForm>({
 		round: config?.round || defaultForm.round,
 		themeId: config?.theme.id || defaultForm.themeId,
@@ -73,37 +73,46 @@ export const SettingContent: FC = () => {
 	// Function to create a new message to show it to the user.
 	const newMessage = useNotificationsStore(store => store.newMessage)
 
-	/** Function to send a request to the API. */
+	// Function to send a request to the API.
 	async function sendToApi() {
-		if (!form.round && !form.themeId) {
-			return
-		}
+		// If the email is not valid, terminate the function.
+		if (!isValid) return
 
+		// We get the result of the request to create a config (if the user changes it for the first time).
 		const isConfigCreated = await loader(createConfig, form.round, form.themeId)
 
+		// If the config has been created.
 		if (isConfigCreated) {
+			// Show the user a message.
 			newMessage('The data was successfully saved.')
+
+			// Clearing the form.
 			setForm(defaultForm)
+
+			// Preventing further execution of the function.
 			return
 		}
 
+		// We get the result of the request to update the config.
 		const isConfigUpdated = await updateConfig(form.round, form.themeId)
 
+		// If the config has been updated.
 		if (isConfigUpdated) {
+			// Show the user a message.
 			newMessage('The data was successfully saved.')
+
+			// Clearing the form.
 			setForm(defaultForm)
+
+			// Preventing further execution of the function.
 			return
 		}
 
+		// if it was not possible to update the config, we show the user an error message.
 		newError('Failed to save data.')
 	}
 
-	/**
-	 * Handler function that will be processed when the form is sent through the
-	 * button.
-	 *
-	 * @param e Form event
-	 */
+	// Handler function that will be processed when the form is sent through the button.
 	async function submitHandler(e: FormEvent<HTMLFormElement>) {
 		// Prevent the default behavior of the browser.
 		e.preventDefault()
@@ -112,21 +121,13 @@ export const SettingContent: FC = () => {
 		await sendToApi()
 	}
 
-	/**
-	 * Handler function that will be executed when the color theme is changed.
-	 *
-	 * @param theme Chosen color theme.
-	 */
+	// Handler function that will be executed when the color theme is changed.
 	function themeChangeHandler(theme: IColorTheme) {
 		// Putting the color theme id in the form.
 		setForm(prev => ({ ...prev, themeId: theme.id }))
 	}
 
-	/**
-	 * Handler function that will be executed when the color round is changed.
-	 *
-	 * @param round Specified rounding of corners of elements.
-	 */
+	// Handler function that will be executed when the color round is changed.
 	function roundChangeHandler(round: string) {
 		// Add the specified value to the form.
 		setForm(prev => ({ ...prev, round: round }))
@@ -161,14 +162,19 @@ export const SettingContent: FC = () => {
 
 	// Call callback on the first render.
 	useEffect(() => {
+		// function for retrieving available topics from the API.
 		const fetchThemes = async () => {
+			// We get the result of the request.
 			const isSuccess = await loader(getThemes)
 
+			// If the request was unsuccessful.
 			if (!isSuccess) {
+				// Show the user an error message.
 				newError('Failed to get list of color themes.')
 			}
 		}
 
+		// Send a request.
 		fetchThemes()
 	}, [getThemes, newError, loader])
 	return (

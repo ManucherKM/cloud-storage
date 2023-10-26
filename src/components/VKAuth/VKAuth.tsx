@@ -119,5 +119,6 @@ export const VKAuth: FC<IVKAuth> = ({ logics, ...props }) => {
 		registrationWithVK,
 		loader,
 	])
+
 	return <KuuiVKAuth onClick={vkAuthHandler} {...props} />
 }

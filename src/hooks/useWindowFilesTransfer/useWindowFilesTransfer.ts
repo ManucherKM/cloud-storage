@@ -1,3 +1,6 @@
+// Types
+import type { Dispatch, SetStateAction } from 'react'
+
 // Utils
 import { useEffect, useState } from 'react'
 
@@ -18,12 +21,6 @@ export const useWindowFilesTransfer = () => {
 		setIsTransfer(true)
 	}
 
-	// Function handler for the dragleave event.
-	function dragLeaveHandler() {
-		// We change the state of "isTransfer".
-		setIsTransfer(false)
-	}
-
 	// Function handler for the drop event.
 	function dropHandler(e: DragEvent) {
 		// Preventing default browser behavior.
@@ -38,20 +35,19 @@ export const useWindowFilesTransfer = () => {
 		// Add a drop event to the window.
 		window.addEventListener('drop', dropHandler)
 
-		// Add a dragleave event to the window.
-		window.addEventListener('dragleave', dragLeaveHandler)
-
 		// Add a dragover event to the window.
 		window.addEventListener('dragover', dragOverHandler)
 
 		// When the component is dismantled, the callback below will be called.
 		return () => {
 			window.removeEventListener('drop', dropHandler)
-			window.removeEventListener('dragleave', dragLeaveHandler)
 			window.removeEventListener('dragover', dragOverHandler)
 		}
 	}, [])
 
 	// Returning the isTransfer state.
-	return isTransfer
+	return [isTransfer, setIsTransfer] as [
+		boolean,
+		Dispatch<SetStateAction<boolean>>,
+	]
 }

@@ -16,7 +16,7 @@ import { useAuthStore } from '@/storage'
  * 	;<AppRouter />
  */
 export const AppRouter: FC = () => {
-	/** The state responsible for user authorization. */
+	// The state responsible for user authorization.
 	const isAuth: boolean = !!useAuthStore(store => store.token)
 
 	return (
@@ -28,17 +28,16 @@ export const AppRouter: FC = () => {
 					element={<route.component />}
 				/>
 			))}
-			{isAuth && (
-				<>
-					{privateRoutes.map(route => (
-						<Route
-							key={route.path}
-							path={route.path}
-							element={<route.component />}
-						/>
-					))}
-				</>
-			)}
+
+			{isAuth &&
+				privateRoutes.map(route => (
+					<Route
+						key={route.path}
+						path={route.path}
+						element={<route.component />}
+					/>
+				))}
+
 			<Route path="/*" element={<NotFound />} />
 		</Routes>
 	)

@@ -83,13 +83,13 @@ export const GoogleAuth: FC<IGoogleAuth> = ({ logics, ...props }) => {
 
 	// Function to bring up a popup window for authorization via Google.
 	const googlePopup = useGoogleLogin({
-		/** Verification method. */
+		// Verification method.
 		flow: 'auth-code',
 
-		/** Error handler. */
+		// Error handler.
 		onError: console.error,
 
-		/** Success handler. */
+		// Success handler.
 		onSuccess: async ({ code }) => {
 			// If login was selected.
 			if (logics === EGoogleAuthVariant.login) {

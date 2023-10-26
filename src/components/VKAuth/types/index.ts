@@ -1,3 +1,4 @@
+/** Enumeration of `VKAuth` logic variant. */
 export enum EVKAuthVariant {
 	/** Authorization option via VK for `login`. */
 	login = 'login',

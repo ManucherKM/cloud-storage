@@ -15,7 +15,7 @@ import { Paragraph } from 'kuui-react'
  */
 export const AccountConfirmContent: FC = () => {
 	return (
-		<div className="max-w-sm p-5 flex flex-col items-center gap-3">
+		<div className="max-w-sm ph_lg:max-w-xs p-5 flex flex-col items-center gap-3">
 			<CheckMark />
 			<Paragraph align="center">
 				Your account has been successfully verified! You can close this tab.

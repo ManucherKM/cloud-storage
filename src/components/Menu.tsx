@@ -34,21 +34,18 @@ export interface INavigationButtons extends IListItem {}
  * @param props Propses
  */
 export const Menu: FC<IMenu> = ({ title, className, ...props }) => {
-	/** Function to log the user out of the account. */
+	// Function to log the user out of the account.
 	const logout = useAuthStore(store => store.logout)
 
 	// A function for showing Loader to the user when requesting an API.
 	const loader = useLoader()
 
-	/** Function to redirect the user. */
+	// Function to redirect the user.
 	const navigate = useNavigate()
 
-	/** Handler function that will be called when clicking on the exit button. */
+	// Handler function that will be called when clicking on the exit button.
 	async function logoutHandler() {
-		/**
-		 * Enter the result of the `logout` function execution into the `isSuccess`
-		 * variable.
-		 */
+		// Enter the result of the "logout" function execution into the "isSuccess" variable.
 		const isSuccess = await loader(logout)
 
 		// If you are unable to log out of the account.
@@ -61,7 +58,7 @@ export const Menu: FC<IMenu> = ({ title, className, ...props }) => {
 		navigate(ERoutes.home)
 	}
 
-	/** Array of navigation buttons. */
+	// Array of navigation buttons.
 	const navigationButtons: INavigationButtons[] = [
 		{
 			isActive: useRouteContain(ERoutes.storage),
@@ -86,7 +83,7 @@ export const Menu: FC<IMenu> = ({ title, className, ...props }) => {
 		},
 	]
 
-	/** Root block styles. */
+	// Root block styles.
 	const styles = clsx('w-full min-w-[150px] max-w-[200px]', className)
 	return (
 		<div className={styles} {...props}>

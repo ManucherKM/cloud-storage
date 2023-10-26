@@ -36,40 +36,37 @@ export interface IFormEmail extends TFormEmail {}
  * 	;<FormEmail />
  */
 export const FormEmail: FC<IFormEmail> = () => {
-	/** Email saved in storage. */
+	// Email saved in storage.
 	const storeEmail = useRestoreAccount(store => store.email)
 
-	/** Function for changing email from storage. */
+	// Function for changing email from storage.
 	const setStoreEmail = useRestoreAccount(store => store.setEmail)
 
-	/** The state for email within a component. */
+	// The state for email within a component.
 	const [email, setEmail] = useState<string>(storeEmail || '')
 
-	/** State for email validity. */
+	// State for email validity.
 	const [isValid, setIsValid] = useState<boolean>(!!storeEmail)
 
-	/** Function to query the API to create a one-time password. */
+	// Function to query the API to create a one-time password.
 	const createOtp = useRestoreAccount(store => store.createOtp)
-
-	/** State for errors */
-	const [error, setError] = useState<string>('')
 
 	// Function to create a new error to show it to the user.
 	const newError = useNotificationsStore(store => store.newError)
 
-	/** Input for email used in the form. */
+	// Input for email used in the form.
 	const input = useRef<HTMLInputElement | null>(null)
 
-	/** A state indicating whether this is the first render or not. */
+	// A state indicating whether this is the first render or not.
 	const isFirstRender = useSkipFirstRender()
 
-	/** Function to redirect the user. */
+	// Function to redirect the user.
 	const navigate = useNavigate()
 
 	// A function for showing Loader to the user when requesting an API.
 	const loader = useLoader()
 
-	/** Function to send a request to the API. */
+	// Function to send a request to the API.
 	async function sendToApi() {
 		// If the email is not valid, terminate the function.
 		if (!isValid) return
@@ -77,6 +74,7 @@ export const FormEmail: FC<IFormEmail> = () => {
 		// We remove the focus from the input so that the user doesn't type anything into the input while the request is being processed.
 		input.current?.blur()
 
+		// We get the result of the request.
 		const isSuccess = await loader(createOtp)
 
 		// If the one-time password could not be created.
@@ -92,22 +90,13 @@ export const FormEmail: FC<IFormEmail> = () => {
 		navigate(ERoutes.restoreAccountOTP)
 	}
 
-	/**
-	 * Handler function to change the state of `email`.
-	 *
-	 * @param e Change event
-	 */
+	// Handler function to change the state of `email`.
 	function changeHandler(e: ChangeEvent<HTMLInputElement>) {
 		// Change the state of "email".
 		setEmail(e.target.value)
 	}
 
-	/**
-	 * Handler function that will be processed when the form is sent through the
-	 * button.
-	 *
-	 * @param e Form event
-	 */
+	// Handler function that will be processed when the form is sent through the button.
 	async function submitHandler(e: FormEvent<HTMLFormElement>) {
 		// Prevent the default behavior of the browser.
 		e.preventDefault()
@@ -116,12 +105,7 @@ export const FormEmail: FC<IFormEmail> = () => {
 		await sendToApi()
 	}
 
-	/**
-	 * Calls the sendToAPI function when the `Enter` key is pressed inside the
-	 * input.
-	 *
-	 * @param e Keyboard event
-	 */
+	// Calls the sendToAPI function when the `Enter` key is pressed inside the input.
 	async function keyDownHandler(e: KeyboardEvent<HTMLInputElement>) {
 		// If the "Enter" key is pressed.
 		if (e.code === 'Enter') {
@@ -146,36 +130,24 @@ export const FormEmail: FC<IFormEmail> = () => {
 		// Check email validity.
 		const isValid = validateEmail(email)
 
-		// If email is valid, clear the error state.
-		if (isValid) {
-			setError('')
-		}
-		// Otherwise, we add the error text to the "error" state.
-		else {
-			setError('Enter a valid email')
-		}
-
 		// Changing the validity state.
 		setIsValid(isValid)
 	}, [email])
 
 	return (
-		<>
-			<div className="max-w-xs w-full px-2">
-				<Form onSubmit={submitHandler} className="w-full flex flex-col gap-3">
-					<Paragraph align="center">Enter your recovery email.</Paragraph>
-					<InputEmail
-						ref={input}
-						error={error}
-						value={email}
-						onKeyDown={keyDownHandler}
-						onChange={changeHandler}
-					/>
-					<Button disabled={!isValid} variant="active" type="submit">
-						Submit
-					</Button>
-				</Form>
-			</div>
-		</>
+		<div className="max-w-xs w-full px-2">
+			<Form onSubmit={submitHandler} className="w-full flex flex-col gap-3">
+				<Paragraph align="center">Enter your recovery email.</Paragraph>
+				<InputEmail
+					ref={input}
+					value={email}
+					onKeyDown={keyDownHandler}
+					onChange={changeHandler}
+				/>
+				<Button disabled={!isValid} variant="active" type="submit">
+					Submit
+				</Button>
+			</Form>
+		</div>
 	)
 }

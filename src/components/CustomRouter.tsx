@@ -31,14 +31,15 @@ export interface ICustomRouter extends TCustomRouter {
  * @param props Propses
  */
 export const CustomRouter: FC<ICustomRouter> = ({ history, ...props }) => {
-	/** State for the current route. */
+	// State for the current route.
 	const [route, setRoute] = useState({
 		action: history.action,
 		location: history.location,
 	})
 
-	/** A handler function that will be processed every time the `history` changes. */
+	// A handler function that will be processed every time the `history` changes.
 	const historyHandler = () => {
+		// When the location changes, the state changes.
 		history.listen(setRoute)
 	}
 

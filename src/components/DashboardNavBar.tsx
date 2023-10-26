@@ -76,11 +76,7 @@ export const DashboardNavBar: FC<IDashboardNavBar> = ({
 	className,
 	...props
 }) => {
-	/**
-	 * Handler function that will be executed at each change of the search query.
-	 *
-	 * @param e Chage event
-	 */
+	// Handler function that will be executed at each change of the search query.
 	function searchHandler(e: ChangeEvent<HTMLInputElement> | undefined) {
 		// If the developer specified this handler, call it.
 		if (onSearch) {
@@ -88,11 +84,7 @@ export const DashboardNavBar: FC<IDashboardNavBar> = ({
 		}
 	}
 
-	/**
-	 * Handler function that will be executed when clicking on the "share" button.
-	 *
-	 * @param e Mouse event
-	 */
+	// Handler function that will be executed when clicking on the "share" button.
 	function shareHandler(e: MouseEvent<HTMLButtonElement>) {
 		// If the developer specified this handler, call it.
 		if (onShare) {
@@ -100,12 +92,7 @@ export const DashboardNavBar: FC<IDashboardNavBar> = ({
 		}
 	}
 
-	/**
-	 * Handler function that will be executed when clicking on the "restore"
-	 * button.
-	 *
-	 * @param e Mouse event
-	 */
+	// Handler function that will be executed when clicking on the "restore" button.
 	function restoreHandler(e: MouseEvent<HTMLButtonElement>) {
 		// If the developer specified this handler, call it.
 		if (onRestore) {
@@ -113,12 +100,7 @@ export const DashboardNavBar: FC<IDashboardNavBar> = ({
 		}
 	}
 
-	/**
-	 * Handler function that will be executed when clicking on the "remove"
-	 * button.
-	 *
-	 * @param e Mouse event
-	 */
+	// Handler function that will be executed when clicking on the "remove" button.
 	function removeHandler(e: MouseEvent<HTMLButtonElement>) {
 		// If the developer specified this handler, call it.
 		if (onRemove) {
@@ -126,7 +108,7 @@ export const DashboardNavBar: FC<IDashboardNavBar> = ({
 		}
 	}
 
-	/** Required styles for the root block. */
+	// Required styles for the root block.
 	const styles = clsx([
 		'w-full flex justify-between px-5 py-3 border-solid border-0 border-b border-black-250 ph_lg:flex-col ph_lg:gap-3',
 		className,

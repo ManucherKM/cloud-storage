@@ -50,11 +50,7 @@ export const FileList: FC<IFileList> = ({
 	selectedFiles,
 	setSelectedFiles,
 }) => {
-	/**
-	 * Function that will be executed when an element of the file is selected.
-	 *
-	 * @param e Select event
-	 */
+	// Function that will be executed when an element of the file is selected.
 	function selectHandler(e: OnSelect) {
 		// Iterate over the elements of the files that have been selected.
 		e.added.forEach(el => {
