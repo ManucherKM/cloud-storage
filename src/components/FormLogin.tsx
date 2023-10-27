@@ -59,6 +59,9 @@ export const FormLogin = forwardRef<HTMLDivElement, IFormLogin>(
 		// The state for the user's form.
 		const [form, setForm] = useState<ILoginForm>(defaultForm)
 
+		// User authorization status.
+		const isAuth = !!useAuthStore(store => store.token)
+
 		// Function to create a new error to show it to the user.
 		const newError = useNotificationsStore(store => store.newError)
 
@@ -220,7 +223,16 @@ export const FormLogin = forwardRef<HTMLDivElement, IFormLogin>(
 
 		// When rendering, we focus on input.
 		useEffect(() => {
-			inputEmail.current?.focus()
+			// If the user is authorized.
+			if (isAuth) {
+				// We redirect it to the storage page.
+				navigate(ERoutes.storage)
+			}
+			// Otherwise
+			else {
+				// We focus on input from email.
+				inputEmail.current?.focus()
+			}
 		}, [])
 
 		// Root block styles
