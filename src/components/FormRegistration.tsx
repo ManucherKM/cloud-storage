@@ -106,21 +106,26 @@ export const FormRegistration = forwardRef<HTMLDivElement, IFormRegistration>(
 				return
 			}
 
+			// We get the results of the request.
 			const isRegistered = await loader(registration, form)
 
 			// If registration failed.
 			if (!isRegistered) {
-				// Clearing the form.
-				setForm(defaultForm)
-
+				// Show the user an error message.
 				newError('Failed to register.')
 
 				// Reset the captcha.
 				hCaptchaRef.current?.resetCaptcha()
 
+				// We remove the hCaptcha token from the state.
+				setForm(prev => ({ ...prev, token: '' }))
+
 				// Stop further execution of the function.
 				return
 			}
+
+			// Clearing the form.
+			setForm(defaultForm)
 
 			// Change the state of confirmEmail.
 			setConfirmEmail(true)

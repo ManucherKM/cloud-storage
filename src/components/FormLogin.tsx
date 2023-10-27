@@ -111,15 +111,18 @@ export const FormLogin = forwardRef<HTMLDivElement, IFormLogin>(
 				// Reset the captcha.
 				hCaptchaRef.current?.resetCaptcha()
 
+				// We remove the hCaptcha token from the state.
+				setForm(prev => ({ ...prev, token: '' }))
+
 				// Stop further execution of the function.
 				return
 			}
 
-			// We redirect the user to the storage page.
-			navigate(ERoutes.storage)
-
 			// Clearing the form.
 			setForm(defaultForm)
+
+			// We redirect the user to the storage page.
+			navigate(ERoutes.storage)
 		}
 
 		// Handler function to focus on `inputPassword` when the "Enter" key is pressed in `inputEmail`.

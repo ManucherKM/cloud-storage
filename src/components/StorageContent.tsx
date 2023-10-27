@@ -175,7 +175,9 @@ export const StorageContent: FC = () => {
 		}
 	}
 
+	// A function that will be called when you click on a dark area while drag and drop appears.
 	function closeDragAndDrop() {
+		// We change the state.
 		setIsTransfer(false)
 	}
 
