@@ -81,17 +81,20 @@ export const StorageContent: FC = () => {
 			return
 		}
 
-		// clear the input from the selected files.
-		e.target.value = ''
-
 		// We get the result of the request.
 		const isSuccess = await loader(sendFiles, selectedFiles)
 
 		// If the request result is unsuccessful.
 		if (!isSuccess) {
+			// clear the input from the selected files.
+			e.target.value = ''
+
 			// Show the user an error message.
 			newError('Failed to send file.')
 		}
+
+		// clear the input from the selected files.
+		e.target.value = ''
 	}
 
 	// A function that will work when downloading files via drag and drop.
