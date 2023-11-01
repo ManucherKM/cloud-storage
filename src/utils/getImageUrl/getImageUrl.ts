@@ -1,5 +1,5 @@
 // Utils
-import { env } from '../configuration/env'
+import { env } from '../../configuration/env'
 
 // Get the URL to interact with the API.
 const API_URL = env.get('API_URL').required().asString()

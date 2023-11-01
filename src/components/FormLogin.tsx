@@ -233,7 +233,7 @@ export const FormLogin = forwardRef<HTMLDivElement, IFormLogin>(
 				// We focus on input from email.
 				inputEmail.current?.focus()
 			}
-		}, [])
+		}, [isAuth, navigate])
 
 		// Root block styles
 		const styles = clsx(['max-w-xs w-full px-2', className])
