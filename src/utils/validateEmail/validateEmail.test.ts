@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest'
 import { validateEmail } from './validateEmail'
 
 describe('Testing the validateEmail function.', () => {

@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest'
 import { IGetVKAuthUrl, IVKAuthParams, getVKAuthUrl } from './getVKAuthUrl'
 
 describe('Testing the getVKAuthUrl function.', () => {

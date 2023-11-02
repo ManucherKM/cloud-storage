@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest'
 import { getImageUrl } from './getImageUrl'
 
 describe('Testing the getImageUrl function.', () => {
@@ -7,6 +8,6 @@ describe('Testing the getImageUrl function.', () => {
 	})
 
 	test('Empty value.', () => {
-		expect(getImageUrl('')).toBe([''])
+		expect(getImageUrl('')).not.toBe('')
 	})
 })

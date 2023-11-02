@@ -22,7 +22,8 @@
 ![Vercel](https://img.shields.io/badge/-Vercel-000?style=for-the-badge&logo=Vercel&logoColor=fff)
 ![Git](https://img.shields.io/badge/-Git-000?style=for-the-badge&logo=Git&logoColor=e84d31)
 ![Prettier](https://img.shields.io/badge/-Prettier-000?style=for-the-badge&logo=Prettier&logoColor=426675)
+![Vitest](https://img.shields.io/badge/-Vitest-000?style=for-the-badge&logo=Vitest&logoColor=729b1b)
 
 ## Preview
 
-[![Preview](https://github.com/ManucherKM/cloud-storage/blob/react/preview/cover.png?raw=true)](https://youtu.be/Bi72e0W1x48)
+<!-- [![Preview](https://github.com/ManucherKM/cloud-storage/blob/react/preview/cover.png?raw=true)](https://youtu.be/Bi72e0W1x48) -->

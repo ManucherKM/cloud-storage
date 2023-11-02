@@ -1,4 +1,5 @@
 import { IFile } from '@/storage/useFileStore/types'
+import { describe, expect, test } from 'vitest'
 import { getValidFiles } from './getValidFiles'
 
 describe('Testing the getTrashFiles function.', () => {

@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest'
 import { getExtension } from './getExtension'
 
 describe('Testing the getExtension function.', () => {
