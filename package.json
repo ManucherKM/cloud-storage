@@ -10,8 +10,7 @@
 		"format": "npx prettier --write src/",
 		"lint": "eslint ./src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
 		"test": "vitest --config ./vitest.config.ts",
-		"type-checking": "tsc",
-		"push": "npm run format && git add . && git commit -m '.' && git push origin react"
+		"type-checking": "tsc"
 	},
 	"dependencies": {
 		"@hcaptcha/react-hcaptcha": "^1.8.1",
