@@ -2,15 +2,16 @@ name: Code preparation.
 run-name: ${{ github.actor }} is trying to push changes.
 on:
   push:
-    branches:
-      - react
+    branches: [react]
+  pull_request:
+    branches: [react]
 jobs:
   formatting:
     name: Formatting
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [ 18.x ]
+        node-version: [18.x]
     steps:
       - uses: actions/checkout@v4
       - name: Install Node.js ${{ matrix.node-version }}
@@ -26,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [ 18.x ]
+        node-version: [18.x]
     steps:
       - uses: actions/checkout@v4
       - name: Install Node.js ${{ matrix.node-version }}
@@ -42,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [ 18.x ]
+        node-version: [18.x]
     steps:
       - uses: actions/checkout@v4
       - name: Install Node.js ${{ matrix.node-version }}
@@ -58,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [ 18.x ]
+        node-version: [18.x]
     steps:
       - uses: actions/checkout@v4
       - name: Install Node.js ${{ matrix.node-version }}
