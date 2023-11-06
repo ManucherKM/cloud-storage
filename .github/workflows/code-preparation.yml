@@ -1,0 +1,15 @@
+name: Code preparation.
+run-name: ${{ github.actor }} is trying to push changes.
+on:
+  push:
+    branches:
+      - react
+jobs:
+  linting:
+    name: Linting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Dependencies
+        run: npm install
+      - name: Start linting
+        run: npm run lint
