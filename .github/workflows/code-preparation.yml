@@ -21,33 +21,51 @@ jobs:
         run: npm install
       - name: Start formatting
         run: npm run format
-  # linting:
-  #   name: Linting
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Check out repository code
-  #       uses: actions/checkout@v4
-  #     - name: Install Dependencies
-  #       run: npm install
-  #     - name: Start linting
-  #       run: npm run lint
-  # type-checking:
-  #   name: Type checking
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Check out repository code
-  #       uses: actions/checkout@v4
-  #     - name: Install Dependencies
-  #       run: npm install
-  #     - name: Start type checking
-  #       run: npm run type-checking
-  # testing:
-  #   name: Testing
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Check out repository code
-  #       uses: actions/checkout@v4
-  #     - name: Install Dependencies
-  #       run: npm install
-  #     - name: Start testing
-  #       run: npm run test
+  linting:
+    name: Linting
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ 18.x ]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install Dependencies
+        run: npm install
+      - name: Start linting
+        run: npm run lint
+  type-checking:
+    name: Type checking
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ 18.x ]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install Dependencies
+        run: npm install
+      - name: Start type checking
+        run: npm run type-checking
+  testing:
+    name: Testing
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ 18.x ]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install Dependencies
+        run: npm install
+      - name: Start testing
+        run: npm run test
