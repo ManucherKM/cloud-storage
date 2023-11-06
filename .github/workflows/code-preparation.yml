@@ -5,7 +5,9 @@ on:
     branches:
       - react
 jobs:
-  uses: actions/checkout@v4
+  - uses: actions/checkout@v4
+  with:
+    sparse-checkout: .
   formatting:
     name: Formatting
     runs-on: ubuntu-latest
