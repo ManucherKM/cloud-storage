@@ -3,7 +3,7 @@ run-name: ${{ github.actor }} is trying to push changes.
 on:
   push:
     branches:
-      - react
+      react
 jobs:
   - uses: actions/checkout@v4
   with:
