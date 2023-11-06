@@ -4,6 +4,7 @@ on:
   push:
     branches: react
 jobs:
+  uses: actions/checkout@v4
   formatting:
     name: Formatting
     runs-on: ubuntu-latest
