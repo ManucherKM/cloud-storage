@@ -5,6 +5,15 @@ on:
     branches:
       - react
 jobs:
+  - uses: actions/checkout@v4
+  formatting:
+    name: Formatting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Dependencies
+        run: npm install
+      - name: Start formatting
+        run: npm run format
   linting:
     name: Linting
     runs-on: ubuntu-latest
@@ -13,3 +22,11 @@ jobs:
         run: npm install
       - name: Start linting
         run: npm run lint
+  type-checking:
+    name: Type checking
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Dependencies
+        run: npm install
+      - name: Start type checking
+        run: npm run type-checking
