@@ -9,8 +9,9 @@ jobs:
     name: Formatting
     runs-on: ubuntu-latest
     steps:
-      - name: Install Dependencies
+      - name: Check out repository code
         uses: actions/checkout@v4
+      - name: Install Dependencies
         run: npm install
       - name: Start formatting
         run: npm run format
