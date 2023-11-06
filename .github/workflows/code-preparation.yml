@@ -2,12 +2,8 @@ name: Code preparation.
 run-name: ${{ github.actor }} is trying to push changes.
 on:
   push:
-    branches:
-      react
+    branches: react
 jobs:
-  - uses: actions/checkout@v4
-  with:
-    sparse-checkout: .
   formatting:
     name: Formatting
     runs-on: ubuntu-latest
