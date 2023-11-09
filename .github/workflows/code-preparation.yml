@@ -5,6 +5,8 @@ on:
     branches: [react]
   pull_request:
     branches: [react]
+env:
+  API_URL: https://example.com
 jobs:
   actions:
     name: Actions
@@ -18,8 +20,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          envkey_API_URL: https://example.com
-          file_name: .env
       - name: Install Dependencies
         run: npm install
       - name: Start formatting
