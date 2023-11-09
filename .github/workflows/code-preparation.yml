@@ -5,8 +5,6 @@ on:
     branches: [react]
   pull_request:
     branches: [react]
-env:
-  API_URL: https://example.com
 jobs:
   actions:
     name: Actions
@@ -30,3 +28,5 @@ jobs:
         run: npm run type-checking
       - name: Start testing
         run: npm run test
+        env:
+          API_URL: https://example.com
