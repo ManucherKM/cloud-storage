@@ -5,8 +5,6 @@ on:
     branches: [react]
   pull_request:
     branches: [react]
-env:
-  API_URL: https://example.com
 jobs:
   actions:
     name: Actions
