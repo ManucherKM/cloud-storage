@@ -30,4 +30,3 @@ jobs:
         run: npm run type-checking
       - name: Start testing
         run: npm run test
-        with:
