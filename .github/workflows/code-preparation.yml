@@ -14,10 +14,12 @@ jobs:
         node-version: [18.x]
     steps:
       - uses: actions/checkout@v4
-      - name: Install Node.js ${{ matrix.node-version }}
+      - name: Setting up the environment ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          envkey_API_URL: https://example.com
+          file_name: .env
       - name: Install Dependencies
         run: npm install
       - name: Start formatting
@@ -29,5 +31,3 @@ jobs:
       - name: Start testing
         run: npm run test
         with:
-          envkey_API_URL: https://example.com
-          file_name: .env
