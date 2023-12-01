@@ -3,8 +3,8 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 
 // Components
-import {      App, CustomRouter } from '@/components'
-import { GoogleOAuthProvider      } from '@react-oauth/google'
+import { App, CustomRouter } from '@/components'
+import { GoogleOAuthProvider } from '@react-oauth/google'
 
 // Utils
 import { env } from './configuration/env'
