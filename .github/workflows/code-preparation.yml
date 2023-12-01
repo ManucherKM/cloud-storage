@@ -10,7 +10,7 @@ jobs:
     name: Actions
     runs-on: ubuntu-latest
     env:
-      API_URL: https://example.com
+      VITE_API_URL: https://example.com
     strategy:
       matrix:
         node-version: [18.x]

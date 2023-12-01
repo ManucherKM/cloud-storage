@@ -1,11 +1,8 @@
 // Utils
-// import { env } from '../../configuration/env'
+import { env } from '../../configuration/env'
 
 // Get the URL to interact with the API.
-const API_URL = import.meta.env.VITE_API_URL
-
-console.log(API_URL);
-
+const API_URL = env.get('API_URL').required().asString()
 
 /**
  * Using this function, you can get a link to an image in the user's storage.
