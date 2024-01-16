@@ -28,7 +28,7 @@ export const NavBar: FC = () => {
 							<Button variant="navigate">Sign in</Button>
 						</Link>
 						<Link to={ERoutes.registration} className="whitespace-nowrap">
-							<Button variant="active">Sign up</Button>
+							<Button variant="active">Login</Button>
 						</Link>
 					</div>
 				</div>
