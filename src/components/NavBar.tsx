@@ -25,10 +25,10 @@ export const NavBar: FC = () => {
 
 					<div className="flex gap-3">
 						<Link to={ERoutes.login} className="whitespace-nowrap">
-							<Button variant="navigate">Sign in</Button>
+							<Button variant="navigate">Login</Button>
 						</Link>
 						<Link to={ERoutes.registration} className="whitespace-nowrap">
-							<Button variant="active">Login</Button>
+							<Button variant="active">Sign in</Button>
 						</Link>
 					</div>
 				</div>
