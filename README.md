@@ -2,12 +2,6 @@
 
 # 💿 Cloud storage | Beta testing.
 
-[Demo](https://cloud-storage-indol.vercel.app)
-
-[UIkit](https://github.com/ManucherKM/kuui)
-
-[Backend](https://github.com/ManucherKM/cloud-storage-backend)
-
 ## Languages and Tools
 
 ![TypeScript](https://img.shields.io/badge/-TypeScript-000?style=for-the-badge&logo=TypeScript&logoColor=3178C6)
@@ -26,7 +20,14 @@
 
 ## Preview
 
-<!-- [![Preview](https://github.com/ManucherKM/cloud-storage/blob/react/preview/cover.png?raw=true)](https://youtu.be/Bi72e0W1x48) -->
-
 https://github.com/ManucherKM/cloud-storage/assets/91463158/d3a488c6-3ad1-4bdf-a430-93a062a6efa8
 
+## Demo
+
+[Demo](https://cloud-storage-indol.vercel.app)
+
+## Related
+
+[UIkit](https://github.com/ManucherKM/kuui)
+
+[Backend](https://github.com/ManucherKM/cloud-storage-backend)
