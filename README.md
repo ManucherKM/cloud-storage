@@ -22,10 +22,6 @@
 
 https://github.com/ManucherKM/cloud-storage/assets/91463158/d3a488c6-3ad1-4bdf-a430-93a062a6efa8
 
-## Demo
-
-[Demo](https://cloud-storage-indol.vercel.app)
-
 ## Related
 
 [UIkit](https://github.com/ManucherKM/kuui)
